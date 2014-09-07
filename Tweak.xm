@@ -34,11 +34,11 @@ static void LoadSettings() {
 	[dict release];
 }
 
-static void reloadPrefsNotification(CFNotificationCenterRef center,
-									void *observer,
-									CFStringRef name,
-									const void *object,
-									CFDictionaryRef userInfo) {
+void reloadPrefsNotification(CFNotificationCenterRef center,
+							void *observer,
+							CFStringRef name,
+							const void *object,
+							CFDictionaryRef userInfo) {
 	LoadSettings();
 }
 
@@ -1434,7 +1434,7 @@ UIImage *reorderImageBlack = nil;
 	isFirmware70 = (kCFCoreFoundationVersionNumber < 874.24);
 	isFirmware71 = (kCFCoreFoundationVersionNumber >= 847.24);
 	
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadPrefsNotification, CFSTR("kr.slak.glareapps.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+	//CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadPrefsNotification, CFSTR("kr.slak.glareapps.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	LoadSettings();
 	
 	if (!isThisAppEnabled()) return;
