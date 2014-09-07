@@ -419,6 +419,43 @@ UIImage *shuffleImage = nil;
 %end
 
 
+%group Firmware71_MusicTableSectionHeaderView_Background
+
+%hook MusicTableSectionHeaderView
+
+%new
+- (void)setBackgroundTransitionProgress:(CGFloat)progress {
+	_UIBackdropView *backdropView = (_UIBackdropView *)[self viewWithTag:0xc001];
+	[backdropView retain];
+	
+	CGRect frame = self.frame;
+	frame.origin.x = 0;
+	frame.origin.y = 0;
+	
+	if (backdropView == nil) {
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
+		
+		backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
+		backdropView.alpha = 0.0f;
+		backdropView.tag = 0xc001;
+	}
+	
+	backdropView.frame = frame;
+	
+	if (self.backgroundView != backdropView)
+		self.backgroundView = backdropView;
+	
+	self.backgroundView.alpha = progress;
+	
+	[backdropView release];
+}
+
+%end
+
+%end
+
+
 %hook MusicTableSectionHeaderView
 
 // < 7.1
@@ -437,7 +474,6 @@ UIImage *shuffleImage = nil;
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
 		backdropView.alpha = 0.0f;
 		backdropView.tag = 0xc001;
-		[self insertSubview:backdropView atIndex:0];
 	}
 	
 	backdropView.frame = frame;
@@ -454,30 +490,6 @@ UIImage *shuffleImage = nil;
 	%orig;
 	
 	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
-	
-	// >= 7.1
-	if (isFirmware71) {
-		_UIBackdropView *backdropView = (_UIBackdropView *)[self viewWithTag:0xc001];
-		
-		CGRect frame = self.frame;
-		frame.origin.x = 0;
-		frame.origin.y = 0;
-		
-		if (backdropView == nil) {
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
-			settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
-			
-			backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
-			backdropView.tag = 0xc001;
-			backdropView.alpha = 1.0f;
-			
-			self.backgroundView = backdropView;
-			
-			[backdropView release];
-		}
-		
-		backdropView.frame = frame;
-	}
 }
 
 %end
@@ -499,7 +511,6 @@ UIImage *shuffleImage = nil;
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
 		backdropView.alpha = 0.0f;
 		backdropView.tag = 0xc001;
-		[self insertSubview:backdropView atIndex:0];
 	}
 	
 	backdropView.frame = frame;
@@ -508,6 +519,9 @@ UIImage *shuffleImage = nil;
 		self.backgroundView = backdropView;
 	
 	%orig;
+	
+	if (isFirmware71)
+		self.backgroundView.alpha = progress;
 	
 	[backdropView release];
 }
@@ -1164,5 +1178,8 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 		loadMusicSettings();
 		
 		%init;
+		
+		if (isFirmware71)
+			%init(Firmware71_MusicTableSectionHeaderView_Background);
 	}
 }
