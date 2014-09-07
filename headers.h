@@ -189,6 +189,7 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 - (void)_setDrawsAsBackdropOverlay:(BOOL)arg1;
 - (void)_setFrameForBackdropMaskViews:(struct CGRect)arg1;
 - (id)_viewControllerForAncestor;
+- (BOOL)_is_needsLayout;
 @end
 
 @interface UIDropShadowView : UIView @end

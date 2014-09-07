@@ -54,6 +54,8 @@ BOOL isThisAppEnabled() {
 }
 
 void setLabelTextColorIfHasBlackColor(UILabel *label) {
+	if (label.attributedText) return;
+	
 	if ([label.textColor isEqual:[UIColor blackColor]] 
 			|| [label.textColor isEqual:[UIColor colorWithWhite:0.0 alpha:1.0]] 
 			|| [label.textColor isEqual:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]]) {
@@ -937,8 +939,10 @@ UIImage *reorderImageBlack = nil;
 		UINavigationController *nvc = MSHookIvar<UINavigationController *>(self.superview, "_viewDelegate");
 		if ([nvc isKindOfClass:[UINavigationController class]] && nvc._isTransitioning && nvc.interactiveTransition) return;
 		
+		if (self._backgroundView == nil || self._backgroundView._is_needsLayout) return;
 		_UIBackdropView *_adaptiveBackdrop = MSHookIvar<_UIBackdropView *>(self._backgroundView, "_adaptiveBackdrop");
 		
+		if (_adaptiveBackdrop._is_needsLayout) return;
 		if (![_adaptiveBackdrop isKindOfClass:[_UIBackdropView class]]) return;
 		
 		if (_adaptiveBackdrop.style != kBackdropStyleForWhiteness && _adaptiveBackdrop.style != kBackdropStyleSystemDefaultDark)
