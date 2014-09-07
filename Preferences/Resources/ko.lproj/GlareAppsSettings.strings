@@ -1,0 +1,9 @@
+"Enable" = "활성화";
+"WhiteList Apps" = "적용 앱";
+"EACHAPP_RESTART_REQUIRED" = "각 앱의 재시작이 필요합니다.";
+"RESPRING_REQUIRED" = "리스프링이 필요합니다.";
+"Use White theme" = "화이트 테마 사용";
+"DEFAULT_THEME_MSG" = "기본적으로 블랙 테마를 사용합니다.\n그리고 적용에 각 앱의 재시작이 필요합니다.";
+"Kill all apps" = "모든 적용 앱 종료";
+"KILLALLAPPS_MSG" = "설정 앱을 포함하여 모두 종료합니다.";
+"MSG_COPYRIGHT" = "Glare Apps © 2014 deVbug";

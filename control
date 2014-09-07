@@ -1,0 +1,13 @@
+Package: kr.slak.glareapps
+Name: Glare Apps
+Depends: mobilesubstrate (>= 0.9.5012), firmware (>= 7.0)
+Version: 0.1
+Architecture: iphoneos-arm
+Description: Translucent apps
+Maintainer: deVbug <devbug@devbug.me>
+Author: deVbug <devbug@devbug.me>
+Section: Tweaks
+Website: http://slak.kr/iphone/cydia/glareapps/index.php
+Depiction: http://slak.kr/iphone/cydia/glareapps/index.php
+Replaces: me.devbug.blurredentiremusicapp, me.devbug.glarephoneapp, me.devbug.glarephotosapp, me.devbug.glarepreferencesapp
+Conflicts: me.devbug.blurredentiremusicapp, me.devbug.glarephoneapp, me.devbug.glarephotosapp, me.devbug.glarepreferencesapp

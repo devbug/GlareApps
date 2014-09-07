@@ -1,0 +1,10 @@
+{
+	entry = {
+		bundle = "GlareAppsSettings";
+		cell = PSLinkCell;
+		detail = "GlareAppsSettingsListController";
+		icon = "GlareAppsSettings.png";
+		isController = 1;
+		label = "Glare Apps";
+	};
+}
