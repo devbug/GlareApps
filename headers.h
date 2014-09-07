@@ -171,6 +171,23 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 
 @interface UIView (private_api)
 + (BOOL)_isInAnimationBlock;
+- (void)_updateBackdropMaskViewsInScrollView:(id)arg1;
+- (void)_recursivelySetHiddenForBackdropMaskViews:(BOOL)arg1;
+- (void)_setHiddenForBackdropMaskViews:(BOOL)arg1;
+- (void)_setTransformForBackdropMaskViews:(struct CGAffineTransform)arg1;
+- (void)_setCenterForBackdropMaskViews:(struct CGPoint)arg1 convertPoint:(BOOL)arg2;
+- (void)_setCenterForBackdropMaskViews:(struct CGPoint)arg1;
+- (void)_setBoundsForBackdropMaskViews:(struct CGRect)arg1;
+- (void)_setFrameForBackdropMaskViews:(struct CGRect)arg1 convertFrame:(BOOL)arg2;
+- (void)_setBackdropMaskViewFlags:(NSInteger)arg1;
+- (id)_backdropMaskViewForFlag:(NSInteger)arg1;
+- (void)_setBackdropMaskView:(id)arg1 forFlag:(NSInteger)arg2;
+- (void)sendSubviewToBack:(id)arg1;
+- (void)_setDrawsAsBackdropOverlayWithBlendMode:(CGBlendMode)arg1;
+- (void)_updateBackdropMaskFrames;
+- (void)_removeBackdropMaskViews;
+- (void)_setDrawsAsBackdropOverlay:(BOOL)arg1;
+- (void)_setFrameForBackdropMaskViews:(struct CGRect)arg1;
 - (id)_viewControllerForAncestor;
 @end
 

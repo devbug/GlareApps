@@ -17,9 +17,16 @@
 
 @interface MusicTableSectionHeaderView : UITableViewHeaderFooterView
 @property(readonly, nonatomic) UILabel *titleLabel;
+@property(nonatomic) CGFloat backgroundTransitionWeighting;
 @end
-@interface MusicAlbumsDetailTableHeaderView : UITableViewHeaderFooterView @end
-@interface MusicFlipsideAlbumDetailHeaderView : UITableViewHeaderFooterView @end
+@interface MusicAlbumsDetailTableHeaderView : UITableViewHeaderFooterView
+- (void)setBackgroundTransitionProgress:(CGFloat)arg1;
+- (CGFloat)backgroundTransitionProgress;
+@end
+@interface MusicFlipsideAlbumDetailHeaderView : UITableViewHeaderFooterView
+- (void)setBackgroundTransitionProgress:(CGFloat)arg1;
+- (CGFloat)backgroundTransitionProgress;
+@end
 
 @interface MusicTableViewCellContentView : UIView @end
 @interface MusicSongTableViewCellContentView : MusicTableViewCellContentView
@@ -435,8 +442,10 @@ UIImage *shuffleImage = nil;
 	
 	backdropView.frame = frame;
 	
-	%orig(0.0f);
-	backdropView.alpha = progress;
+	if (self.backgroundView != backdropView)
+		self.backgroundView = backdropView;
+	
+	%orig;
 	
 	[backdropView release];
 }
@@ -450,23 +459,24 @@ UIImage *shuffleImage = nil;
 	if (isFirmware71) {
 		_UIBackdropView *backdropView = (_UIBackdropView *)[self viewWithTag:0xc001];
 		
+		CGRect frame = self.frame;
+		frame.origin.x = 0;
+		frame.origin.y = 0;
+		
 		if (backdropView == nil) {
-			CGRect frame = self.frame;
-			frame.origin.x = 0;
-			frame.origin.y = 0;
-			
 			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
 			settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 			
 			backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
 			backdropView.tag = 0xc001;
-			backdropView.frame = frame;
 			backdropView.alpha = 1.0f;
 			
-			[self insertSubview:backdropView atIndex:0];
+			self.backgroundView = backdropView;
 			
 			[backdropView release];
 		}
+		
+		backdropView.frame = frame;
 	}
 }
 
@@ -494,8 +504,10 @@ UIImage *shuffleImage = nil;
 	
 	backdropView.frame = frame;
 	
-	%orig(0.0f);
-	backdropView.alpha = progress;
+	if (self.backgroundView != backdropView)
+		self.backgroundView = backdropView;
+	
+	%orig;
 	
 	[backdropView release];
 }
