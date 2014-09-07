@@ -68,7 +68,7 @@ void setLabelTextColorIfHasBlackColor(UILabel *label) {
 		[label.textColor getWhite:&white alpha:&alpha];
 		
 		if (white != kLightColorWithWhiteForWhiteness) {
-			label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:alpha];
+			label.textColor = [UIColor colorWithWhite:fabs(kLightColorWithWhiteForWhiteness - white) alpha:alpha];
 		}
 	}
 }
@@ -530,7 +530,7 @@ void clearBar(UIView *view) {
 	if (!isWhiteness && selfText && ![self __glareapps_isActionSheetOrActivityGroup]
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
 		if (white != kLightColorWithWhiteForWhiteness)
-			textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:alpha];
+			textColor = [UIColor colorWithWhite:fabs(kLightColorWithWhiteForWhiteness - white) alpha:alpha];
 	}
 	
 	%orig;
