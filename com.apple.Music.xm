@@ -453,8 +453,33 @@ UIImage *shuffleImage = nil;
 
 %end
 
+
+%hook UITableView
+
+- (NSRange)MPU_rangeOfVisibleSections {
+	NSArray *indexPaths = [self indexPathsForVisibleRows];
+	
+	NSInteger start = (indexPaths.count > 0 ? ((NSIndexPath *)indexPaths[0]).section : -1), count = 0, currentSection = -1;
+	
+	for (NSIndexPath *indexPath in indexPaths) {
+		if (indexPath.section > currentSection) {
+			currentSection = indexPath.section;
+			count++;
+		}
+		
+		if (currentSection < start)
+			start = currentSection;
+	}
+	
+	return NSMakeRange(start, count);
+}
+
 %end
 
+%end
+
+
+%group Firmware70_MusicTableSectionHeaderView_Background
 
 %hook MusicTableSectionHeaderView
 
@@ -485,6 +510,13 @@ UIImage *shuffleImage = nil;
 	
 	[backdropView release];
 }
+
+%end
+
+%end
+
+
+%hook MusicTableSectionHeaderView
 
 - (void)layoutSubviews {
 	%orig;
@@ -1181,5 +1213,7 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 		
 		if (isFirmware71)
 			%init(Firmware71_MusicTableSectionHeaderView_Background);
+		else if (isFirmware70)
+			%init(Firmware70_MusicTableSectionHeaderView_Background);
 	}
 }
