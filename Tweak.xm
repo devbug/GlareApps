@@ -940,10 +940,11 @@ UIImage *reorderImageBlack = nil;
 		UINavigationController *nvc = MSHookIvar<UINavigationController *>(self.superview, "_viewDelegate");
 		if ([nvc isKindOfClass:[UINavigationController class]] && nvc._isTransitioning && nvc.interactiveTransition) return;
 		
-		if (self._backgroundView == nil || self._backgroundView._is_needsLayout) return;
+		if (self._backgroundView == nil) return;
+		if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.MobileStore"] && self._backgroundView._is_needsLayout)
+			return;
 		_UIBackdropView *_adaptiveBackdrop = MSHookIvar<_UIBackdropView *>(self._backgroundView, "_adaptiveBackdrop");
 		
-		if (_adaptiveBackdrop._is_needsLayout) return;
 		if (![_adaptiveBackdrop isKindOfClass:[_UIBackdropView class]]) return;
 		
 		if (_adaptiveBackdrop.style != kBackdropStyleForWhiteness && _adaptiveBackdrop.style != kBackdropStyleSystemDefaultDark)
