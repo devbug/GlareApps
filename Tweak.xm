@@ -1021,6 +1021,9 @@ UIImage *reorderImageBlack = nil;
 	if (backdropView != nil) {
 		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
 		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
+		settings.grayscaleTintAlpha = (([self.controller respondsToSelector:@selector(isActive)] && self.controller.isActive) ? kTintColorAlphaFactor : 0.0f);
+		if (isWhiteness)
+			settings.grayscaleTintAlpha *= 1.5f;
 		
 		[backdropView transitionToSettings:settings];
 	}
@@ -1033,6 +1036,30 @@ UIImage *reorderImageBlack = nil;
 	}
 	
 	return %orig;
+}
+
+%end
+
+
+%hook UISearchDisplayController
+
+- (void)showHideAnimationDidFinish {
+	%orig;
+	
+	if (!self.isActive) {
+		UINavigationBar *navBar = self.navigationItem.navigationBar;
+		
+		if (!navBar) {
+			id _navigationControllerBookkeeper = MSHookIvar<id>(self, "_navigationControllerBookkeeper");
+			
+			if ([_navigationControllerBookkeeper isKindOfClass:[UINavigationController class]]) {
+				UINavigationController *nc = (UINavigationController *)_navigationControllerBookkeeper;
+				navBar = nc.navigationBar;
+			}
+		}
+		
+		[navBar setNeedsLayout];
+	}
 }
 
 %end

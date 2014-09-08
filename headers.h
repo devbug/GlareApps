@@ -247,6 +247,7 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @property(readonly, nonatomic) UIView *behindView;
 @end
 @interface UISearchDisplayController (private_api)
+@property(nonatomic, getter=isActive) BOOL active;
 - (UISearchDisplayControllerContainerView *)_containerView;
 @end
 
@@ -269,7 +270,15 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @interface _UIModalItemAlertContentView : _UIModalItemContentView @end
 
 @interface UISearchBar (private_api)
+- (void)_setBarTintColor:(id)arg1 forceUpdate:(BOOL)arg2;
 - (void)_setBackdropStyle:(NSUInteger)arg1;
+- (BOOL)_isAtTop;
+- (BOOL)drawsBackgroundInPalette;
+- (void)setDrawsBackgroundInPalette:(BOOL)arg1;
+- (BOOL)drawsBackground;
+- (void)setDrawsBackground:(BOOL)arg1;
+- (void)_updateBackgroundToBackdropStyle:(NSInteger)arg1;
+- (UISearchDisplayController *)controller;
 @end
 
 @interface UISegmentedControl (private_api)
