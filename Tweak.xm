@@ -54,6 +54,7 @@ BOOL isThisAppEnabled() {
 }
 
 void setLabelTextColorIfHasBlackColor(UILabel *label) {
+	// To do: 전화 -> 연락처 -> 그룹
 	if (label.attributedText) return;
 	
 	if ([label.textColor isEqual:[UIColor blackColor]] 
@@ -67,8 +68,8 @@ void setLabelTextColorIfHasBlackColor(UILabel *label) {
 		CGFloat white = 0.0f, alpha = 0.0f;
 		[label.textColor getWhite:&white alpha:&alpha];
 		
-		if (white != kLightColorWithWhiteForWhiteness) {
-			label.textColor = [UIColor colorWithWhite:fabs(kLightColorWithWhiteForWhiteness - white) alpha:alpha];
+		if (white != kLightColorWithWhiteForWhiteness && white < 0.4) {
+			label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:fabs(1.0-white)*alpha];
 		}
 	}
 }
