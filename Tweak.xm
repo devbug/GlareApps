@@ -86,6 +86,9 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 			[color getWhite:&white alpha:&alpha];
 			mutableAttributes[@"NSColor"] = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:alpha];
 		}
+		if (color == nil) {
+			mutableAttributes[@"NSColor"] = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+		}
 		[attributedString setAttributes:mutableAttributes range:range];
 	}];
 	
@@ -764,17 +767,15 @@ void clearBar(UIView *view) {
 %end
 
 
-%hook UITableViewHeaderFooterView
+@interface UITableViewHeaderFooterView (GlareApps)
+- (void)__glareapps_setBackground;
+@end
 
-- (void)layoutSubviews {
-	%orig;
-	
-	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
-	
-	if (self.tableView != nil && self.tableView.style == UITableViewStyleGrouped) return;
-	if ([self isKindOfClass:%c(ABGroupHeaderFooterView)]) return;
-	
+@implementation UITableViewHeaderFooterView (GlareApps)
+
+- (void)__glareapps_setBackground {
 	if (self.tableView && ![self.backgroundView isKindOfClass:%c(_UIBackdropView)]) {
+		self.backgroundColor = nil;
 		self.contentView.backgroundColor = [UIColor clearColor];
 		self.tintColor = nil;
 		if ([self respondsToSelector:@selector(setBackgroundImage:)])
@@ -789,6 +790,32 @@ void clearBar(UIView *view) {
 			[backdropView release];
 		}
 	}
+}
+
+@end
+
+%hook UITableViewHeaderFooterView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	
+	if (self.tableView != nil && self.tableView.style == UITableViewStyleGrouped) return;
+	if ([self.class requiresConstraintBasedLayout]) return;
+	
+	[self __glareapps_setBackground];
+}
+
+- (void)updateConstraints {
+	%orig;
+	
+	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	
+	if (self.tableView != nil && self.tableView.style == UITableViewStyleGrouped) return;
+	if (![self.class requiresConstraintBasedLayout]) return;
+	
+	[self __glareapps_setBackground];
 }
 
 %end
@@ -1276,6 +1303,26 @@ UIImage *reorderImageBlack = nil;
 
 %hook ABStyleProvider
 
+- (UIColor *)groupCellTextColor {
+	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:0.9f];
+}
+
+- (BOOL)groupsTableShouldRemoveBackgroundView {
+	return YES;
+}
+
+- (BOOL)peoplePickerBarStyleIsTranslucent {
+	return YES;
+}
+
+- (UIBarStyle)peoplePickerBarStyle {
+	return kBarStyleForWhiteness;
+}
+
+- (BOOL)shouldUsePeoplePickerBarStyle {
+	return YES;
+}
+
 - (id)cardCellDividerColorVertical:(BOOL)vertical {
 	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:1.0f];
 }
@@ -1378,6 +1425,65 @@ UIImage *reorderImageBlack = nil;
 %end
 
 
+%hook ABPropertyNameCell
+
+- (void)setBackgroundColor:(UIColor *)color {
+	//%orig([UIColor clearColor]);
+	
+	objc_super $super = {self, [UITableViewCell class]};
+	objc_msgSendSuper(&$super, @selector(setBackgroundColor:), color);
+}
+
+%end
+
+
+@interface UILabel (TextAttributes)
+- (id)textAttributes;
+- (void)setTextAttributes:(id)arg1;
+@end
+
+%hook ABPropertyNoteCell
+
+- (void)setBackgroundColor:(UIColor *)color {
+	//%orig([UIColor clearColor]);
+	
+	objc_super $super = {self, [UITableViewCell class]};
+	objc_msgSendSuper(&$super, @selector(setBackgroundColor:), color);
+}
+
+- (void)setLabelTextAttributes:(NSDictionary *)attributes {
+	%orig;
+	
+	NSDictionary *&labelTextAttributes = MSHookIvar<NSDictionary *>(self, "_labelTextAttributes");
+	NSDictionary *privDict = self.labelTextAttributes;
+	[privDict retain];
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:privDict];
+	
+	dict[@"NSColor"] = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	
+	[self.labelLabel setTextAttributes:dict];
+	
+	labelTextAttributes = [dict copy];
+	
+	[privDict release];
+}
+
+%end
+
+
+%hook ABContactCell
+
+- (void)setSeparatorColor:(UIColor *)color {
+	%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor]);
+}
+
+- (void)setContactSeparatorColor:(UIColor *)color {
+	%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor]);
+}
+
+%end
+
+
 %hook ABContactHeaderView
 
 - (void)layoutSubviews {
@@ -1388,6 +1494,50 @@ UIImage *reorderImageBlack = nil;
 	
 	_nameLabel.backgroundColor = [UIColor clearColor];
 	_taglineLabel.backgroundColor = [UIColor clearColor];
+}
+
+%end
+
+
+%hook ABGroupHeaderFooterView
+
+- (void)updateConstraints {
+	%orig;
+	
+	self.backgroundColor = nil;
+	self.contentView.backgroundColor = [UIColor clearColor];
+	self.tintColor = nil;
+	if ([self respondsToSelector:@selector(setBackgroundImage:)])
+		self.backgroundImage = nil;
+	
+	self.backgroundView.alpha = 0.0f;
+}
+
+%end
+
+
+%hook UIColor
+
++ (id)cardCellSeparatorColor {
+	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+}
++ (id)cardCellReadonlyBackgroundColor {
+	return %orig;
+}
++ (id)cardBackgroundInPopoverColor {
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+}
++ (id)cardCellBackgroundColor {
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+}
++ (id)cardValueReadonlyTextColor {
+	return %orig;
+}
++ (id)cardValueTextColor {
+	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+}
++ (id)cardLabelReadonlyTextColor {
+	return %orig;
 }
 
 %end

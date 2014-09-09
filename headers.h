@@ -235,9 +235,29 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 - (UITableView *)tableView;
 @end
 
+@interface ABContactCell : UITableViewCell
+// < 7.1
+@property(retain, nonatomic) UIColor *separatorColor;
+// >= 7.1
+@property(retain, nonatomic) UIColor *contactSeparatorColor;
+@end
 @interface ABPropertyCell : UITableViewCell
 @property(readonly, nonatomic) UILabel *valueLabel;
 @property(readonly, nonatomic) UILabel *labelLabel;
+@property(copy, nonatomic) NSDictionary *valueTextAttributes;
+@property(copy, nonatomic) NSDictionary *labelTextAttributes;
+@end
+@interface ABPropertyNameCell : UITableViewCell
+@property(readonly, nonatomic) UITextField *textField;
+@end
+@interface ABPropertyNoteCell : ABPropertyCell
+@property(retain, nonatomic) UITextView *textView;
+@end
+
+@interface ABGroupHeaderFooterView : UITableViewHeaderFooterView
+@property(readonly, nonatomic) UIView *bottomSeparatorView;
+@property(readonly, nonatomic) UIView *topSeparatorView;
+@property(readonly, nonatomic) UILabel *titleLabel;
 @end
 
 @interface UISearchBarBackground : _UIBarBackgroundImageView @end
