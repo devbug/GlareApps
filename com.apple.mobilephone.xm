@@ -159,18 +159,6 @@ NSInteger currentBackdropStyle				= 0;
 %end
 
 
-%hook ABStyleProvider
-
-- (id)cardCellDividerColorVertical:(BOOL)vertical {
-	if (isWhiteness && (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad))
-		return %orig;
-	
-	return [UIColor colorWithWhite:1.0f alpha:kClearAlphaFactor];
-}
-
-%end
-
-
 %hook DialerController
 
 - (void)viewWillAppear:(BOOL)animated {

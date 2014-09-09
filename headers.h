@@ -35,6 +35,7 @@ extern BOOL isFirmware71;
 #define kLightColorWithWhiteForWhiteness	(isWhiteness ? 0.0f : 1.0f)
 
 #define kClearAlphaFactor					(isWhiteness ? 0.2f : 0.1f)
+#define kJustClearAlphaFactor				0.1f
 #define kTintColorAlphaFactor				0.4f
 #define kFullAlphaFactor					0.9f
 #define kRealFullAlphaFactor				1.0f

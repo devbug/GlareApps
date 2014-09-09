@@ -373,8 +373,9 @@ void clearBar(UIView *view) {
 	if (color != nil && ![color isEqual:[UIColor clearColor]]
 			&& [[color description] hasPrefix:@"UIDeviceWhiteColorSpace"]
 			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor * 2.0f]]
+			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor * 2.0f]]
 			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor]]
+			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]]
 			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor]]) {
 		//self.backgroundColor = [UIColor clearColor];
 		return;
@@ -471,8 +472,9 @@ void clearBar(UIView *view) {
 	if (color != nil && ![color isEqual:[UIColor clearColor]]
 			&& [[color description] hasPrefix:@"UIDeviceWhiteColorSpace"]
 			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor * 2.0f]]
+			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor * 2.0f]]
 			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor]]
+			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]]
 			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor]]) {
 		//%orig([UIColor clearColor]);
 		//return;
@@ -662,20 +664,20 @@ void clearBar(UIView *view) {
 	return [UIColor clearColor];
 }
 + (id)tableCellbackgroundColorPigglyWiggly {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 }
 + (id)tableCellBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 }
 + (id)tableCellGroupedBackgroundColorLegacyWhite {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 }
 + (id)tableCellPlainBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 }
 + (id)tableBackgroundColor {
 	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.Preferences"])
-		return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor * 2.0f];
+		return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor * 2.0f];
 	
 	return [UIColor clearColor];
 }
@@ -695,25 +697,16 @@ void clearBar(UIView *view) {
 	return [UIColor clearColor];
 }
 + (id)tableGroupedSeparatorLightColor {
-	if (isWhiteness && !isPad)
-		return %orig;
-	
 	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
 }
 + (id)tableSeparatorLightColor {
-	if (isWhiteness && !isPad)
-		return %orig;
-	
 	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
 }
 + (id)tableSeparatorDarkColor {
-	if (isWhiteness && !isPad)
-		return %orig;
-	
 	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
 }
 + (id)tableCellGroupedBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 }
 + (id)groupTableViewBackgroundColor {
 	return [UIColor clearColor];
@@ -755,10 +748,50 @@ void clearBar(UIView *view) {
 
 - (void)layoutSubviews {
 	%orig;
-	
+
 	if (self.superview) {
 		self.sectionIndexBackgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
 	}
+}
+
+- (UIColor *)backgroundColor {
+	return [UIColor clearColor];
+}
+
+- (void)setBackgroundColor:(id)color {
+	%orig([UIColor clearColor]);
+}
+
+- (void)_setBackgroundColor:(id)color animated:(BOOL)animated {
+	%orig([UIColor clearColor], animated);
+}
+
+- (UIColor *)sectionIndexBackgroundColor {
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+}
+
+- (void)setSectionIndexBackgroundColor:(UIColor *)color {
+	%orig([UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]);
+}
+
+- (id)_defaultSeparatorColor {
+	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+}
+
+- (UIColor *)separatorColor {
+	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+}
+
+- (void)setSeparatorColor:(UIColor *)color {
+	%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor]);
+}
+
+- (id)tableHeaderBackgroundColor {
+	return [UIColor clearColor];
+}
+
+- (void)setTableHeaderBackgroundColor:(id)color {
+	%orig([UIColor clearColor]);
 }
 
 %end
@@ -846,7 +879,7 @@ void setDisclosureImage(UIImageView *iv) {
 	%orig;
 	
 	if (![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.Music"])
-		self.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+		self.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 	
 	self.textLabel.backgroundColor = [UIColor clearColor];
 	self.detailTextLabel.backgroundColor = [UIColor clearColor];
@@ -917,6 +950,27 @@ UIImage *reorderImageBlack = nil;
 	}
 	
 	return reorderImage;
+}
+
+%end
+
+
+%hook UIGroupTableViewCellBackground
+
+- (id)backgroundColor {
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+}
+- (void)setBackgroundColor:(id)color {
+	%orig([UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]);
+}
+- (UIColor *)selectionTintColor {
+	return %orig;
+}
+- (void)setSelectionTintColor:(id)color {
+	%orig;
+}
+- (void)setSelectionTintColor:(id)color layoutSubviews:(BOOL)arg2 {
+	%orig;
 }
 
 %end
@@ -1315,8 +1369,7 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	self.currentTableView.backgroundColor = [UIColor clearColor];
-	[self.currentTableView _setSeparatorBackdropOverlayBlendMode:kCGBlendModeOverlay];
-	self.currentTableView.sectionIndexBackgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	self.currentTableView.sectionIndexBackgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 }
 
 %end
@@ -1561,7 +1614,7 @@ UIImage *reorderImageBlack = nil;
 	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
 }
 + (id)cardCellBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 }
 + (id)cardValueReadonlyTextColor {
 	return %orig;

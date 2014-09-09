@@ -595,7 +595,7 @@ UIImage *shuffleImage = nil;
 - (id)tableView:(UITableView *)tableView cellForRowAtIndexPath:(id)indexPath {
 	UITableViewCell *cell = %orig;
 	
-	cell.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor / 2.0f];
+	cell.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 	
 	return cell;
 }
