@@ -327,6 +327,19 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 
 @interface UITabBarCustomizeView : UIView @end
 
+@interface _UINavigationPaletteBackground : UIView {
+	_UIBackdropView *_adaptiveBackdrop;
+}
+@property(nonatomic) BOOL paletteWantsAdaptiveBackdrop;
+@property(nonatomic, getter=isTranslucent) BOOL translucent;
+@property(nonatomic) UIBarStyle barStyle;
+@property(retain, nonatomic) UIColor *barTintColor;
+- (void)_syncWithBarStyles;
+@end
+@interface _UINavigationControllerPalette : UIView
+@property(retain, nonatomic, setter=_setBackgroundView:) _UINavigationPaletteBackground *_backgroundView;
+@end
+
 @interface UIKBRenderConfig : NSObject
 + (id)darkConfig;
 + (id)defaultConfig;

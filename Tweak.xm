@@ -290,8 +290,7 @@ void clearBar(UIView *view) {
 	
 	UINavigationBar *bar = (UINavigationBar *)view;
 	
-	if (bar.barStyle != UIBarStyleBlack)
-		bar.barStyle = (isWhiteness ? UIBarStyleDefault : UIBarStyleBlack);
+	bar.barStyle = kBarStyleForWhiteness;
 	
 	bar.barTintColor = nil;
 	bar.backgroundColor = [UIColor clearColor];
@@ -1046,6 +1045,50 @@ UIImage *reorderImageBlack = nil;
 	}
 }
 
+- (id)_backgroundViewForPalette:(id)palette {
+	return nil;
+}
+
+- (void)_setBackgroundImage:(id)image mini:(id)mini {
+	%orig(nil, nil);
+}
+
+- (void)_updateBackgroundImage {
+	
+}
+
+- (UIBarStyle)barStyle {
+	return kBarStyleForWhiteness;
+}
+
+- (void)setBarStyle:(UIBarStyle)style {
+	%orig(kBarStyleForWhiteness);
+}
+
+- (UIColor *)barTintColor {
+	return nil;
+}
+
+- (void)setBarTintColor:(UIColor *)color {
+	%orig(nil);
+}
+
+- (UIColor *)backgroundColor {
+	return [UIColor clearColor];
+}
+
+- (void)setBackgroundColor:(UIColor *)color {
+	%orig([UIColor clearColor]);
+}
+
+- (BOOL)isTranslucent {
+	return YES;
+}
+
+- (void)setTranslucent:(BOOL)translucent {
+	%orig(YES);
+}
+
 %end
 
 
@@ -1063,6 +1106,42 @@ UIImage *reorderImageBlack = nil;
 	
 	if (_adaptiveBackdrop.style != kBackdropStyleForWhiteness)
 		[_adaptiveBackdrop transitionToStyle:kBackdropStyleForWhiteness];
+}
+
+- (void)_setBackgroundImage:(id)image {
+	%orig(nil);
+}
+
+- (UIBarStyle)barStyle {
+	return kBarStyleForWhiteness;
+}
+
+- (void)setBarStyle:(UIBarStyle)style {
+	%orig(kBarStyleForWhiteness);
+}
+
+- (UIColor *)barTintColor {
+	return nil;
+}
+
+- (void)setBarTintColor:(UIColor *)color {
+	%orig(nil);
+}
+
+- (UIColor *)backgroundColor {
+	return [UIColor clearColor];
+}
+
+- (void)setBackgroundColor:(UIColor *)color {
+	%orig([UIColor clearColor]);
+}
+
+- (BOOL)isTranslucent {
+	return YES;
+}
+
+- (void)setTranslucent:(BOOL)translucent {
+	%orig(YES);
 }
 
 %end
@@ -1084,15 +1163,90 @@ UIImage *reorderImageBlack = nil;
 		[_adaptiveBackdrop transitionToStyle:kBackdropStyleForWhiteness];
 }
 
+- (void)_cleanupAdaptiveBackdrop {
+	
+}
+
+- (UIBarStyle)barStyle {
+	return kBarStyleForWhiteness;
+}
+
+- (void)setBarStyle:(UIBarStyle)style {
+	%orig(kBarStyleForWhiteness);
+}
+
+- (UIColor *)barTintColor {
+	return nil;
+}
+
+- (void)setBarTintColor:(UIColor *)color {
+	%orig(nil);
+}
+
+- (UIColor *)backgroundColor {
+	return [UIColor clearColor];
+}
+
+- (void)setBackgroundColor:(UIColor *)color {
+	%orig([UIColor clearColor]);
+}
+
+- (BOOL)isTranslucent {
+	return YES;
+}
+
+- (void)setTranslucent:(BOOL)translucent {
+	%orig(YES);
+}
+
 %end
 
 
 %hook UISearchBar
 
+- (UIImage *)backgroundImage {
+	return nil;
+}
+
+- (void)setBackgroundImage:(UIImage *)image {
+	%orig(nil);
+}
+
+- (UIBarStyle)barStyle {
+	return kBarStyleForWhiteness;
+}
+
+- (void)setBarStyle:(UIBarStyle)style {
+	%orig(kBarStyleForWhiteness);
+}
+
+- (UIColor *)barTintColor {
+	return nil;
+}
+
+- (void)setBarTintColor:(UIColor *)color {
+	%orig(nil);
+}
+
+- (UIColor *)backgroundColor {
+	return [UIColor clearColor];
+}
+
+- (void)setBackgroundColor:(UIColor *)color {
+	%orig([UIColor clearColor]);
+}
+
+- (BOOL)isTranslucent {
+	return YES;
+}
+
+- (void)setTranslucent:(BOOL)translucent {
+	%orig(YES);
+}
+
 - (void)layoutSubviews {
 	self.searchBarStyle = UISearchBarStyleMinimal;
-	if (self.barStyle != UIBarStyleBlack)
-		self.barStyle = (isWhiteness ? UIBarStyleDefault : UIBarStyleBlack);
+	self.barStyle = kBarStyleForWhiteness;
 	
 	%orig;
 	
