@@ -1182,7 +1182,6 @@ UIImage *reorderImageBlack = nil;
 	if ([self isKindOfClass:%c(SLComposeViewController)]) return NO;
 	//MFMessageComposeViewController
 	//MFMailComposeViewController
-	// To do "print" action view
 	
 	return YES;
 }
@@ -1235,6 +1234,32 @@ UIImage *reorderImageBlack = nil;
 	}
 	
 	%orig;
+}
+
+%end
+
+
+%hook UIPrintPanelViewController
+
+- (void)_presentWindow {
+	%orig;
+	
+	UIWindow *_window = MSHookIvar<UIWindow *>(self, "_window");
+	
+	_UIBackdropView *backdropView = (_UIBackdropView *)[_window viewWithTag:0xc001];
+	[backdropView retain];
+	
+	if (backdropView == nil) {
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		settings.grayscaleTintAlpha = 0.3f;
+		
+		backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
+		backdropView.tag = 0xc001;
+		
+		[_window insertSubview:backdropView atIndex:0];
+	}
+	
+	[backdropView release];
 }
 
 %end
