@@ -327,6 +327,25 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 
 @interface UITabBarCustomizeView : UIView @end
 
+@interface UIKBRenderConfig : NSObject
++ (id)darkConfig;
++ (id)defaultConfig;
+@property(nonatomic) BOOL lightKeyboard;
+@property(nonatomic) CGFloat keycapOpacity;
+@property(nonatomic) CGFloat blurSaturation;
+@property(nonatomic) CGFloat blurRadius;
+@property(readonly, nonatomic) NSInteger backdropStyle;
+@property(readonly, nonatomic) BOOL whiteText;
+@end
+@interface UIKBRenderConfig (Firmware70)
+@property(nonatomic) CGFloat keyborderOpacity;
+@end
+@interface UIKBRenderConfig (Firmware71)
++ (NSInteger)backdropStyleForStyle:(NSInteger)arg1;
++ (id)configForAppearance:(NSInteger)arg1;
+@property(nonatomic) CGFloat lightLatinKeycapOpacity;
+@end
+
 @interface MFComposeHeaderView : UIView @end
 @interface MFComposeRecipientView : MFComposeHeaderView
 @property(readonly) UITextField *textField;

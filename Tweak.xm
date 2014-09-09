@@ -102,6 +102,8 @@ BOOL isWhiteness							= NO;
 BOOL isFirmware70							= YES;
 BOOL isFirmware71							= NO;
 
+UIKBRenderConfig *kbRenderConfig			= nil;
+
 
 
 
@@ -610,6 +612,18 @@ void clearBar(UIView *view) {
 
 - (id)_placeholderColor {
 	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+}
+
+%end
+
+
+%hook UIKBRenderConfig
+
++ (id)darkConfig {
+	return kbRenderConfig;
+}
++ (id)defaultConfig {
+	return kbRenderConfig;
 }
 
 %end
@@ -1709,6 +1723,16 @@ UIImage *reorderImageBlack = nil;
 	LoadSettings();
 	
 	if (!isThisAppEnabled()) return;
+	
+	kbRenderConfig = [[%c(UIKBRenderConfig) alloc] init];
+	kbRenderConfig.blurRadius = 20.0f;
+	kbRenderConfig.lightKeyboard = (isWhiteness ? YES : NO);
+	kbRenderConfig.blurSaturation = isFirmware71 ? 0.5f : 0.9f;
+	kbRenderConfig.keycapOpacity = isFirmware71 ? 1.0f : 0.82f;
+	if (isFirmware71)
+		kbRenderConfig.lightLatinKeycapOpacity = 1.0f;
+	else
+		kbRenderConfig.keyborderOpacity = 1.0f;
 	
 	%init;
 }
