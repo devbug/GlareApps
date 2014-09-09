@@ -54,7 +54,6 @@ BOOL isThisAppEnabled() {
 }
 
 void setLabelTextColorIfHasBlackColor(UILabel *label) {
-	// To do: 전화 -> 연락처 -> 그룹
 	if (label.attributedText) return;
 	
 	if ([label.textColor isEqual:[UIColor blackColor]] 
@@ -1053,9 +1052,10 @@ UIImage *reorderImageBlack = nil;
 	%orig(nil, nil);
 }
 
-- (void)_updateBackgroundImage {
-	
-}
+// Music app now playing flipside..
+//- (void)_updateBackgroundImage {
+//	
+//}
 
 - (UIBarStyle)barStyle {
 	return kBarStyleForWhiteness;
