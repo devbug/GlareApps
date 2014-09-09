@@ -86,9 +86,6 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 			[color getWhite:&white alpha:&alpha];
 			mutableAttributes[@"NSColor"] = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:alpha];
 		}
-		if (color == nil) {
-			mutableAttributes[@"NSColor"] = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-		}
 		[attributedString setAttributes:mutableAttributes range:range];
 	}];
 	
@@ -1511,6 +1508,17 @@ UIImage *reorderImageBlack = nil;
 		self.backgroundImage = nil;
 	
 	self.backgroundView.alpha = 0.0f;
+}
+
+%end
+
+
+%hook ABBannerView
+
+- (void)_updateLabel {
+	%orig;
+	
+	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
 }
 
 %end

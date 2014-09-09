@@ -260,6 +260,8 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @property(readonly, nonatomic) UILabel *titleLabel;
 @end
 
+@interface ABBannerView : UITableViewCell @end
+
 @interface UISearchBarBackground : _UIBarBackgroundImageView @end
 
 @interface UISearchResultsTableView : UITableView @end
