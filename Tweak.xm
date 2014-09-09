@@ -294,6 +294,8 @@ void clearBar(UIView *view) {
 	bar.barTintColor = nil;
 	bar.backgroundColor = [UIColor clearColor];
 	bar.translucent = YES;
+	
+	[bar setNeedsLayout];
 }
 
 %hook UIViewController
