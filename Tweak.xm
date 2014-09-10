@@ -1620,6 +1620,14 @@ UIImage *reorderImageBlack = nil;
 	return YES;
 }
 
+- (id)cardCellBackgroundColor {
+	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+}
+
+- (UIColor *)cardLabelBackgroundColor {
+	return [UIColor clearColor];
+}
+
 - (id)cardCellDividerColorVertical:(BOOL)vertical {
 	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:1.0f];
 }
@@ -1778,6 +1786,20 @@ UIImage *reorderImageBlack = nil;
 	%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor]);
 }
 
+- (void)layoutSubviews {
+	%orig;
+	
+	self.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	self.textLabel.backgroundColor = [UIColor clearColor];
+}
+
+- (void)setBackgroundColor:(UIColor *)color {
+	//%orig([UIColor clearColor]);
+	
+	objc_super $super = {self, [UITableViewCell class]};
+	objc_msgSendSuper(&$super, @selector(setBackgroundColor:), color);
+}
+
 %end
 
 
@@ -1819,6 +1841,15 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+}
+
+%end
+
+
+%hook ABContactView
+
+- (void)setBackgroundColor:(UIColor *)color {
+	%orig([UIColor clearColor]);
 }
 
 %end

@@ -263,6 +263,8 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 
 @interface ABBannerView : UITableViewCell @end
 
+@interface ABContactView : UITableView @end
+
 @interface UISearchBarBackground : _UIBarBackgroundImageView @end
 
 @interface UISearchResultsTableView : UITableView @end
@@ -383,3 +385,8 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 - (id)tintColor;
 @end
 
+
+@interface MFMessageComposeViewController : UIViewController @end
+@interface MFMailComposeViewController : UIViewController @end
+@interface SLComposeViewController : UIViewController @end
+@interface SKComposeReviewViewController : UIViewController @end
