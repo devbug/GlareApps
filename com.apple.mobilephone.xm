@@ -203,6 +203,15 @@ NSInteger currentBackdropStyle				= 0;
 %end
 
 
+%hook UITableViewCell
+
+- (BOOL)__glareapps_isNeedsToSetJustClearBackground {
+	return YES;
+}
+
+%end
+
+
 
 %ctor {
 	if (!isThisAppEnabled()) return;

@@ -826,6 +826,10 @@ void clearBar(UIView *view) {
 	%orig([UIColor clearColor]);
 }
 
+//- (void)setSeparatorStyle:(UITableViewCellSeparatorStyle)style {
+//	%orig(UITableViewCellSeparatorStyleSingleLine);
+//}
+
 %end
 
 
@@ -905,12 +909,24 @@ void setDisclosureImage(UIImageView *iv) {
 		iv.image = disclosureImage;
 }
 
+@interface UITableViewCell (GlareApps)
+- (BOOL)__glareapps_isNeedsToSetJustClearBackground;
+@end
+
+@implementation UITableViewCell (GlareApps)
+
+- (BOOL)__glareapps_isNeedsToSetJustClearBackground {
+	return NO;
+}
+
+@end
+
 %hook UITableViewCell
 
 - (void)layoutSubviews {
 	%orig;
 	
-	if (![[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.Music"])
+	if ([self __glareapps_isNeedsToSetJustClearBackground])
 		self.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
 	
 	self.textLabel.backgroundColor = [UIColor clearColor];
@@ -1441,6 +1457,7 @@ UIImage *reorderImageBlack = nil;
 	if ([self isKindOfClass:%c(SLComposeViewController)]) return NO;
 	//MFMessageComposeViewController
 	//MFMailComposeViewController
+	//SKComposeReviewViewController
 	
 	return YES;
 }
