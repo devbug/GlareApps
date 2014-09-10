@@ -359,6 +359,9 @@ void clearBar(UIView *view) {
 	if ([selfclass hasPrefix:@"UIAlert"] || [superviewclass hasPrefix:@"UIAlert"]) {
 		return;
 	}
+	if ([superviewclass isEqualToString:@"UIPageControl"]) {
+		return;
+	}
 	if (self.window != nil && self.window != [UIApplication sharedApplication].keyWindow) {
 		return;
 	}
@@ -453,6 +456,10 @@ void clearBar(UIView *view) {
 		return;
 	}
 	if ([selfclass hasPrefix:@"UIAlert"] || [superviewclass hasPrefix:@"UIAlert"]) {
+		%orig;
+		return;
+	}
+	if ([superviewclass isEqualToString:@"UIPageControl"]) {
 		%orig;
 		return;
 	}
