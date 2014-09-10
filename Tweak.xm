@@ -1979,6 +1979,23 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
+#pragma mark Camera
+
+
+%hook PLCameraView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	self._previewMaskingView.backgroundColor = [UIColor clearColor];
+}
+
+%end
+
+
+
+
+#pragma mark -
 #pragma mark Constructure
 
 

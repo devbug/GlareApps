@@ -390,6 +390,10 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @property(retain, nonatomic) _UIBackdropView *backdropView;
 @end
 
+@interface PLCameraView : UIView
+@property(readonly, nonatomic) UIView *_previewMaskingView;
+@end
+
 
 @interface MFMessageComposeViewController : UIViewController @end
 @interface MFMailComposeViewController : UIViewController @end
