@@ -12,8 +12,10 @@ GlareApps_FILES = Tweak.xm \
 				  com.apple.Preferences.xm \
 				  com.apple.mobilephone.xm \
 				  com.apple.mobileslideshow.xm \
-				  com.apple.Music.xm
+				  com.apple.Music.xm \
+				  com.apple.mobiletimer.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics
+GlareApps_PRIVATE_FRAMEWORKS = MobileTimer
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

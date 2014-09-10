@@ -751,6 +751,26 @@ void clearBar(UIView *view) {
 %end
 
 
+%hook UICollectionViewCell
+
+- (void)layoutSubviews {
+	%orig;
+	
+	self.backgroundColor = [UIColor clearColor];
+	self.backgroundView.alpha = 0.0f;
+	self.contentView.backgroundColor = nil;
+}
+
+- (void)_updateBackgroundView {
+	%orig;
+	
+	self.backgroundView = nil;
+	self.backgroundColor = [UIColor clearColor];
+}
+
+%end
+
+
 
 #pragma mark -
 #pragma mark UITableView (basic)
@@ -1017,6 +1037,22 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
+#pragma mark UIPickerView
+
+
+%hook UIPickerView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	self.backgroundColor = [UIColor clearColor];
+}
+
+%end
+
+
+
+#pragma mark -
 #pragma mark BackdropView Control
 
 
@@ -1272,6 +1308,7 @@ UIImage *reorderImageBlack = nil;
 		settings.grayscaleTintAlpha = (([self.controller respondsToSelector:@selector(isActive)] && self.controller.isActive) ? kTintColorAlphaFactor : 0.0f);
 		if (isWhiteness)
 			settings.grayscaleTintAlpha *= 1.5f;
+		//settings.blurRadius = 30.0f;
 		
 		[backdropView transitionToSettings:settings];
 	}
