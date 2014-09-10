@@ -15,7 +15,8 @@ GlareApps_FILES = Tweak.xm \
 				  com.apple.Music.xm \
 				  com.apple.mobiletimer.xm \
 				  com.apple.AppStore.xm \
-				  com.apple.stocks.xm
+				  com.apple.stocks.xm \
+				  com.apple.calculator.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics
 GlareApps_PRIVATE_FRAMEWORKS = MobileTimer
 
