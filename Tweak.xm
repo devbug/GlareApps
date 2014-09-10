@@ -840,6 +840,8 @@ void clearBar(UIView *view) {
 @implementation UITableViewHeaderFooterView (GlareApps)
 
 - (void)__glareapps_setBackground {
+	if ([self isKindOfClass:%c(ABGroupHeaderFooterView)]) return;
+	
 	if (self.tableView && ![self.backgroundView isKindOfClass:%c(_UIBackdropView)]) {
 		self.backgroundColor = nil;
 		self.contentView.backgroundColor = [UIColor clearColor];
