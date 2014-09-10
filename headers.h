@@ -386,6 +386,11 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @end
 
 
+@interface UIActivityGroupCancelButton : UIButton
+@property(retain, nonatomic) _UIBackdropView *backdropView;
+@end
+
+
 @interface MFMessageComposeViewController : UIViewController @end
 @interface MFMailComposeViewController : UIViewController @end
 @interface SLComposeViewController : UIViewController @end

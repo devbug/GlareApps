@@ -1950,6 +1950,26 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
+#pragma mark UIAlert
+
+
+%hook UIActivityGroupCancelButton
+
+- (void)layoutSubviews {
+	%orig;
+	
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+	settings.blurRadius = 10.0f;
+	
+	[self.backdropView transitionToSettings:settings];
+}
+
+%end
+
+
+
+
+#pragma mark -
 #pragma mark Constructure
 
 
