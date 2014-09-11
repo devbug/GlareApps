@@ -42,8 +42,42 @@ void reloadPrefsNotification(CFNotificationCenterRef center,
 	LoadSettings();
 }
 
+BOOL isThisAppUIServiceProcess() {
+	NSString *executablePath = [[NSBundle mainBundle] executablePath];
+	
+	if ([executablePath hasSuffix:@"/MessagesViewService"]
+			|| [executablePath hasSuffix:@"/MailCompositionService"]
+			|| [executablePath hasSuffix:@"/SocialUIService"]
+			|| [executablePath hasSuffix:@"/CompassCalibrationViewService"]
+			|| [executablePath hasSuffix:@"/GameCenterUIService"]
+			|| [executablePath hasSuffix:@"/MusicUIService"]
+			|| [executablePath hasSuffix:@"/PassbookUIService"]
+			|| [executablePath hasSuffix:@"/StoreKitUIService"]
+			|| [executablePath hasSuffix:@"/WebViewService"])
+		return YES;
+	
+	return NO;
+}
+
+BOOL isTheAppUIServiceProcess(NSString *bundleIdentifier) {
+	if ([bundleIdentifier isEqualToString:@"com.apple.mobilesms.compose"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.MailCompositionService"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.social.remoteui.SocialUIService"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.CompassCalibrationViewService"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.gamecenter.GameCenterUIService"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.MusicUIService"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.PassbookUIService"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.ios.StoreKitUIService"]
+			|| [bundleIdentifier isEqualToString:@"com.apple.WebViewService"])
+		return YES;
+	
+	return NO;
+}
+
 BOOL isThisAppEnabled() {
 	if (!GlareAppsEnable) return NO;
+	
+	if (isThisAppUIServiceProcess()) return YES;
 	
 	if (GlareAppsWhiteList) {
 		if (![GlareAppsWhiteList containsObject:[[NSBundle mainBundle] bundleIdentifier]])
@@ -55,6 +89,8 @@ BOOL isThisAppEnabled() {
 
 BOOL isTheAppEnabled(NSString *bundleIdentifier) {
 	if (!GlareAppsEnable) return NO;
+	
+	if (isTheAppUIServiceProcess(bundleIdentifier)) return YES;
 	
 	if (GlareAppsWhiteList) {
 		if (![GlareAppsWhiteList containsObject:bundleIdentifier])

@@ -1,4 +1,7 @@
 
+#import "headers.h"
+
+
 
 @interface SBApplication : NSObject
 - (void)setActivationSetting:(NSUInteger)fp8 flag:(BOOL)fp12;
@@ -35,7 +38,6 @@ extern NSString *const SBSAppSwitcherQuitAppNotification;
 
 
 
-extern BOOL isWhiteness;
 static NSArray *GlareAppsWhiteList = nil;
 
 
@@ -86,7 +88,7 @@ void killAllApps(NSArray *filteredApps)
 		}
 		
 		for (SBApplication *app in applist) {
-			if (![filteredApps containsObject:app.displayIdentifier])
+			if (!isTheAppUIServiceProcess(app.displayIdentifier) && ![filteredApps containsObject:app.displayIdentifier])
 				continue;
 			
 			[[%c(NSDistributedNotificationCenter) defaultCenter] postNotificationName:SBSAppSwitcherQuitAppNotification object:app.bundleIdentifier];
@@ -124,6 +126,145 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 		infoDict[@"UIBackgroundStyle"] = isWhiteness ? @"UIBackgroundStyleLightBlur" : @"UIBackgroundStyleDarkBlur";
 	
 	return %orig(bundleIdentifier, webClip, path, bundle, infoDict, isSystemApplication, signerIdentity, provisioningProfileValidated, entitlements);
+}
+
+%end
+
+
+%hook _UIModalItemContentView
+
+- (void)layout {
+	%orig;
+	
+	self.backgroundColor = nil;
+	self.buttonTable.backgroundColor = nil;
+	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.subtitleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.messageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+}
+
+%end
+
+%hook _UIModalItemAlertContentView
+
+- (void)layout {
+	%orig;
+	
+	self.backgroundColor = nil;
+	self.buttonTable.backgroundColor = nil;
+	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.subtitleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.messageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+}
+
+%end
+
+%hook _UIModalItemAlertBackgroundView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
+	
+	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+	if (_effectView.style != style)
+		[_effectView transitionToStyle:style];
+	
+	UIImageView *_fillingView = MSHookIvar<UIImageView *>(self, "_fillingView");
+	_fillingView.alpha = (isWhiteness ? 1.0f : 0.0f);
+}
+
+%end
+
+
+%hook _UIModalItemActionSheetContentView
+
+- (void)layout {
+	%orig;
+	
+	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
+	
+	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+	if (_effectView.style != style)
+		[_effectView transitionToStyle:style];
+}
+
+%end
+
+
+%hook UIActionSheet
+
+- (void)layout {
+	%orig;
+	
+	_UIBackdropView *_backdropView = nil;
+	if (isFirmware71) {
+		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
+	}
+	else {
+		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
+	}
+	
+	if (![_backdropView isKindOfClass:[_UIBackdropView class]]) return;
+	
+	UIImage *grayscaleTintMaskImage = [_backdropView.inputSettings.grayscaleTintMaskImage retain];
+	UIImage *colorTintMaskImage = [_backdropView.inputSettings.colorTintMaskImage retain];
+	UIImage *filterMaskImage = [_backdropView.inputSettings.filterMaskImage retain];
+	
+	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultUltraDark);
+	if (_backdropView.style != style) {
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:style];
+		settings.blurRadius = 7.0f;
+		settings.grayscaleTintMaskImage = grayscaleTintMaskImage;
+		settings.colorTintMaskImage = colorTintMaskImage;
+		settings.filterMaskImage = filterMaskImage;
+		
+		[_backdropView transitionToSettings:settings];
+	}
+	
+	[grayscaleTintMaskImage release];
+	[colorTintMaskImage release];
+	[filterMaskImage release];
+}
+
+%end
+
+%hook _UIActionSheetBlendingHighlightView
+
+- (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
+	if (isWhiteness) return %orig;
+	
+	burnColor = [UIColor colorWithWhite:0.9f alpha:0.2f];
+	
+	return %orig;
+}
+
+%end
+
+%hook _UIActionSheetBlendingSeparatorView
+
+- (id)initWithFrame:(CGRect)frame {
+	_UIActionSheetBlendingSeparatorView *rtn = %orig;
+	
+	if (rtn && !isWhiteness) {
+		UIView *_colorBurnView = MSHookIvar<UIView *>(rtn, "_colorBurnView");
+		
+		[_colorBurnView.layer setCompositingFilter:nil];
+	}
+	
+	return rtn;
+}
+
+%end
+
+
+%hook UIActivityGroupListViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+	%orig;
+	
+	if (self.backdropView.style != kBackdropStyleForWhiteness)
+		[self.backdropView transitionToStyle:kBackdropStyleForWhiteness];
 }
 
 %end

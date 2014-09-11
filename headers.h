@@ -60,7 +60,10 @@ extern BOOL isFirmware71;
 #define isPad								(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 
+BOOL isThisAppUIServiceProcess();
+BOOL isTheAppUIServiceProcess(NSString *bundleIdentifier);
 BOOL isThisAppEnabled();
+BOOL isTheAppEnabled(NSString *bundleIdentifier);
 void clearBar(UIView *view);
 void setLabelTextColorIfHasBlackColor(UILabel *label);
 NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *text);
