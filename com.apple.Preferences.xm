@@ -39,13 +39,21 @@
 	
 	UIColor *tintColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
 	
-	if (![slider.maximumTrackTintColor isEqual:slider.minimumTrackTintColor])
-		[slider setMaximumTrackTintColor:tintColor];
-	
 	for (UILabel *label in slider.subviews) {
 		if ([label isKindOfClass:[UILabel class]])
 			label.textColor = tintColor;
 	}
+}
+
+- (id)newControl {
+	UISlider *slider = %orig;
+	
+	UIColor *tintColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	
+	if (![slider.maximumTrackTintColor isEqual:slider.minimumTrackTintColor])
+		[slider setMaximumTrackTintColor:tintColor];
+	
+	return slider;
 }
 
 %end
