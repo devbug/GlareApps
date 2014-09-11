@@ -395,6 +395,11 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @property(readonly, nonatomic) UIView *_previewMaskingView;
 @end
 
+@interface PLWallpaperButton : UIButton
+@property(retain, nonatomic) _UIBackdropView *backdropView;
+@property(retain, nonatomic) UIImageView *titleMaskImageView;
+@end
+
 
 @interface MFMessageComposeViewController : UIViewController @end
 @interface MFMailComposeViewController : UIViewController @end

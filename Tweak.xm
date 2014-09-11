@@ -513,8 +513,6 @@ void clearBar(UIView *view) {
 		isActionSheetOrActivityGroup = [superviewName hasPrefix:@"UIActivityGroup"];
 	if (!isActionSheetOrActivityGroup)
 		isActionSheetOrActivityGroup = [superviewName hasPrefix:@"_UIToolbar"];
-	if (!isActionSheetOrActivityGroup)
-		isActionSheetOrActivityGroup = [superviewName isEqualToString:@"PLWallpaperButton"];
 	
 	return isActionSheetOrActivityGroup;
 }
@@ -1454,13 +1452,47 @@ UIImage *reorderImageBlack = nil;
 - (void)transitionToSettings:(_UIBackdropViewSettings *)newSettings {
 	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:newSettings.style];
 	if (settings.blurRadius == newSettings.blurRadius 
-		&& settings.grayscaleTintAlpha == newSettings.grayscaleTintAlpha
-		&& settings.grayscaleTintLevel == newSettings.grayscaleTintLevel) {
+			&& settings.grayscaleTintAlpha == newSettings.grayscaleTintAlpha
+			&& settings.grayscaleTintLevel == newSettings.grayscaleTintLevel) {
+		if (isWhiteness && newSettings.style == kBackdropStyleSystemDefaultSemiLight) {
+			%orig;
+			return;
+		}
+		if (self.inputSettings.style != kBackdropStyleForWhiteness && self.inputSettings.style != newSettings.style) {
+			%orig;
+			return;
+		}
 		if (self.inputSettings != nil)
 			return;
 	}
 	
 	%orig;
+}
+
+- (id)initWithFrame:(CGRect)frame autosizesToFitSuperview:(BOOL)fitSuperview settings:(_UIBackdropViewSettings *)newSettings {
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:newSettings.style];
+	if (settings.blurRadius == newSettings.blurRadius 
+			&& settings.grayscaleTintAlpha == newSettings.grayscaleTintAlpha
+			&& settings.grayscaleTintLevel == newSettings.grayscaleTintLevel) {
+		if (newSettings.style != kBackdropStyleForWhiteness 
+				&& (newSettings.style == kBackdropStyleSystemDefaultUltraLight || newSettings.style == kBackdropStyleSystemDefaultLight 
+						|| newSettings.style == kBackdropStyleSystemDefaultDark || newSettings.style == kBackdropStyleSystemDefaultAdaptiveLight)) {
+			_UIBackdropViewSettings *styledSettings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleForWhiteness];
+			
+			return %orig(frame, fitSuperview, styledSettings);
+		}
+		if (newSettings.style != kBackdropStyleForWhiteness 
+				&& (newSettings.style == kBackdropStyleSystemDefaultLightLow || newSettings.style == kBackdropStyleSystemDefaultDarkLow)) {
+			_UIBackdropViewSettings *styledSettings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleForWhiteness+9];
+			
+			return %orig(frame, fitSuperview, styledSettings);
+		}
+	}
+	if (newSettings == nil) {
+		newSettings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleForWhiteness];
+	}
+	
+	return %orig;
 }
 
 %end
@@ -2005,6 +2037,17 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	self._previewMaskingView.backgroundColor = [UIColor clearColor];
+}
+
+%end
+
+
+%hook PLWallpaperButton
+
+- (void)_setupBackdropView {
+	%orig;
+	
+	[self setTitleColor:[UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f] forState:UIControlStateNormal];
 }
 
 %end
