@@ -1449,6 +1449,23 @@ UIImage *reorderImageBlack = nil;
 %end
 
 
+%hook _UIBackdropView
+
+- (void)transitionToSettings:(_UIBackdropViewSettings *)newSettings {
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:newSettings.style];
+	if (settings.blurRadius == newSettings.blurRadius 
+		&& settings.grayscaleTintAlpha == newSettings.grayscaleTintAlpha
+		&& settings.grayscaleTintLevel == newSettings.grayscaleTintLevel) {
+		if (self.inputSettings != nil)
+			return;
+	}
+	
+	%orig;
+}
+
+%end
+
+
 
 #pragma mark -
 #pragma mark Additional BackdropView

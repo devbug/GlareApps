@@ -86,6 +86,7 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 - (void)_setBlursBackground:(BOOL)arg1;
 - (void)setBackdropVisible:(BOOL)arg1;
 - (void)transitionToSettings:(id)arg1;
+- (void)transitionToPrivateStyle:(NSInteger)arg1;
 - (void)transitionToStyle:(NSInteger)arg1;
 - (void)removeMaskViews;
 - (void)updateMaskViewsForView:(id)arg1;
