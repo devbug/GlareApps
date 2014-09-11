@@ -2071,6 +2071,64 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
+#pragma mark ChatKit
+
+
+%hook CKBalloonView
+
+- (BOOL)canUseOpaqueMask {
+	return NO;
+}
+
+- (BOOL)isFilled {
+	return YES;
+}
+
+%end
+
+%hook CKUIBehavior
+
+- (id)gray_balloonTextColor {
+	return [UIColor colorWithWhite:0.0f alpha:0.9f];
+}
+
+%end
+
+
+
+
+#pragma mark -
+#pragma mark CommunicationsSetupUI
+
+
+%hook CNFRegSigninLearnMoreView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.verbiageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	
+	self.userPassBox.alpha = 0.2f;
+}
+
+%end
+
+%hook CNFRegTableLabel
+
+- (void)layoutSubviews {
+	%orig;
+	
+	UILabel *_label = MSHookIvar<UILabel *>(self, "_label");
+	_label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+}
+
+%end
+
+
+
+
+#pragma mark -
 #pragma mark Constructure
 
 

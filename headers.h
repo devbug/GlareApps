@@ -439,8 +439,13 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @end
 @interface PLEffectSelectionViewControllerView : UIView @end
 
+@interface CNFRegSigninLearnMoreView : UIView
+- (UIView *)userPassBox;
+- (UILabel *)titleLabel;
+- (UILabel *)verbiageLabel;
+@end
 
-@interface MFMessageComposeViewController : UIViewController @end
+
 @interface MFMailComposeViewController : UIViewController @end
 @interface SLComposeViewController : UIViewController @end
 @interface SKComposeReviewViewController : UIViewController @end
