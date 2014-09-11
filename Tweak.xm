@@ -615,6 +615,8 @@ void clearBar(UIView *view) {
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
 		if (white == 0.5f && alpha == 1.0f)
 			textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+		else if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
+			textColor = [UIColor colorWithWhite:fabs(1.0f-white) alpha:alpha];
 	}
 	
 	%orig;
@@ -662,6 +664,17 @@ void clearBar(UIView *view) {
 
 - (id)_placeholderColor {
 	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+}
+
+- (void)setTextColor:(UIColor *)textColor {
+	CGFloat white = 0.0f, alpha = 0.0f;
+	
+	if ([[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
+		if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
+			textColor = [UIColor colorWithWhite:fabs(1.0f-white) alpha:alpha];
+	}
+	
+	%orig;
 }
 
 %end
