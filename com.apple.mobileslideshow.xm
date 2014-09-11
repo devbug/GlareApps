@@ -401,7 +401,7 @@
 		UINavigationBar *navBar = self.navigationController.navigationBar;
 		
 		if (navBar) {
-			_UIBackdropView *_adaptiveBackdrop = MSHookIvar<_UIBackdropView *>(navBar._backgroundView, "_adaptiveBackdrop");
+			_UIBackdropView *_adaptiveBackdrop = navBar._backgroundView._adaptiveBackdrop;
 			
 			if (_adaptiveBackdrop.style != kBackdropStyleForWhiteness)
 				[_adaptiveBackdrop transitionToStyle:kBackdropStyleForWhiteness];
@@ -430,8 +430,18 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self.textView.textColor = [UIColor colorWithWhite:0.0f alpha:kFullAlphaFactor];
 	self.placeholderLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+}
+
+%end
+
+%hook PLCommentsViewController
+
+- (void)_updateLayerMaskWithBoundsChange {
+	%orig;
+	
+	UIImageView *_gradientView = MSHookIvar<UIImageView *>(self, "_gradientView");
+	_gradientView.image = [_gradientView.image _flatImageWithWhite:kDarkColorWithWhiteForWhiteness alpha:1.0f];
 }
 
 %end

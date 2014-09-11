@@ -17,7 +17,7 @@ GlareApps_FILES = Tweak.xm \
 				  com.apple.AppStore.xm \
 				  com.apple.stocks.xm \
 				  com.apple.calculator.xm
-GlareApps_FRAMEWORKS = UIKit CoreGraphics
+GlareApps_FRAMEWORKS = UIKit CoreGraphics QuartzCore
 GlareApps_PRIVATE_FRAMEWORKS = MobileTimer
 
 include $(THEOS_MAKE_PATH)/tweak.mk

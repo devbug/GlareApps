@@ -24,6 +24,20 @@ enum {
 };
 
 
+extern NSString * const kCAFilterNormalBlendMode;
+extern NSString * const kCAFilterMultiplyBlendMode;
+extern NSString * const kCAFilterScreenBlendMode;
+extern NSString * const kCAFilterOverlayBlendMode;
+extern NSString * const kCAFilterDarkenBlendMode;
+extern NSString * const kCAFilterLightenBlendMode;
+extern NSString * const kCAFilterColorDodgeBlendMode;
+extern NSString * const kCAFilterColorBurnBlendMode;
+extern NSString * const kCAFilterSoftLightBlendMode;
+extern NSString * const kCAFilterHardLightBlendMode;
+extern NSString * const kCAFilterDifferenceBlendMode;
+extern NSString * const kCAFilterExclusionBlendMode;
+
+
 
 extern BOOL isWhiteness;
 extern BOOL isFirmware70;
@@ -66,10 +80,13 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @property(nonatomic) BOOL usesColorTintView;
 @property(nonatomic) CGFloat scale;
 @property(retain, nonatomic) UIColor *legibleColor;
+@property(retain, nonatomic) UIImage *filterMaskImage;
 @property(nonatomic) CGFloat blurRadius;
+@property(retain, nonatomic) UIImage *colorTintMaskImage;
 @property(nonatomic) CGFloat colorTintMaskAlpha;
 @property(nonatomic) CGFloat colorTintAlpha;
 @property(retain, nonatomic) UIColor *colorTint;
+@property(retain, nonatomic) UIImage *grayscaleTintMaskImage;
 @property(nonatomic) CGFloat grayscaleTintMaskAlpha;
 @property(nonatomic) CGFloat grayscaleTintAlpha;
 @property(nonatomic) CGFloat grayscaleTintLevel;
@@ -80,11 +97,18 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @interface _UIBackdropView : UIView
 + (id)allBackdropViews;
 @property(copy, nonatomic) NSString *groupName;
+@property(retain, nonatomic) UIImage *colorTintMaskImage;
+@property(retain, nonatomic) UIImage *grayscaleTintMaskImage;
+@property(retain, nonatomic) UIImage *filterMaskImage;
 @property(retain, nonatomic) _UIBackdropViewSettings *inputSettings;
 @property(nonatomic) BOOL blursBackground;
 @property(nonatomic) NSInteger style;
+- (void)applySettings:(id)arg1;
+- (void)computeAndApplySettings:(id)arg1;
 - (void)_setBlursBackground:(BOOL)arg1;
 - (void)setBackdropVisible:(BOOL)arg1;
+- (void)transitionIncrementallyToPrivateStyle:(NSInteger)arg1 weighting:(CGFloat)arg2;
+- (void)transitionIncrementallyToStyle:(NSInteger)arg1 weighting:(CGFloat)arg2;
 - (void)transitionToSettings:(id)arg1;
 - (void)transitionToPrivateStyle:(NSInteger)arg1;
 - (void)transitionToStyle:(NSInteger)arg1;
@@ -215,6 +239,11 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 - (id)_flatImageWithColor:(UIColor *)arg1;
 @end
 
+@interface UIBarButtonItem (private_api)
+- (UIImage *)image;
+- (void)setImage:(UIImage *)arg1;
+@end
+
 
 @interface ABMemberNameView : UIView
 @property(nonatomic) BOOL highlighted;
@@ -294,6 +323,7 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @end
 
 @interface _UIModalItemAlertContentView : _UIModalItemContentView @end
+@interface _UIModalItemActionSheetContentView : _UIModalItemContentView @end
 
 @interface UISearchBar (private_api)
 - (void)_setBarTintColor:(id)arg1 forceUpdate:(BOOL)arg2;
@@ -399,6 +429,12 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @property(retain, nonatomic) _UIBackdropView *backdropView;
 @property(retain, nonatomic) UIImageView *titleMaskImageView;
 @end
+
+@interface PLEditPhotoController : UIViewController
+@property(retain, nonatomic) UIToolbar *toolbar;
+@property(retain, nonatomic) UINavigationBar *navigationBar;
+@end
+@interface PLEffectSelectionViewControllerView : UIView @end
 
 
 @interface MFMessageComposeViewController : UIViewController @end

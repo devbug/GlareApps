@@ -127,58 +127,6 @@
 %end
 
 
-%hook SKUISegmentedTableHeaderView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-	settings.blurRadius = 7.0f;
-	
-	_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
-	
-	[_backdropView transitionToSettings:settings];
-}
-
-%end
-
-
-%hook SKUIProductPageHeaderFloatingView
-
-- (void)_reloadBackdropView {
-	%orig;
-	
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
-	settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
-	
-	_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
-	
-	[_backdropView transitionToSettings:settings];
-}
-
-%end
-
-
-%hook SKUIIPadChartsView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	UIView *_headerBackgroundView = MSHookIvar<UIView *>(self, "_headerBackgroundView");
-	_headerBackgroundView.backgroundColor = [UIColor clearColor];
-	
-	_UIBackdropView *backdropView = (_headerBackgroundView.subviews.count > 0 ? _headerBackgroundView.subviews[0] : nil);
-	if (backdropView && [backdropView isKindOfClass:[_UIBackdropView class]]) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
-		
-		[backdropView transitionToSettings:settings];
-	}
-}
-
-%end
-
-
 %hook SKUIProductPageHeaderLabel
 
 - (void)layoutSubviews {
@@ -453,31 +401,6 @@
 	}
 	
 	%orig;
-}
-
-%end
-
-
-%hook ASPurchasedHeaderView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	if (isPad) {
-		_UIBackdropView *backdropView = (_UIBackdropView *)[self viewWithTag:0xc001];
-		[backdropView retain];
-		
-		if (backdropView == nil) {
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-			
-			backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
-			backdropView.tag = 0xc001;
-			
-			[self insertSubview:backdropView atIndex:0];
-		}
-		
-		[backdropView release];
-	}
 }
 
 %end

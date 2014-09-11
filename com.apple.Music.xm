@@ -200,6 +200,12 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 
 %hook UIViewController
 
+- (void)viewWillAppear:(BOOL)animated {
+	clearBar(self.navigationController.navigationBar);
+	
+	%orig;
+}
+
 - (void)viewDidLayoutSubviews {
 	%orig;
 	

@@ -57,8 +57,8 @@ void setLabelTextColorIfHasBlackColor(UILabel *label) {
 	if (label.attributedText) return;
 	
 	if ([label.textColor isEqual:[UIColor blackColor]] 
-			|| [label.textColor isEqual:[UIColor colorWithWhite:0.0 alpha:1.0]] 
-			|| [label.textColor isEqual:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.0]]) {
+			|| [label.textColor isEqual:[UIColor colorWithWhite:0.0f alpha:1.0f]] 
+			|| [label.textColor isEqual:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]]) {
 		label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
 		return;
 	}
@@ -67,8 +67,8 @@ void setLabelTextColorIfHasBlackColor(UILabel *label) {
 		CGFloat white = 0.0f, alpha = 0.0f;
 		[label.textColor getWhite:&white alpha:&alpha];
 		
-		if (white != kLightColorWithWhiteForWhiteness && white < 0.4) {
-			label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:fabs(1.0-white)*alpha];
+		if (white != kLightColorWithWhiteForWhiteness && white < 0.4f) {
+			label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:fabs(1.0f-white)*alpha];
 		}
 	}
 }
@@ -301,9 +301,9 @@ void clearBar(UIView *view) {
 %hook UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
-	clearBar(self.navigationController.navigationBar);
-	clearBar(self.navigationController.toolbar);
-	clearBar(self.tabBarController.tabBar);
+	//clearBar(self.navigationController.navigationBar);
+	//clearBar(self.navigationController.toolbar);
+	//clearBar(self.tabBarController.tabBar);
 	
 	%orig;
 	
@@ -527,7 +527,7 @@ void clearBar(UIView *view) {
 	
 	if (![self.superview isKindOfClass:%c(UITableViewCellContentView)] 
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
-		if (white == 0.5 && alpha == 1.0f)
+		if (white == 0.5f && alpha == 1.0f)
 			textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
 	}
 	
@@ -566,7 +566,7 @@ void clearBar(UIView *view) {
 	
 	if (![self.superview isKindOfClass:%c(UITableViewCellContentView)] 
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
-		if (white == 0.5 && alpha == 1.0f)
+		if (white == 0.5f && alpha == 1.0f)
 			textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
 	}
 	
@@ -585,7 +585,7 @@ void clearBar(UIView *view) {
 	%orig;
 	
 	if (!isWhiteness && [self.textColor isEqual:[UIColor blackColor]])
-		self.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0];
+		self.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
 	if ([self respondsToSelector:@selector(setKeyboardAppearance:)] && ![self isKindOfClass:%c(CKBalloonTextView)])
 		self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 }
@@ -608,7 +608,7 @@ void clearBar(UIView *view) {
 	NSString *superviewName = NSStringFromClass([self.superview class]);
 	
 	if (!isWhiteness && [self.textColor isEqual:[UIColor blackColor]] && ![superviewName hasPrefix:@"_UIModalItem"])
-		self.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0];
+		self.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
 	if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
 		self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 }
@@ -763,7 +763,7 @@ void clearBar(UIView *view) {
 	
 	self.backgroundColor = [UIColor clearColor];
 	self.backgroundView.alpha = 0.0f;
-	self.contentView.backgroundColor = nil;
+	self.contentView.backgroundColor = [UIColor clearColor];
 }
 
 - (void)_updateBackgroundView {
@@ -1078,7 +1078,7 @@ UIImage *reorderImageBlack = nil;
 #pragma mark -
 #pragma mark BackdropView Control
 
-
+/*
 %hook UINavigationBar
 
 - (void)layoutSubviews {
@@ -1259,7 +1259,7 @@ UIImage *reorderImageBlack = nil;
 }
 
 %end
-
+*/
 
 %hook UISearchBar
 
@@ -1402,6 +1402,87 @@ UIImage *reorderImageBlack = nil;
 	
 	UIImageView *_fillingView = MSHookIvar<UIImageView *>(self, "_fillingView");
 	_fillingView.alpha = (isWhiteness ? 1.0f : 0.0f);
+}
+
+%end
+
+
+%hook _UIModalItemActionSheetContentView
+
+- (void)layout {
+	%orig;
+	
+	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
+	
+	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+	if (_effectView.style != style)
+		[_effectView transitionToStyle:style];
+}
+
+%end
+
+
+%hook UIActionSheet
+
+- (void)layout {
+	%orig;
+	
+	_UIBackdropView *_backdropView = nil;
+	if (isFirmware71) {
+		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
+	}
+	else {
+		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
+	}
+	
+	if (![_backdropView isKindOfClass:[_UIBackdropView class]]) return;
+	
+	UIImage *grayscaleTintMaskImage = [_backdropView.inputSettings.grayscaleTintMaskImage retain];
+	UIImage *colorTintMaskImage = [_backdropView.inputSettings.colorTintMaskImage retain];
+	UIImage *filterMaskImage = [_backdropView.inputSettings.filterMaskImage retain];
+	
+	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultUltraDark);
+	if (_backdropView.style != style) {
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:style];
+		settings.blurRadius = 7.0f;
+		settings.grayscaleTintMaskImage = grayscaleTintMaskImage;
+		settings.colorTintMaskImage = colorTintMaskImage;
+		settings.filterMaskImage = filterMaskImage;
+		
+		[_backdropView transitionToSettings:settings];
+	}
+	
+	[grayscaleTintMaskImage release];
+	[colorTintMaskImage release];
+	[filterMaskImage release];
+}
+
+%end
+
+%hook _UIActionSheetBlendingHighlightView
+
+- (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
+	if (isWhiteness) return %orig;
+	
+	burnColor = [UIColor colorWithWhite:0.9f alpha:0.2f];
+	
+	return %orig;
+}
+
+%end
+
+%hook _UIActionSheetBlendingSeparatorView
+
+- (id)initWithFrame:(CGRect)frame {
+	_UIActionSheetBlendingSeparatorView *rtn = %orig;
+	
+	if (rtn && !isWhiteness) {
+		UIView *_colorBurnView = MSHookIvar<UIView *>(rtn, "_colorBurnView");
+		
+		[_colorBurnView.layer setCompositingFilter:nil];
+	}
+	
+	return rtn;
 }
 
 %end
@@ -1691,11 +1772,11 @@ UIImage *reorderImageBlack = nil;
 }
 
 - (UIColor *)memberNameTextColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0];
+	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
 }
 
 - (UIColor *)cardValueTextColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0];
+	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
 }
 
 %end
@@ -2048,6 +2129,62 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	[self setTitleColor:[UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f] forState:UIControlStateNormal];
+}
+
+%end
+
+
+%hook PLEditPhotoController
+
+// 만약 backdropview를 전체 스타일처럼 변경한다면 툴바 아이콘 색깔도 변경이 필요.
+// 그때 쓰면 됨.
+/*- (id)_newButtonItemWithIcon:(id)icon title:(id)title target:(id)target action:(SEL)action tag:(NSInteger)tag {
+	UIBarButtonItem *item = %orig;
+	UIButton *customView = (UIButton *)item.customView;
+	UIImage *image = [customView imageForState:UIControlStateNormal];
+	
+	image = [image _flatImageWithWhite:kLightColorWithWhiteForWhiteness alpha:kRealFullAlphaFactor];
+	[customView setImage:image forState:UIControlStateNormal];
+	
+	return item;
+}*/
+
+// 툴바, navbar의 스타일을 원본 스타일(Dark)처럼 적용시킴.
+- (void)viewDidAppear:(BOOL)animated {
+	%orig;
+	
+	self.toolbar.barStyle = UIBarStyleBlack;
+	self.navigationBar.barStyle = UIBarStyleBlack;
+	
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultDark];
+	settings.blurRadius = 22.0f;
+	
+	_UIBackdropView *_adaptiveBackdrop = MSHookIvar<_UIBackdropView *>(self.toolbar, "_adaptiveBackdrop");
+	if ([_adaptiveBackdrop isKindOfClass:[_UIBackdropView class]])
+		[_adaptiveBackdrop transitionToSettings:settings];
+	
+	_adaptiveBackdrop = MSHookIvar<_UIBackdropView *>(self.navigationBar._backgroundView, "_adaptiveBackdrop");
+	if ([_adaptiveBackdrop isKindOfClass:[_UIBackdropView class]])
+		[_adaptiveBackdrop transitionToSettings:settings];
+}
+
+%end
+
+%hook PLEffectSelectionViewControllerView
+
+// effect 배경 스타일을 원본 스타일(Dark)처럼 적용시킴.
+- (void)layoutSubviews {
+	%orig;
+	
+	if (self.subviews.count > 0) {
+		_UIBackdropView *backdropView = self.subviews[0];
+		if ([backdropView isKindOfClass:[_UIBackdropView class]]) {
+			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultDark];
+			settings.blurRadius = 22.0f;
+			
+			[backdropView transitionToSettings:settings];
+		}
+	}
 }
 
 %end
