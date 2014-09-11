@@ -2022,33 +2022,6 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
-#pragma mark SpringBoard
-
-
-%group SpringBoard
-
-%hook SBApplication
-
-- (id)initWithBundleIdentifier:(id)bundleIdentifier webClip:(id)webClip path:(id)path bundle:(id)bundle 
-				infoDictionary:(NSDictionary *)dictionary isSystemApplication:(BOOL)isSystemApplication 
-				signerIdentity:(id)signerIdentity provisioningProfileValidated:(BOOL)provisioningProfileValidated 
-				  entitlements:(id)entitlements {
-	NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithDictionary:dictionary];
-	
-	if (isSystemApplication)
-		infoDict[@"UIBackgroundStyle"] = isWhiteness ? @"UIBackgroundStyleLightBlur" : @"UIBackgroundStyleDarkBlur";
-	
-	return %orig(bundleIdentifier, webClip, path, bundle, infoDict, isSystemApplication, signerIdentity, provisioningProfileValidated, entitlements);
-}
-
-%end
-
-%end
-
-
-
-
-#pragma mark -
 #pragma mark Constructure
 
 
@@ -2059,11 +2032,6 @@ UIImage *reorderImageBlack = nil;
 	
 	//CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadPrefsNotification, CFSTR("kr.slak.glareapps.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	LoadSettings();
-	
-	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.springboard"]) {
-		%init(SpringBoard);
-		return;
-	}
 	
 	if (!isThisAppEnabled()) return;
 	

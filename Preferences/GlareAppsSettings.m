@@ -103,15 +103,19 @@
 		PSSpecifier *theme = [PSSpecifier emptyGroupSpecifier];
 		[theme setProperty:[[self bundle] localizedStringForKey:@"DEFAULT_THEME_MSG" value:@"Default is Black theme." table:@"GlareAppsSettings"] forKey:@"footerText"];
 		
-		PSSpecifier *specifier4 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Kill all apps" value:@"Kill all applied apps" table:@"GlareAppsSettings"]
-																 target:self
-																	set:nil
-																	get:nil
-																 detail:nil
-																   cell:PSButtonCell
-																   edit:nil];
+		PSConfirmationSpecifier *specifier4 = [PSConfirmationSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Kill all apps" value:@"Kill all applied apps" table:@"GlareAppsSettings"]
+																						 target:self
+																							set:nil
+																							get:nil
+																						 detail:nil
+																						   cell:PSButtonCell
+																						   edit:nil];
+		specifier4.title = [[self bundle] localizedStringForKey:@"KILL" value:@"KILL!" table:@"GlareAppsSettings"];
+		specifier4.prompt = [[self bundle] localizedStringForKey:@"KillAllApps_PROMPT" value:@"Kill every applied apps" table:@"GlareAppsSettings"];
+		specifier4.okButton = [[self bundle] localizedStringForKey:@"KILL" value:@"KILL!" table:@"GlareAppsSettings"];
+		specifier4.cancelButton = [[self bundle] localizedStringForKey:@"Cancel" value:@"Cancel" table:@"GlareAppsSettings"];
+		specifier4.confirmationAction = @selector(killAllApps:);
 		[specifier4 setProperty:@(2) forKey:@"alignment"];
-		specifier4.buttonAction = @selector(killAllApps:);
 		
 		PSSpecifier *killallapps = [PSSpecifier emptyGroupSpecifier];
 		[killallapps setProperty:[[self bundle] localizedStringForKey:@"KILLALLAPPS_MSG" value:@"Include Preferences app." table:@"GlareAppsSettings"] forKey:@"footerText"];
@@ -136,6 +140,7 @@
 
 
 - (BOOL)killAllApps:(PSSpecifier *)specifier {
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("kr.slak.glareapps.killallapps"), NULL, NULL, TRUE);
 	return YES;
 }
 

@@ -9,6 +9,7 @@ include theos/makefiles/aggregate.mk
 
 TWEAK_NAME = GlareApps
 GlareApps_FILES = Tweak.xm \
+				  com.apple.springboard.xm \
 				  com.apple.Preferences.xm \
 				  com.apple.mobilephone.xm \
 				  com.apple.mobileslideshow.xm \
@@ -18,7 +19,7 @@ GlareApps_FILES = Tweak.xm \
 				  com.apple.stocks.xm \
 				  com.apple.calculator.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics QuartzCore
-GlareApps_PRIVATE_FRAMEWORKS = MobileTimer
+GlareApps_PRIVATE_FRAMEWORKS = MobileTimer SpringBoardServices BackBoardServices
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
