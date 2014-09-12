@@ -178,24 +178,6 @@
 %end
 
 
-%hook PUPhotoBrowserController
-
-- (void)_setOverlaysVisible:(BOOL)visible animated:(BOOL)animated updateBarsVisibility:(BOOL)updateBars {
-	%orig;
-	
-	if (isFirmware71 && updateBars) {
-		UINavigationBar *navBar = self.navigationController.navigationBar;
-		
-		_UIBackdropView *_adaptiveBackdrop = navBar._backgroundView._adaptiveBackdrop;
-		
-		if (_adaptiveBackdrop.style != kBackdropStyleForWhiteness && _adaptiveBackdrop.style != kBackdropStyleSystemDefaultDark)
-			[_adaptiveBackdrop transitionToStyle:kBackdropStyleForWhiteness];
-	}
-}
-
-%end
-
-
 %hook PUTabbedLibraryViewController
 
 - (void)_showBarWithTransition:(NSInteger)transition isExplicit:(BOOL)isExplicit {
@@ -391,34 +373,6 @@
 	if (self.presentingViewController) {
 		_UIBackdropView *backdropView = (_UIBackdropView *)[self.view viewWithTag:0xc001];
 		[backdropView removeFromSuperview];
-	}
-}
-
-- (void)viewDidLayoutSubviews {
-	%orig;
-		
-	if (isFirmware71 && self.presentingViewController) {
-		UINavigationBar *navBar = self.navigationController.navigationBar;
-		
-		if (navBar) {
-			_UIBackdropView *_adaptiveBackdrop = navBar._backgroundView._adaptiveBackdrop;
-			
-			if (_adaptiveBackdrop.style != kBackdropStyleForWhiteness)
-				[_adaptiveBackdrop transitionToStyle:kBackdropStyleForWhiteness];
-		}
-		
-		UINavigationItem *navigationItem = self.navigationItem;
-		PUPickerBanner *banner = (PUPickerBanner *)navigationItem.pu_banner;
-		if ([banner isKindOfClass:%c(PUPickerBanner)]) {
-			_UINavigationControllerPalette *pal = (_UINavigationControllerPalette *)banner.view.superview;
-			
-			if ([pal isKindOfClass:%c(_UINavigationControllerPalette)]) {
-				_UIBackdropView *_adaptiveBackdrop = MSHookIvar<_UIBackdropView *>(pal._backgroundView, "_adaptiveBackdrop");
-				
-				if (_adaptiveBackdrop.style != kBackdropStyleForWhiteness)
-					[_adaptiveBackdrop transitionToStyle:kBackdropStyleForWhiteness];
-			}
-		}
 	}
 }
 

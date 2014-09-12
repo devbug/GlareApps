@@ -369,49 +369,6 @@ UIImage *shuffleImage = nil;
 %end
 
 
-%hook MPUBackdropContentViewController
-
-- (void)viewDidLoad {
-	%orig;
-	
-	if (isFirmware71) {
-		_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
-		
-		if (_backdropView.style != kBackdropStyleForWhiteness)
-			[_backdropView transitionToStyle:kBackdropStyleForWhiteness];
-	}
-}
-
-%end
-
-
-%hook MusicFlipsideTracksViewController
-
-- (void)viewWillAppear:(BOOL)animated {
-	%orig;
-	
-	if (!isFirmware71) {
-		UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
-		
-		for (UIView *v in keyWindow.subviews) {
-			if ([v isKindOfClass:%c(UITransitionView)]) {
-				for (UIView *v2 in v.subviews) {
-					if ([v2 isKindOfClass:%c(_UIBackdropView)]) {
-						_UIBackdropView *backdropView = (_UIBackdropView *)v2;
-						
-						if (backdropView.style != kBackdropStyleForWhiteness)
-							[backdropView transitionToStyle:kBackdropStyleForWhiteness];
-					}
-				}
-				
-				break;
-			}
-		}
-	}
-}
-
-%end
-
 // for MusicFlipside
 %hook _UINavigationPaletteBackground
 

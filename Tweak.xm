@@ -1269,11 +1269,6 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	self.backgroundColor = [colorHelper clearColor];
-	
-	_UIBackdropView *_backdrop = MSHookIvar<_UIBackdropView *>(self, "_backdrop");
-	
-	if (_backdrop.style != kBackdropStyleSystemDefaultClear)
-		[_backdrop transitionToStyle:kBackdropStyleSystemDefaultClear];
 }
 
 %end
@@ -1284,29 +1279,8 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
-	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
-	if (_effectView.style != style)
-		[_effectView transitionToStyle:style];
-	
 	UIImageView *_fillingView = MSHookIvar<UIImageView *>(self, "_fillingView");
 	_fillingView.alpha = (isWhiteness ? 1.0f : 0.0f);
-}
-
-%end
-
-
-%hook _UIModalItemActionSheetContentView
-
-- (void)layout {
-	%orig;
-	
-	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
-	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
-	if (_effectView.style != style)
-		[_effectView transitionToStyle:style];
 }
 
 %end
@@ -1388,31 +1362,6 @@ UIImage *reorderImageBlack = nil;
 
 %end
 
-
-%hook UIActivityGroupListViewController
-
-- (void)viewWillAppear:(BOOL)animated {
-	%orig;
-	
-	if (self.backdropView.style != kBackdropStyleForWhiteness)
-		[self.backdropView transitionToStyle:kBackdropStyleForWhiteness];
-}
-
-%end
-
-
-%hook _UIPopoverStandardChromeView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	_UIBackdropView *_blurView = MSHookIvar<_UIBackdropView *>(self, "_blurView");
-	
-	if (_blurView.style != kBackdropStyleForWhiteness)
-		[_blurView transitionToStyle:kBackdropStyleForWhiteness];
-}
-
-%end
 
 %hook _UIPopoverView
 
@@ -1972,26 +1921,6 @@ UIImage *reorderImageBlack = nil;
 	MFRecipientTableViewCellTitleView *_titleView = MSHookIvar<MFRecipientTableViewCellTitleView *>(self, "_titleView");
 	_detailView.backgroundColor = [colorHelper clearColor];
 	_titleView.backgroundColor = [colorHelper clearColor];
-}
-
-%end
-
-
-
-
-#pragma mark -
-#pragma mark UIAlert
-
-
-%hook UIActivityGroupCancelButton
-
-- (void)layoutSubviews {
-	%orig;
-	
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-	settings.blurRadius = 10.0f;
-	
-	[self.backdropView transitionToSettings:settings];
 }
 
 %end
