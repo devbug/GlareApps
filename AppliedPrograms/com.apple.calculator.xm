@@ -11,7 +11,7 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end

@@ -73,7 +73,7 @@
 
 %new
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f];
+	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper keyWindowBackgroundColor];
 }
 
 %new
@@ -126,19 +126,19 @@
 }
 
 - (UIColor *)photoCollectionViewBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+	return [colorHelper themedFakeClearColor];
 }
 
 - (UIColor *)emptyPlaceholderViewBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+	return [colorHelper themedFakeClearColor];
 }
 
 - (UIColor *)albumListBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+	return [colorHelper themedFakeClearColor];
 }
 
 - (UIColor *)cloudFeedBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+	return [colorHelper themedFakeClearColor];
 }
 
 // >= 7.1
@@ -160,7 +160,7 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self._titleTextField.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self._titleTextField.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -171,8 +171,8 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self._label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self._detailLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self._label.textColor = [colorHelper commonTextColor];
+	self._detailLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -219,7 +219,7 @@
 - (void)_updateBackground {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	
 	_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
 	
@@ -258,11 +258,11 @@
 	%orig;
 	
 	UITextView *_textView = MSHookIvar<UITextView *>(self, "_textView");
-	_textView.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_textView.textColor = [colorHelper commonTextColor];
 }
 
 - (id)_placeholderColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	return [colorHelper systemGrayColor];
 }
 
 %end
@@ -430,7 +430,7 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self.placeholderLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	self.placeholderLabel.textColor = [colorHelper systemGrayColor];
 }
 
 %end
@@ -441,7 +441,7 @@
 	%orig;
 	
 	UIImageView *_gradientView = MSHookIvar<UIImageView *>(self, "_gradientView");
-	_gradientView.image = [_gradientView.image _flatImageWithWhite:kDarkColorWithWhiteForWhiteness alpha:1.0f];
+	_gradientView.image = [_gradientView.image _flatImageWithColor:[colorHelper lightTextColor]];
 }
 
 %end
@@ -464,7 +464,7 @@
 %hook PUPhotoBrowserController
 
 - (UIColor *)photoBackgroundColor {
-	return [UIColor colorWithWhite:1.0f alpha:kTransparentAlphaFactor];
+	return [colorHelper fakeWhiteClearColor];
 }
 
 %end
@@ -497,7 +497,7 @@
 	
 	MFComposeRecipientView *_recipientView = MSHookIvar<MFComposeRecipientView *>(self, "_recipientView");
 	
-	_recipientView.textField.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_recipientView.textField.textColor = [colorHelper commonTextColor];
 }
 
 - (id)tableView:(id)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -508,11 +508,11 @@
 		MFRecipientTableViewCellTitleView *_titleView = MSHookIvar<MFRecipientTableViewCellTitleView *>(cell, "_titleView");
 		
 		if (_detailView.tintColor == nil || [[_detailView.tintColor description] hasPrefix:@"UIDeviceWhiteColorSpace"]) {
-			_detailView.detailLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
-			_detailView.labelLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+			_detailView.detailLabel.textColor = [colorHelper systemGrayColor];
+			_detailView.labelLabel.textColor = [colorHelper systemGrayColor];
 		}
 		if (_titleView.tintColor == nil || [[_titleView.tintColor description] hasPrefix:@"UIDeviceWhiteColorSpace"]) {
-			_titleView.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+			_titleView.titleLabel.textColor = [colorHelper commonTextColor];
 		}
 	}
 	

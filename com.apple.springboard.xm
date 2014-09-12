@@ -270,7 +270,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 %hook UIAlertButton
 
 - (void)setHighlightImage:(UIImage *)image {
-	image = [image _flatImageWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	image = [image _flatImageWithColor:[colorHelper commonTextColor]];
 	
 	%orig;
 }

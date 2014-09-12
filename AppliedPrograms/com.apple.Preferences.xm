@@ -37,7 +37,7 @@
 	
 	UISlider *slider = (UISlider *)self.control;
 	
-	UIColor *tintColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	UIColor *tintColor = [colorHelper systemGrayColor];
 	
 	for (UILabel *label in slider.subviews) {
 		if ([label isKindOfClass:[UILabel class]])
@@ -48,7 +48,7 @@
 - (id)newControl {
 	UISlider *slider = %orig;
 	
-	UIColor *tintColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	UIColor *tintColor = [colorHelper systemGrayColor];
 	
 	if (![slider.maximumTrackTintColor isEqual:slider.minimumTrackTintColor])
 		[slider setMaximumTrackTintColor:tintColor];

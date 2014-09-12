@@ -54,7 +54,7 @@
 
 %new
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f];
+	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper keyWindowBackgroundColor];
 }
 
 %new
@@ -70,7 +70,7 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -86,7 +86,7 @@
 	UIView *placeholder = (_table.subviews.count >= 2 ? _table.subviews[0] : nil);
 	
 	if (![placeholder isKindOfClass:%c(UITableViewWrapperView)])
-		placeholder.backgroundColor = [UIColor clearColor];
+		placeholder.backgroundColor = [colorHelper clearColor];
 }
 
 %end

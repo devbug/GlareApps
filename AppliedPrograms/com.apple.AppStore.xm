@@ -90,7 +90,7 @@
 
 %new
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f];
+	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper keyWindowBackgroundColor];
 }
 
 %new
@@ -104,11 +104,11 @@
 %hook SKUIColorScheme
 
 - (UIColor *)backgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 
 - (void)setBackgroundColor:(UIColor *)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 %end
@@ -119,9 +119,9 @@
 - (void)viewWillAppear:(BOOL)animated {
 	%orig;
 	
-	self.tableView.backgroundColor = [UIColor clearColor];
-	self._tableView.backgroundColor = [UIColor clearColor];
-	self.view.backgroundColor = [UIColor clearColor];
+	self.tableView.backgroundColor = [colorHelper clearColor];
+	self._tableView.backgroundColor = [colorHelper clearColor];
+	self.view.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -130,7 +130,7 @@
 %hook SKUIProductPageHeaderLabel
 
 - (void)layoutSubviews {
-	self.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.textColor = [colorHelper commonTextColor];
 	
 	%orig;
 }
@@ -141,20 +141,20 @@
 %hook SKUIProductPageHeaderView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 - (id)initWithClientContext:(id)cc {
 	UIView *rtn = %orig;
 	
 	if (rtn) {
-		rtn.backgroundColor = [UIColor clearColor];
+		rtn.backgroundColor = [colorHelper clearColor];
 	}
 	
 	return rtn;
@@ -166,20 +166,20 @@
 %hook SKUIProductPageCopyrightView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 - (id)init {
 	UIView *rtn = %orig;
 	
 	if (rtn) {
-		rtn.backgroundColor = [UIColor clearColor];
+		rtn.backgroundColor = [colorHelper clearColor];
 	}
 	
 	return rtn;
@@ -191,7 +191,7 @@
 %hook SKUIProductPagePlaceholderView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 %end
@@ -200,13 +200,13 @@
 %hook SKUIProductPageFeaturesView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -215,20 +215,20 @@
 %hook SKUIScreenshotsView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 - (id)initWithFrame:(CGRect)frame {
 	UIView *rtn = %orig;
 	
 	if (rtn) {
-		rtn.backgroundColor = [UIColor clearColor];
+		rtn.backgroundColor = [colorHelper clearColor];
 	}
 	
 	return rtn;
@@ -240,17 +240,17 @@
 %hook SKUITextBoxView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 - (void)setColorScheme:(SKUIColorScheme *)scheme {
-	scheme.primaryTextColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	scheme.primaryTextColor = [colorHelper commonTextColor];
 	scheme.secondaryTextColor = nil;
 	
 	%orig;
@@ -275,7 +275,7 @@
 	%orig;
 	
 	if ([NSStringFromClass(self.class) hasPrefix:@"SKUI"])
-		self.backgroundColor = [UIColor clearColor];
+		self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -351,13 +351,13 @@
 %hook SKUIProductPageTableExpandableHeaderView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -366,13 +366,13 @@
 %hook SKUIIPadCustomerReviewsHeaderView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -381,13 +381,13 @@
 %hook SKUISwooshView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end

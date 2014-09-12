@@ -6,6 +6,7 @@
 #import "AdditionalHeaders/UITableViewHeaderFooterView+GlareApps.h"
 #import "AdditionalHeaders/UIView+GlareApps.h"
 #import "AdditionalHeaders/UIViewController+GlareApps.h"
+#import "GlareAppsColorHelper.h"
 
 
 enum {
@@ -47,6 +48,7 @@ extern NSString * const kCAFilterExclusionBlendMode;
 extern BOOL isWhiteness;
 extern BOOL isFirmware70;
 extern BOOL isFirmware71;
+extern GlareAppsColorHelper *colorHelper;
 
 #define kBackdropStyleForWhiteness			(isWhiteness ? kBackdropStyleSystemDefaultLight : kBackdropStyleSystemDefaultDark)
 #define kBarStyleForWhiteness				(isWhiteness ? UIBarStyleDefault : UIBarStyleBlack)
@@ -243,7 +245,7 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 @end
 
 @interface UIImage (Private)
-- (id)_flatImageWithWhite:(CGFloat)arg1 alpha:(CGFloat)arg2;
+//- (id)_flatImageWithWhite:(CGFloat)arg1 alpha:(CGFloat)arg2;
 - (id)_flatImageWithColor:(UIColor *)arg1;
 @end
 

@@ -158,8 +158,8 @@
 @interface MusicMiniPlayerTransportControls : MPTransportControls @end
 
 
-#define TINT_COLOR							[UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f]
-#define TINT_COLOR_WITH_ALPHA(a)			[UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:a]
+#define TINT_COLOR							[colorHelper commonTextColor]
+#define TINT_COLOR_WITH_ALPHA(a)			[colorHelper commonTextColorWithAlpha:a]
 #define TINT_FRACTION						(isWhiteness ? 1.5f : 1.0f)
 
 
@@ -190,7 +190,7 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 		temporaryUnlockStatusBarForegroundColorSetting = YES;
 	}
 	
-	[UIApplication sharedApplication].statusBar.foregroundColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	[UIApplication sharedApplication].statusBar.foregroundColor = [colorHelper commonTextColor];
 	
 	%orig;
 }
@@ -222,7 +222,7 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 
 %new
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f];
+	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper keyWindowBackgroundColor];
 }
 
 %new
@@ -294,14 +294,14 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 		[backdropView release];
 	}
 	
-	self.backgroundColor = [UIColor colorWithWhite:1.0f alpha:kTransparentAlphaFactor];
+	self.backgroundColor = [colorHelper themedFakeClearColor];
 	
 	UIImageView *_imageView = MSHookIvar<UIImageView *>(self, "_imageView");
-	_imageView.backgroundColor = [UIColor clearColor];
+	_imageView.backgroundColor = [colorHelper clearColor];
 	_imageView.alpha = kRealTransparentAlphaFactor;
 	
 	UIView *_containerView = MSHookIvar<UIView *>(self, "_containerView");
-	_containerView.backgroundColor = [UIColor clearColor];
+	_containerView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -312,11 +312,11 @@ UIImage *shuffleImage = nil;
 %hook MusicTheme
 
 + (id)disabledPlaybackControlColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	return [colorHelper systemGrayColor];
 }
 
 + (id)tableViewCellSeparatorColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	return [colorHelper systemGrayColor];
 }
 
 + (id)shuffleImage {
@@ -363,7 +363,7 @@ UIImage *shuffleImage = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+	self.backgroundColor = [colorHelper fakeBlackClearColor];
 }
 
 %end
@@ -527,7 +527,7 @@ UIImage *shuffleImage = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	self.titleLabel.textColor = [colorHelper systemGrayColor];
 }
 
 %end
@@ -588,7 +588,7 @@ UIImage *shuffleImage = nil;
 	
 	backdropView.frame = frame;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	
 	[backdropView release];
 }
@@ -601,7 +601,7 @@ UIImage *shuffleImage = nil;
 - (id)tableView:(UITableView *)tableView cellForRowAtIndexPath:(id)indexPath {
 	UITableViewCell *cell = %orig;
 	
-	cell.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	cell.backgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
 	
 	return cell;
 }
@@ -609,7 +609,7 @@ UIImage *shuffleImage = nil;
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(id)indexPath {
 	%orig;
 	
-	cell.imageView.tintColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	cell.imageView.tintColor = [colorHelper systemGrayColor];
 }
 
 %end
@@ -620,18 +620,18 @@ UIImage *shuffleImage = nil;
 - (void)setTitle:(NSString *)title {
 	%orig;
 	
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor * 2.0f];
+	self.titleLabel.textColor = [colorHelper musicTableViewCellTextColor];
 }
 - (void)setArtist:(NSString *)artist {
 	%orig;
 	
 	if (!isFirmware71)
-		self.artistLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor * 2.0f];
+		self.artistLabel.textColor = [colorHelper musicTableViewCellTextColor];
 }
 - (void)setAlbum:(NSString *)album {
 	%orig;
 	
-	self.albumLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	self.albumLabel.textColor = [colorHelper systemGrayColor];
 }
 
 %end
@@ -647,12 +647,12 @@ UIImage *shuffleImage = nil;
 	%orig;
 	
 	UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
-	_titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_titleLabel.textColor = [colorHelper commonTextColor];
 	UILabel *_detailLabel = MSHookIvar<UILabel *>(self, "_detailLabel");
-	_detailLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_detailLabel.textColor = [colorHelper commonTextColor];
 	
 	UIImageView *_artworkImageView = MSHookIvar<UIImageView *>(self, "_artworkImageView");
-	_artworkImageView.backgroundColor = [UIColor clearColor];
+	_artworkImageView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -664,17 +664,17 @@ UIImage *shuffleImage = nil;
 	%orig;
 	
 	UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
-	_titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_titleLabel.textColor = [colorHelper commonTextColor];
 	UILabel *_yearLabel = MSHookIvar<UILabel *>(self, "_yearLabel");
-	_yearLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_yearLabel.textColor = [colorHelper commonTextColor];
 	UILabel *_detailTextLabel = MSHookIvar<UILabel *>(self, "_detailTextLabel");
-	_detailTextLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_detailTextLabel.textColor = [colorHelper commonTextColor];
 	
 	UILabel *_copyrightLabel = MSHookIvar<UILabel *>(self, "_copyrightLabel");
-	_copyrightLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	_copyrightLabel.textColor = [colorHelper systemGrayColor];
 	
 	UIImageView *_artworkImageView = MSHookIvar<UIImageView *>(self, "_artworkImageView");
-	_artworkImageView.backgroundColor = [UIColor clearColor];
+	_artworkImageView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -686,10 +686,10 @@ UIImage *shuffleImage = nil;
 	%orig;
 	
 	UILabel *_songLabel = MSHookIvar<UILabel *>(self, "_songLabel");
-	_songLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_songLabel.textColor = [colorHelper commonTextColor];
 	
 	UIImageView *_artworkImageView = MSHookIvar<UIImageView *>(self, "_artworkImageView");
-	_artworkImageView.backgroundColor = [UIColor clearColor];
+	_artworkImageView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -705,14 +705,14 @@ UIImage *shuffleImage = nil;
 	%orig;
 	
 	UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
-	_titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_titleLabel.textColor = [colorHelper commonTextColor];
 	UILabel *_subtitleLabel = MSHookIvar<UILabel *>(self, "_subtitleLabel");
-	_subtitleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_subtitleLabel.textColor = [colorHelper commonTextColor];
 	UILabel *_detailLabel = MSHookIvar<UILabel *>(self, "_detailLabel");
-	_detailLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_detailLabel.textColor = [colorHelper commonTextColor];
 	
 	UIImageView *_artworkImageView = MSHookIvar<UIImageView *>(self, "_artworkImageView");
-	_artworkImageView.backgroundColor = [UIColor clearColor];
+	_artworkImageView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -728,10 +728,10 @@ UIImage *shuffleImage = nil;
 	%orig;
 	
 	UILabel *_detailLabel = MSHookIvar<UILabel *>(self, "_detailLabel");
-	_detailLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_detailLabel.textColor = [colorHelper commonTextColor];
 	
 	UIImageView *_artworkImageView = MSHookIvar<UIImageView *>(self, "_artworkImageView");
-	_artworkImageView.backgroundColor = [UIColor clearColor];
+	_artworkImageView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -751,7 +751,7 @@ UIImage *shuffleImage = nil;
 	%orig;
 	
 	//UIImageView *_artworkImageView = MSHookIvar<UIImageView *>(self, "_artworkImageView");
-	//_artworkImageView.backgroundColor = [UIColor clearColor];
+	//_artworkImageView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -762,7 +762,7 @@ UIImage *shuffleImage = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.artworkImageView.backgroundColor = [UIColor clearColor];
+	self.artworkImageView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -795,7 +795,7 @@ UIImage *shuffleImage = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor * 2.0f];
+	self.textLabel.textColor = [colorHelper musicTableViewCellTextColor];
 }
 
 %end
@@ -932,7 +932,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 
 - (id)_colorSliceImageWithColor:(UIColor *)color height:(CGFloat)height {
 	if (isEnabledRedrawControls(self)) {
-		UIImage *image = %orig([UIColor whiteColor], height);
+		UIImage *image = %orig([colorHelper whiteColor], height);
 		return [image _flatImageWithColor:TINT_COLOR];
 	}
 	
@@ -1049,8 +1049,8 @@ BOOL isEnabledRedrawControls(UIView *self) {
 - (void)layoutSubviews {
 	%orig;
 	
-	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kFullAlphaFactor];
-	self.detailTextLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	self.textLabel.textColor = [colorHelper commonTextColor];
+	self.detailTextLabel.textColor = [colorHelper systemGrayColor];
 }
 
 %end
@@ -1066,7 +1066,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	UILabel *_tuningType2Label = MSHookIvar<UILabel *>(self, "_tuningType2Label");
 	UILabel *_tuningType3Label = MSHookIvar<UILabel *>(self, "_tuningType3Label");
 	
-	UIColor *tintColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	UIColor *tintColor = [colorHelper systemGrayColor];
 	
 	if (![_tuningSlider.maximumTrackTintColor isEqual:_tuningSlider.minimumTrackTintColor])
 		[_tuningSlider setMaximumTrackTintColor:tintColor];
@@ -1094,7 +1094,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	%orig;
 	
 	UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
-	_titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kFullAlphaFactor];
+	_titleLabel.textColor = [colorHelper commonTextColor];
 }
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
@@ -1121,7 +1121,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	%orig;
 	
 	UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
-	_titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kFullAlphaFactor];
+	_titleLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -1133,7 +1133,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	%orig;
 	
 	UILabel *_copyrightLabel = MSHookIvar<UILabel *>(self, "_copyrightLabel");
-	_copyrightLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	_copyrightLabel.textColor = [colorHelper systemGrayColor];
 }
 
 %end

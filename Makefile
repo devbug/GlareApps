@@ -9,6 +9,7 @@ include theos/makefiles/aggregate.mk
 
 TWEAK_NAME = GlareApps
 GlareApps_FILES = Tweak.xm \
+				  GlareAppsColorHelper.mm \
 				  com.apple.springboard.xm \
 				  AppliedPrograms/com.apple.Preferences.xm \
 				  AppliedPrograms/com.apple.mobilephone.xm \

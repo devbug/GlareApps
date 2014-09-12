@@ -30,9 +30,7 @@
 %hook UIColor
 
 + (id)whiteColor {
-	if (!isWhiteness) return %orig;
-	
-	return [UIColor blackColor];
+	return [colorHelper commonTextColor];
 }
 
 + (id)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha {
@@ -120,8 +118,8 @@
 			[_blurView transitionToSettings:settings];
 		}
 		
-		rtn.statusView.backgroundColor = [UIColor clearColor];
-		rtn.detailView.backgroundColor = [UIColor clearColor];
+		rtn.statusView.backgroundColor = [colorHelper clearColor];
+		rtn.detailView.backgroundColor = [colorHelper clearColor];
 	}
 	
 	return rtn;
@@ -136,10 +134,10 @@
 	%orig;
 	
 	if (!selected) {
-		self.backgroundColor = [UIColor clearColor];
+		self.backgroundColor = [colorHelper clearColor];
 	}
 	else {
-		self.backgroundColor = [UIColor colorWithWhite:(isWhiteness ? 0.77f : 0.11f) alpha:0.2f];
+		self.backgroundColor = [colorHelper stocksListTableViewCellSelectedColor];
 	}
 }
 
@@ -150,10 +148,10 @@
 	UILabel *_priceLabel = MSHookIvar<UILabel *>(self, "_priceLabel");
 	UILabel *_boxLabel = MSHookIvar<UILabel *>(self, "_boxLabel");
 	
-	_symbolLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kFullAlphaFactor];
-	_priceLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kFullAlphaFactor];
+	_symbolLabel.textColor = [colorHelper commonTextColor];
+	_priceLabel.textColor = [colorHelper commonTextColor];
 	if (isWhiteness)
-		_boxLabel.textColor = [UIColor colorWithWhite:0.99f alpha:1.0f];
+		_boxLabel.textColor = colorHelper.whiteColor;
 }
 
 %end
@@ -165,7 +163,7 @@
 	%orig;
 	
 	UIView *_titleView = MSHookIvar<UIView *>(self, "_titleView");
-	_titleView.backgroundColor = [UIColor clearColor];
+	_titleView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -176,7 +174,7 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -187,7 +185,7 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end

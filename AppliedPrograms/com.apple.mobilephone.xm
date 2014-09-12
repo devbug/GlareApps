@@ -65,7 +65,7 @@ NSInteger currentBackdropStyle				= 0;
 	%orig;
 	
 	UIView *subview = (self.view.subviews.count > 0 ? self.view.subviews[0] : nil);
-	subview.backgroundColor = [UIColor clearColor];
+	subview.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -91,7 +91,7 @@ NSInteger currentBackdropStyle				= 0;
 %hook PHHandsetDialerView
 
 - (id)dialerColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.6f];
+	return [colorHelper mobilePhoneDialerBackgroundColor];
 }
 
 %end
@@ -100,13 +100,13 @@ NSInteger currentBackdropStyle				= 0;
 %hook PHHandsetDialerLCDView
 
 - (id)lcdColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.6f];
+	return [colorHelper mobilePhoneDialerBackgroundColor];
 }
 
 - (void)setText:(id)text needsFormat:(BOOL)format {
 	%orig;
 	
-	self.numberLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.numberLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -119,7 +119,7 @@ NSInteger currentBackdropStyle				= 0;
 	
 	UILabel *_labelTextLabel = MSHookIvar<UILabel *>(self, "_labelTextLabel");
 	
-	_labelTextLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	_labelTextLabel.textColor = [colorHelper systemGrayColor];
 }
 
 %end
@@ -138,11 +138,11 @@ NSInteger currentBackdropStyle				= 0;
 	setLabelTextColorIfHasBlackColor(_callerNameLabel);
 	setLabelTextColorIfHasBlackColor(_callerLabelLabel);
 	setLabelTextColorIfHasBlackColor(_callerCountLabel);
-	_callerDateLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	_callerDateLabel.textColor = [colorHelper systemGrayColor];
 	
 	UIImageView *_callTypeIconView = MSHookIvar<UIImageView *>(self, "_callTypeIconView");
 	
-	_callTypeIconView.image = [_callTypeIconView.image _flatImageWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0];
+	_callTypeIconView.image = [_callTypeIconView.image _flatImageWithColor:[colorHelper commonTextColor]];
 }
 
 %end

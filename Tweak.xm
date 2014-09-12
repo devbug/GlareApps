@@ -102,10 +102,10 @@ BOOL isTheAppEnabled(NSString *bundleIdentifier) {
 void setLabelTextColorIfHasBlackColor(UILabel *label) {
 	if (label.attributedText) return;
 	
-	if ([label.textColor isEqual:[UIColor blackColor]] 
-			|| [label.textColor isEqual:[UIColor colorWithWhite:0.0f alpha:1.0f]] 
-			|| [label.textColor isEqual:[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f]]) {
-		label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	if ([label.textColor isEqual:[colorHelper blackColor]] 
+			|| [label.textColor isEqual:colorHelper.color_0_0__1_0] 
+			|| [label.textColor isEqual:colorHelper.rgbBlackColor]) {
+		label.textColor = [colorHelper commonTextColor];
 		return;
 	}
 	
@@ -114,7 +114,7 @@ void setLabelTextColorIfHasBlackColor(UILabel *label) {
 		[label.textColor getWhite:&white alpha:&alpha];
 		
 		if (white != kLightColorWithWhiteForWhiteness && white < 0.4f) {
-			label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:fabs(1.0f-white)*alpha];
+			label.textColor = [colorHelper commonTextColorWithAlpha:fabs(1.0f-white)*alpha];
 		}
 	}
 }
@@ -129,7 +129,7 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 		if ([[color description] hasPrefix:@"UIDeviceWhiteColorSpace"]) {
 			CGFloat white = 0.0f, alpha = 0.0f;
 			[color getWhite:&white alpha:&alpha];
-			mutableAttributes[@"NSColor"] = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:alpha];
+			mutableAttributes[@"NSColor"] = [colorHelper commonTextColorWithAlpha:alpha];
 		}
 		[attributedString setAttributes:mutableAttributes range:range];
 	}];
@@ -148,6 +148,8 @@ BOOL isFirmware70							= YES;
 BOOL isFirmware71							= NO;
 
 UIKBRenderConfig *kbRenderConfig			= nil;
+
+GlareAppsColorHelper *colorHelper			= nil;
 
 
 
@@ -218,7 +220,7 @@ UIKBRenderConfig *kbRenderConfig			= nil;
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
 	%orig;
 	
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f];
+	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper keyWindowBackgroundColor];
 }
 
 %end
@@ -246,7 +248,7 @@ UIKBRenderConfig *kbRenderConfig			= nil;
 
 %new
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f];
+	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper keyWindowBackgroundColor];
 }
 
 %end
@@ -338,7 +340,7 @@ void clearBar(UIView *view) {
 	bar.barStyle = kBarStyleForWhiteness;
 	
 	bar.barTintColor = nil;
-	bar.backgroundColor = [UIColor clearColor];
+	bar.backgroundColor = [colorHelper clearColor];
 	bar.translucent = YES;
 	
 	[bar setNeedsLayout];
@@ -354,7 +356,7 @@ void clearBar(UIView *view) {
 	%orig;
 	
 	[[UIApplication sharedApplication] setStatusBarStyle:kBarStyleForWhiteness];
-	self.view.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+	self.view.backgroundColor = [colorHelper themedFakeClearColor];
 	self.dropShadowView.backgroundColor = nil;
 }
 
@@ -408,21 +410,20 @@ void clearBar(UIView *view) {
 		return;
 	}
 	
-	if ([color isEqual:[UIColor clearColor]]) {
+	if ([color isEqual:[colorHelper clearColor]]) {
 		return;
 	}
-	if ([color isEqual:[UIColor blackColor]] || [color isEqual:[UIColor whiteColor]]) {
-		self.backgroundColor = [UIColor clearColor];
+	if ([color isEqual:[colorHelper blackColor]] || [color isEqual:[colorHelper whiteColor]]) {
+		self.backgroundColor = [colorHelper clearColor];
 		return;
 	}
-	if (color != nil && ![color isEqual:[UIColor clearColor]]
+	if (color != nil && ![color isEqual:[colorHelper clearColor]]
 			&& [[color description] hasPrefix:@"UIDeviceWhiteColorSpace"]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor * 2.0f]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor]]) {
-		//self.backgroundColor = [UIColor clearColor];
+			&& ![color isEqual:[colorHelper keyWindowBackgroundColor]]
+			&& ![color isEqual:[colorHelper preferencesUITableViewBackgroundColor]]
+			&& ![color isEqual:[colorHelper themedFakeClearColor]]
+			&& ![color isEqual:[colorHelper defaultTableViewCellBackgroundColor]]) {
+		//self.backgroundColor = [colorHelper clearColor];
 		return;
 	}
 }
@@ -510,22 +511,21 @@ void clearBar(UIView *view) {
 		return;
 	}
 	
-	if ([color isEqual:[UIColor clearColor]]) {
+	if ([color isEqual:[colorHelper clearColor]]) {
 		%orig;
 		return;
 	}
-	if ([color isEqual:[UIColor whiteColor]]) {
-		%orig([UIColor clearColor]);
+	if ([color isEqual:[colorHelper whiteColor]]) {
+		%orig([colorHelper clearColor]);
 		return;
 	}
-	if (color != nil && ![color isEqual:[UIColor clearColor]]
+	if (color != nil && ![color isEqual:[colorHelper clearColor]]
 			&& [[color description] hasPrefix:@"UIDeviceWhiteColorSpace"]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:0.2f]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor * 2.0f]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]]
-			&& ![color isEqual:[UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor]]) {
-		//%orig([UIColor clearColor]);
+			&& ![color isEqual:[colorHelper keyWindowBackgroundColor]]
+			&& ![color isEqual:[colorHelper preferencesUITableViewBackgroundColor]]
+			&& ![color isEqual:[colorHelper themedFakeClearColor]]
+			&& ![color isEqual:[colorHelper defaultTableViewCellBackgroundColor]]) {
+		//%orig([colorHelper clearColor]);
 		//return;
 	}
 	
@@ -566,7 +566,7 @@ void clearBar(UIView *view) {
 	if (![self.superview isKindOfClass:%c(UITableViewCellContentView)] 
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
 		if (white == 0.5f && alpha == 1.0f)
-			textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+			textColor = [colorHelper systemGrayColor];
 	}
 	
 	NSString *selfText = nil;
@@ -605,7 +605,7 @@ void clearBar(UIView *view) {
 	if (![self.superview isKindOfClass:%c(UITableViewCellContentView)] 
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
 		if (white == 0.5f && alpha == 1.0f)
-			textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+			textColor = [colorHelper systemGrayColor];
 		else if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
 			textColor = [UIColor colorWithWhite:fabs(1.0f-white) alpha:alpha];
 	}
@@ -624,8 +624,8 @@ void clearBar(UIView *view) {
 - (void)layoutSubviews {
 	%orig;
 	
-	if (!isWhiteness && [self.textColor isEqual:[UIColor blackColor]])
-		self.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	if (!isWhiteness && [self.textColor isEqual:[colorHelper blackColor]])
+		self.textColor = [colorHelper commonTextColor];
 	if ([self respondsToSelector:@selector(setKeyboardAppearance:)] && ![self isKindOfClass:%c(CKBalloonTextView)])
 		self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 }
@@ -647,14 +647,14 @@ void clearBar(UIView *view) {
 	
 	NSString *superviewName = NSStringFromClass([self.superview class]);
 	
-	if (!isWhiteness && [self.textColor isEqual:[UIColor blackColor]] && ![superviewName hasPrefix:@"_UIModalItem"])
-		self.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	if (!isWhiteness && [self.textColor isEqual:[colorHelper blackColor]] && ![superviewName hasPrefix:@"_UIModalItem"])
+		self.textColor = [colorHelper commonTextColor];
 	if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
 		self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 }
 
 - (id)_placeholderColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	return [colorHelper systemGrayColor];
 }
 
 - (void)setTextColor:(UIColor *)textColor {
@@ -690,9 +690,9 @@ void clearBar(UIView *view) {
 	
 	self.backgroundColor = nil;
 	self.buttonTable.backgroundColor = nil;
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.subtitleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.messageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.titleLabel.textColor = [colorHelper commonTextColor];
+	self.subtitleLabel.textColor = [colorHelper commonTextColor];
+	self.messageLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -704,9 +704,9 @@ void clearBar(UIView *view) {
 	
 	self.backgroundColor = nil;
 	self.buttonTable.backgroundColor = nil;
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.subtitleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.messageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.titleLabel.textColor = [colorHelper commonTextColor];
+	self.subtitleLabel.textColor = [colorHelper commonTextColor];
+	self.messageLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -717,7 +717,7 @@ void clearBar(UIView *view) {
 	%orig;//(NO, animated);
 	
 	UIView *_fakeEffectSourceView = MSHookIvar<UIView *>(self, "_fakeEffectSourceView");
-	_fakeEffectSourceView.backgroundColor = [UIColor colorWithWhite:fabs(kDarkColorWithWhiteForWhiteness-0.1f) alpha:1.0f];
+	_fakeEffectSourceView.backgroundColor = [colorHelper defaultAlertViewRepresentationViewBackgroundColor];
 }
 
 %end
@@ -727,68 +727,86 @@ void clearBar(UIView *view) {
 
 + (id)darkTextColor {
 	UIColor *color = %orig;
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:color.alphaComponent];
+	return [colorHelper commonTextColorWithAlpha:color.alphaComponent];
 }
 + (id)lightTextColor {
 	UIColor *color = %orig;
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:color.alphaComponent];
+	return [colorHelper lightTextColorWithAlpha:color.alphaComponent];
 }
 + (id)systemGrayColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	return [colorHelper systemGrayColor];
+}
++ (UIColor *)darkGrayColor {
+	return [colorHelper systemDarkGrayColor];
+}
++ (UIColor *)lightGrayColor {
+	return [colorHelper systemLightGrayColor];
+}
++ (id)tableCellDefaultSelectionTintColor {
+	return [colorHelper systemLightGrayColor];
+}
++ (id)tableSelectionGradientEndColor {
+	return [colorHelper systemLightGrayColor];
+}
++ (id)tableSelectionGradientStartColor {
+	return [colorHelper systemDarkGrayColor];
+}
++ (id)tableSelectionColor {
+	return [colorHelper systemLightGrayColor];
 }
 + (id)tablePlainHeaderFooterFloatingBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 + (id)tablePlainHeaderFooterBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 + (id)tableCellbackgroundColorPigglyWiggly {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 + (id)tableCellBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 + (id)tableCellGroupedBackgroundColorLegacyWhite {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 + (id)tableCellPlainBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 + (id)tableBackgroundColor {
 	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.Preferences"])
-		return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor * 2.0f];
+		return [colorHelper preferencesUITableViewBackgroundColor];
 	
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 + (id)sectionHeaderOpaqueBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 + (id)sectionHeaderBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 + (id)tableCellGrayTextColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	return [colorHelper systemGrayColor];
 }
 + (id)noContentDarkGradientBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 + (id)noContentLightGradientBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 + (id)tableGroupedSeparatorLightColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [colorHelper defaultTableViewSeparatorColor];
 }
 + (id)tableSeparatorLightColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [colorHelper defaultTableViewSeparatorColor];
 }
 + (id)tableSeparatorDarkColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [colorHelper defaultTableViewSeparatorColor];
 }
 + (id)tableCellGroupedBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 + (id)groupTableViewBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 
 %end
@@ -823,16 +841,16 @@ void clearBar(UIView *view) {
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	self.backgroundView.alpha = 0.0f;
-	self.contentView.backgroundColor = [UIColor clearColor];
+	self.contentView.backgroundColor = [colorHelper clearColor];
 }
 
 - (void)_updateBackgroundView {
 	%orig;
 	
 	self.backgroundView = nil;
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -849,48 +867,48 @@ void clearBar(UIView *view) {
 	%orig;
 
 	if (self.superview) {
-		self.sectionIndexBackgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+		self.sectionIndexBackgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
 	}
 }
 
 - (UIColor *)backgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)_setBackgroundColor:(id)color animated:(BOOL)animated {
-	%orig([UIColor clearColor], animated);
+	%orig([colorHelper clearColor], animated);
 }
 
 - (UIColor *)sectionIndexBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 
 - (void)setSectionIndexBackgroundColor:(UIColor *)color {
-	%orig([UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]);
+	%orig([colorHelper defaultTableViewCellBackgroundColor]);
 }
 
 - (id)_defaultSeparatorColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [colorHelper defaultTableViewSeparatorColor];
 }
 
 - (UIColor *)separatorColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [colorHelper defaultTableViewSeparatorColor];
 }
 
 - (void)setSeparatorColor:(UIColor *)color {
-	%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor]);
+	%orig([colorHelper defaultTableViewSeparatorColor]);
 }
 
 - (id)tableHeaderBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 
 - (void)setTableHeaderBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 //- (void)setSeparatorStyle:(UITableViewCellSeparatorStyle)style {
@@ -907,7 +925,7 @@ void clearBar(UIView *view) {
 	
 	if (self.tableView && ![self.backgroundView isKindOfClass:%c(_UIBackdropView)]) {
 		self.backgroundColor = nil;
-		self.contentView.backgroundColor = [UIColor clearColor];
+		self.contentView.backgroundColor = [colorHelper clearColor];
 		self.tintColor = nil;
 		if ([self respondsToSelector:@selector(setBackgroundImage:)])
 			self.backgroundImage = nil;
@@ -930,7 +948,7 @@ void clearBar(UIView *view) {
 - (void)layoutSubviews {
 	%orig;
 	
-	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	self.textLabel.textColor = [colorHelper systemGrayColor];
 	
 	if (self.tableView != nil && self.tableView.style == UITableViewStyleGrouped) return;
 	if ([self.class requiresConstraintBasedLayout]) return;
@@ -941,7 +959,7 @@ void clearBar(UIView *view) {
 - (void)updateConstraints {
 	%orig;
 	
-	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	self.textLabel.textColor = [colorHelper systemGrayColor];
 	
 	if (self.tableView != nil && self.tableView.style == UITableViewStyleGrouped) return;
 	if (![self.class requiresConstraintBasedLayout]) return;
@@ -958,8 +976,8 @@ UIImage *disclosureImageBlack = nil;
 
 void setDisclosureImage(UIImageView *iv) {
 	if (disclosureImageBlack == nil) {
-		disclosureImageBlack = [iv.image _flatImageWithWhite:0.0f alpha:kTintColorAlphaFactor];
-		disclosureImageWhite = [iv.image _flatImageWithWhite:1.0f alpha:kTintColorAlphaFactor];
+		disclosureImageBlack = [iv.image _flatImageWithColor:colorHelper.color_0_0__0_4];
+		disclosureImageWhite = [iv.image _flatImageWithColor:colorHelper.color_1_0__0_4];
 		[disclosureImageBlack retain];
 		[disclosureImageWhite retain];
 	}
@@ -988,17 +1006,17 @@ void setDisclosureImage(UIImageView *iv) {
 	%orig;
 	
 	if ([self __glareapps_isNeedsToSetJustClearBackground])
-		self.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+		self.backgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
 	
-	self.textLabel.backgroundColor = [UIColor clearColor];
-	self.detailTextLabel.backgroundColor = [UIColor clearColor];
-	self.detailTextLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	self.textLabel.backgroundColor = [colorHelper clearColor];
+	self.detailTextLabel.backgroundColor = [colorHelper clearColor];
+	self.detailTextLabel.textColor = [colorHelper systemGrayColor];
 	
 	setLabelTextColorIfHasBlackColor(self.textLabel);
 	
 	for (UILabel *label in self.contentView.subviews) {
 		if ([label isKindOfClass:[UILabel class]]) {
-			label.backgroundColor = [UIColor clearColor];
+			label.backgroundColor = [colorHelper clearColor];
 			
 			setLabelTextColorIfHasBlackColor(label);
 		}
@@ -1046,8 +1064,8 @@ UIImage *reorderImageBlack = nil;
 	if (reorderImageBlack == nil) {
 		UIImage *rtn = %orig;
 		
-		reorderImageBlack = [rtn _flatImageWithWhite:0.0f alpha:kTintColorAlphaFactor];
-		reorderImageWhite = [rtn _flatImageWithWhite:1.0f alpha:kTintColorAlphaFactor];
+		reorderImageBlack = [rtn _flatImageWithColor:colorHelper.color_0_0__0_4];
+		reorderImageWhite = [rtn _flatImageWithColor:colorHelper.color_1_0__0_4];
 		[reorderImageBlack retain];
 		[reorderImageWhite retain];
 	}
@@ -1067,10 +1085,10 @@ UIImage *reorderImageBlack = nil;
 %hook UIGroupTableViewCellBackground
 
 - (id)backgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]);
+	%orig([colorHelper defaultTableViewCellBackgroundColor]);
 }
 - (UIColor *)selectionTintColor {
 	return %orig;
@@ -1093,7 +1111,7 @@ UIImage *reorderImageBlack = nil;
 %hook UITabBarButton
 
 - (void)_setUnselectedTintColor:(UIColor *)tintColor forceLabelToConform:(BOOL)labelConform {
-	tintColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	tintColor = [colorHelper systemGrayColor];
 	labelConform = YES;
 	
 	%orig;
@@ -1102,7 +1120,7 @@ UIImage *reorderImageBlack = nil;
 // >= 7.1
 - (void)_setContentTintColor:(UIColor *)color forState:(UIControlState)state {
 	if (state == UIControlStateNormal) {
-		%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor], state);
+		%orig([colorHelper systemGrayColor], state);
 		return;
 	}
 	
@@ -1122,7 +1140,7 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -1160,11 +1178,11 @@ UIImage *reorderImageBlack = nil;
 }
 
 - (UIColor *)backgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 
 - (void)setBackgroundColor:(UIColor *)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (BOOL)isTranslucent {
@@ -1182,7 +1200,7 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	self.barTintColor = nil;
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	self.backgroundImage = nil;
 }
 
@@ -1212,7 +1230,7 @@ UIImage *reorderImageBlack = nil;
 - (id)_glyphAndTextColor:(BOOL)unknown {
 	// placeholder
 	if (!unknown) {
-		return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+		return [colorHelper systemGrayColor];
 	}
 	
 	return %orig;
@@ -1250,7 +1268,7 @@ UIImage *reorderImageBlack = nil;
 - (void)_updateViewHierarchy {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	
 	_UIBackdropView *_backdrop = MSHookIvar<_UIBackdropView *>(self, "_backdrop");
 	
@@ -1336,7 +1354,7 @@ UIImage *reorderImageBlack = nil;
 - (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
 	if (isWhiteness) return %orig;
 	
-	burnColor = [UIColor colorWithWhite:0.9f alpha:0.2f];
+	burnColor = colorHelper.color_0_9__0_2;
 	
 	return %orig;
 }
@@ -1363,7 +1381,7 @@ UIImage *reorderImageBlack = nil;
 
 - (void)setHighlightImage:(UIImage *)image {
 	if (!isWhiteness)
-		image = [image _flatImageWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+		image = [image _flatImageWithColor:[colorHelper commonTextColor]];
 	
 	%orig;
 }
@@ -1401,10 +1419,10 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
-	self.standardChromeView.backgroundColor = [UIColor clearColor];
-	self.backgroundView.backgroundColor = [UIColor clearColor];
-	self.contentView.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
+	self.standardChromeView.backgroundColor = [colorHelper clearColor];
+	self.backgroundView.backgroundColor = [colorHelper clearColor];
+	self.contentView.backgroundColor = [colorHelper clearColor];
 	self.toolbarShine.alpha = 0.0f;
 }
 
@@ -1570,13 +1588,13 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
-	self.contactNameView.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
+	self.contactNameView.backgroundColor = [colorHelper clearColor];
 	
 	if (!isFirmware71) {
-		self.contactNameView.meLabel.backgroundColor = [UIColor clearColor];
-		self.contactNameView.meLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
-		self.contactNameView.nameLabel.backgroundColor = [UIColor clearColor];
+		self.contactNameView.meLabel.backgroundColor = [colorHelper clearColor];
+		self.contactNameView.meLabel.textColor = [colorHelper systemGrayColor];
+		self.contactNameView.nameLabel.backgroundColor = [colorHelper clearColor];
 	}
 }
 
@@ -1590,7 +1608,7 @@ UIImage *reorderImageBlack = nil;
 }
 
 - (void)drawRect:(CGRect)rect {
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	
 	BOOL isHighlighted = self.highlighted;
 	self.highlighted = YES;
@@ -1608,8 +1626,8 @@ UIImage *reorderImageBlack = nil;
 - (void)viewWillAppear:(BOOL)animated {
 	%orig;
 	
-	self.currentTableView.backgroundColor = [UIColor clearColor];
-	self.currentTableView.sectionIndexBackgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	self.currentTableView.backgroundColor = [colorHelper clearColor];
+	self.currentTableView.sectionIndexBackgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
 }
 
 %end
@@ -1619,7 +1637,7 @@ UIImage *reorderImageBlack = nil;
 %hook ABStyleProvider
 
 - (UIColor *)groupCellTextColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:0.9f];
+	return [colorHelper commonTextColor];
 }
 
 - (BOOL)groupsTableShouldRemoveBackgroundView {
@@ -1639,23 +1657,23 @@ UIImage *reorderImageBlack = nil;
 }
 
 - (id)cardCellBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 
 - (UIColor *)cardLabelBackgroundColor {
-	return [UIColor clearColor];
+	return [colorHelper clearColor];
 }
 
 - (id)cardCellDividerColorVertical:(BOOL)vertical {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:1.0f];
+	return [colorHelper lightTextColor];
 }
 
 - (UIColor *)memberNameTextColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	return [colorHelper commonTextColor];
 }
 
 - (UIColor *)cardValueTextColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	return [colorHelper commonTextColor];
 }
 
 %end
@@ -1668,7 +1686,7 @@ UIImage *reorderImageBlack = nil;
 	
 	if ([view isKindOfClass:[UITableViewHeaderFooterView class]]) {
 		if (![view.backgroundView isKindOfClass:%c(_UIBackdropView)]) {
-			view.contentView.backgroundColor = [UIColor clearColor];
+			view.contentView.backgroundColor = [colorHelper clearColor];
 			view.tintColor = nil;
 			if ([view respondsToSelector:@selector(setBackgroundImage:)])
 				view.backgroundImage = nil;
@@ -1691,7 +1709,7 @@ UIImage *reorderImageBlack = nil;
 - (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView {
 	%orig;
 	
-	tableView.backgroundColor = [UIColor clearColor];
+	tableView.backgroundColor = [colorHelper clearColor];
 	
 	UIView *superview = controller._containerView.behindView;
 	
@@ -1741,8 +1759,8 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.valueLabel.backgroundColor = [UIColor clearColor];
-	self.labelLabel.backgroundColor = [UIColor clearColor];
+	self.valueLabel.backgroundColor = [colorHelper clearColor];
+	self.labelLabel.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -1751,7 +1769,7 @@ UIImage *reorderImageBlack = nil;
 %hook ABPropertyNameCell
 
 - (void)setBackgroundColor:(UIColor *)color {
-	//%orig([UIColor clearColor]);
+	//%orig([colorHelper clearColor]);
 	
 	objc_super $super = {self, [UITableViewCell class]};
 	objc_msgSendSuper(&$super, @selector(setBackgroundColor:), color);
@@ -1768,7 +1786,7 @@ UIImage *reorderImageBlack = nil;
 %hook ABPropertyNoteCell
 
 - (void)setBackgroundColor:(UIColor *)color {
-	//%orig([UIColor clearColor]);
+	//%orig([colorHelper clearColor]);
 	
 	objc_super $super = {self, [UITableViewCell class]};
 	objc_msgSendSuper(&$super, @selector(setBackgroundColor:), color);
@@ -1782,7 +1800,7 @@ UIImage *reorderImageBlack = nil;
 	[privDict retain];
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:privDict];
 	
-	dict[@"NSColor"] = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+	dict[@"NSColor"] = [colorHelper systemGrayColor];
 	
 	[self.labelLabel setTextAttributes:dict];
 	
@@ -1797,22 +1815,22 @@ UIImage *reorderImageBlack = nil;
 %hook ABContactCell
 
 - (void)setSeparatorColor:(UIColor *)color {
-	%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor]);
+	%orig([colorHelper defaultTableViewSeparatorColor]);
 }
 
 - (void)setContactSeparatorColor:(UIColor *)color {
-	%orig([UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor]);
+	%orig([colorHelper defaultTableViewSeparatorColor]);
 }
 
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
-	self.textLabel.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
+	self.textLabel.backgroundColor = [colorHelper clearColor];
 }
 
 - (void)setBackgroundColor:(UIColor *)color {
-	//%orig([UIColor clearColor]);
+	//%orig([colorHelper clearColor]);
 	
 	objc_super $super = {self, [UITableViewCell class]};
 	objc_msgSendSuper(&$super, @selector(setBackgroundColor:), color);
@@ -1829,8 +1847,8 @@ UIImage *reorderImageBlack = nil;
 	UILabel *_nameLabel = MSHookIvar<UILabel *>(self, "_nameLabel");
 	UILabel *_taglineLabel = MSHookIvar<UILabel *>(self, "_taglineLabel");
 	
-	_nameLabel.backgroundColor = [UIColor clearColor];
-	_taglineLabel.backgroundColor = [UIColor clearColor];
+	_nameLabel.backgroundColor = [colorHelper clearColor];
+	_taglineLabel.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -1842,7 +1860,7 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	self.backgroundColor = nil;
-	self.contentView.backgroundColor = [UIColor clearColor];
+	self.contentView.backgroundColor = [colorHelper clearColor];
 	self.tintColor = nil;
 	if ([self respondsToSelector:@selector(setBackgroundImage:)])
 		self.backgroundImage = nil;
@@ -1858,7 +1876,7 @@ UIImage *reorderImageBlack = nil;
 - (void)_updateLabel {
 	%orig;
 	
-	self.textLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.textLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -1867,7 +1885,7 @@ UIImage *reorderImageBlack = nil;
 %hook ABContactView
 
 - (void)setBackgroundColor:(UIColor *)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 %end
@@ -1876,22 +1894,22 @@ UIImage *reorderImageBlack = nil;
 %hook UIColor
 
 + (id)cardCellSeparatorColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kClearAlphaFactor];
+	return [colorHelper defaultTableViewSeparatorColor];
 }
 + (id)cardCellReadonlyBackgroundColor {
 	return %orig;
 }
 + (id)cardBackgroundInPopoverColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kTransparentAlphaFactor];
+	return [colorHelper themedFakeClearColor];
 }
 + (id)cardCellBackgroundColor {
-	return [UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor];
+	return [colorHelper defaultTableViewCellBackgroundColor];
 }
 + (id)cardValueReadonlyTextColor {
 	return %orig;
 }
 + (id)cardValueTextColor {
-	return [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	return [colorHelper commonTextColor];
 }
 + (id)cardLabelReadonlyTextColor {
 	return %orig;
@@ -1910,9 +1928,9 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.textField.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.textField.backgroundColor = [UIColor clearColor];
-	self.backgroundColor = [UIColor clearColor];
+	self.textField.textColor = [colorHelper commonTextColor];
+	self.textField.backgroundColor = [colorHelper clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -1924,13 +1942,13 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	if ([[self.tintColor description] hasPrefix:@"UIDeviceWhiteColorSpace"]) {
-		self.detailLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
-		self.labelLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor];
+		self.detailLabel.textColor = [colorHelper systemGrayColor];
+		self.labelLabel.textColor = [colorHelper systemGrayColor];
 	}
 	
-	self.detailLabel.backgroundColor = [UIColor clearColor];
-	self.labelLabel.backgroundColor = [UIColor clearColor];
-	self.backgroundColor = [UIColor clearColor];
+	self.detailLabel.backgroundColor = [colorHelper clearColor];
+	self.labelLabel.backgroundColor = [colorHelper clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -1942,10 +1960,10 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	if ([[self.tintColor description] hasPrefix:@"UIDeviceWhiteColorSpace"])
-		self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+		self.titleLabel.textColor = [colorHelper commonTextColor];
 	
-	self.titleLabel.backgroundColor = [UIColor clearColor];
-	self.backgroundColor = [UIColor clearColor];
+	self.titleLabel.backgroundColor = [colorHelper clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -1958,8 +1976,8 @@ UIImage *reorderImageBlack = nil;
 	
 	MFRecipientTableViewCellDetailView *_detailView = MSHookIvar<MFRecipientTableViewCellDetailView *>(self, "_detailView");
 	MFRecipientTableViewCellTitleView *_titleView = MSHookIvar<MFRecipientTableViewCellTitleView *>(self, "_titleView");
-	_detailView.backgroundColor = [UIColor clearColor];
-	_titleView.backgroundColor = [UIColor clearColor];
+	_detailView.backgroundColor = [colorHelper clearColor];
+	_titleView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -1996,7 +2014,7 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self._previewMaskingView.backgroundColor = [UIColor clearColor];
+	self._previewMaskingView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -2007,7 +2025,7 @@ UIImage *reorderImageBlack = nil;
 - (void)_setupBackdropView {
 	%orig;
 	
-	[self setTitleColor:[UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f] forState:UIControlStateNormal];
+	[self setTitleColor:[colorHelper commonTextColor] forState:UIControlStateNormal];
 }
 
 %end
@@ -2022,7 +2040,7 @@ UIImage *reorderImageBlack = nil;
 	UIButton *customView = (UIButton *)item.customView;
 	UIImage *image = [customView imageForState:UIControlStateNormal];
 	
-	image = [image _flatImageWithWhite:kLightColorWithWhiteForWhiteness alpha:kRealFullAlphaFactor];
+	image = [image _flatImageWithColor:[colorHelper commonTextColor]];
 	[customView setImage:image forState:UIControlStateNormal];
 	
 	return item;
@@ -2090,7 +2108,7 @@ UIImage *reorderImageBlack = nil;
 %hook CKUIBehavior
 
 - (id)gray_balloonTextColor {
-	return [UIColor colorWithWhite:0.0f alpha:0.9f];
+	return colorHelper.color_0_0__0_9;
 }
 
 %end
@@ -2107,8 +2125,8 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.verbiageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.titleLabel.textColor = [colorHelper commonTextColor];
+	self.verbiageLabel.textColor = [colorHelper commonTextColor];
 	
 	self.userPassBox.alpha = 0.2f;
 }
@@ -2121,7 +2139,7 @@ UIImage *reorderImageBlack = nil;
 	%orig;
 	
 	UILabel *_label = MSHookIvar<UILabel *>(self, "_label");
-	_label.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	_label.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -2142,6 +2160,8 @@ UIImage *reorderImageBlack = nil;
 	LoadSettings();
 	
 	if (!isThisAppEnabled()) return;
+	
+	colorHelper = [GlareAppsColorHelper sharedInstance];
 	
 	kbRenderConfig = [[%c(UIKBRenderConfig) alloc] init];
 	kbRenderConfig.blurRadius = 20.0f;

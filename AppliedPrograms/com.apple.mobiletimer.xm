@@ -139,7 +139,7 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 	//%orig;
 	
 	UIColor *color = MTButtonTextColor(colorType);
-	[self setTitleColor:(colorType == kMTButtonStyleDisabled ? color : [UIColor colorWithWhite:1.0f alpha:kFullAlphaFactor]) 
+	[self setTitleColor:(colorType == kMTButtonStyleDisabled ? color : [colorHelper whiteColor]) 
 			   forState:state];
 	
 	UIImage *image = MTButtonCircleImageForColorAndSize(colorType, self.size);
@@ -149,7 +149,7 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 }
 
 - (void)setBackgroundColor:(UIColor *)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 %end
@@ -159,11 +159,11 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 %hook MTTimerPickerView
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)internalSetBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 %end
@@ -174,10 +174,10 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	
 	UIView *_buttonsBackgroundView = MSHookIvar<UIView *>(self, "_buttonsBackgroundView");
-	_buttonsBackgroundView.backgroundColor = [UIColor clearColor];
+	_buttonsBackgroundView.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -186,11 +186,11 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 %hook AlarmTableViewCell
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]);
+	%orig([colorHelper defaultTableViewCellBackgroundColor]);
 }
 
 - (void)internalSetBackgroundColor:(id)color {
-	%orig([UIColor colorWithWhite:kDarkColorWithWhiteForWhiteness alpha:kJustClearAlphaFactor]);
+	%orig([colorHelper defaultTableViewCellBackgroundColor]);
 }
 
 %end
@@ -201,7 +201,7 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 - (void)layoutSubviews {
 	%orig;
 	
-	self.combinedLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.combinedLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -212,7 +212,7 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 - (void)updateColorThemeForFullscreen {
 	%orig;
 	
-	self.dayLabel.textColor = [UIColor colorWithWhite:0.7f alpha:kFullAlphaFactor];
+	self.dayLabel.textColor = colorHelper.color_0_7__1_0;
 }
 
 %end
@@ -251,13 +251,13 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 - (id)newDateLabel {
 	UILabel *label = %orig;
 	
-	label.backgroundColor = [UIColor clearColor];
+	label.backgroundColor = [colorHelper clearColor];
 	
 	return label;
 }
 
 - (void)setBackgroundColor:(id)color {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 %end
@@ -268,11 +268,11 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 	
 	NSMutableArray *_hourLabels = MSHookIvar<NSMutableArray *>(self, "_hourLabels");
 	for (UILabel *label in _hourLabels) {
-		label.textColor = [UIColor colorWithWhite:0.0f alpha:kFullAlphaFactor];
+		label.textColor = colorHelper.blackColor;
 	}
 }
 
@@ -288,11 +288,11 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 	UILabel *_centerColumnHeader = MSHookIvar<UILabel *>(self, "_centerColumnHeader");
 	UILabel *_rightColumnHeader = MSHookIvar<UILabel *>(self, "_rightColumnHeader");
 	
-	_leftColumnHeader.backgroundColor = [UIColor clearColor];
-	_centerColumnHeader.backgroundColor = [UIColor clearColor];
-	_rightColumnHeader.backgroundColor = [UIColor clearColor];
+	_leftColumnHeader.backgroundColor = [colorHelper clearColor];
+	_centerColumnHeader.backgroundColor = [colorHelper clearColor];
+	_rightColumnHeader.backgroundColor = [colorHelper clearColor];
 	
-	self.backgroundColor = [UIColor clearColor];
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -301,11 +301,11 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 %hook LapPadTableViewCell
 
 - (void)setBackgroundColor:(id)arg1 {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 - (void)internalSetBackgroundColor:(id)arg1 {
-	%orig([UIColor clearColor]);
+	%orig([colorHelper clearColor]);
 }
 
 %end
@@ -315,7 +315,7 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 
 - (void)_setControlsBackgroundColor {
 	UILabel *_currentLapTimeLabel = MSHookIvar<UILabel *>(self, "_currentLapTimeLabel");
-	_currentLapTimeLabel.backgroundColor = [UIColor clearColor];
+	_currentLapTimeLabel.backgroundColor = [colorHelper clearColor];
 }
 
 %end
@@ -330,7 +330,7 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 	_circleBackground.alpha = 0.3f;
 	
 	UIButton *_toneButton = MSHookIvar<UIButton *>(self, "_toneButton");
-	_toneButton.backgroundColor = [UIColor clearColor];
+	_toneButton.backgroundColor = [colorHelper clearColor];
 }
 
 %end
