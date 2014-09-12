@@ -1505,12 +1505,10 @@ UIImage *reorderImageBlack = nil;
 
 - (void)presentViewController:(UIViewController *)viewController withTransition:(UIViewAnimationTransition)transition completion:(id)fp_ {
 	if ([viewController __glareapps_isNeedsToHasBackdrop]) {
-		BOOL alreadyExists = NO;
 		if (viewController.view.subviews.count > 0 && [viewController.view.subviews[0] isKindOfClass:[_UIBackdropView class]]) {
 			_UIBackdropView *view = viewController.view.subviews[0];
 			if (view.tag != 0xc001) {
 				view.alpha = 0.0f;
-				alreadyExists = YES;
 			}
 		}
 		
@@ -1530,8 +1528,6 @@ UIImage *reorderImageBlack = nil;
 				frame.origin.x = 0;
 				
 				_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-				if (!alreadyExists)
-					settings.grayscaleTintAlpha = 0.3f;
 				
 				backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 				backdropView.tag = 0xc001;
@@ -1563,7 +1559,6 @@ UIImage *reorderImageBlack = nil;
 	
 	if (backdropView == nil) {
 		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		settings.grayscaleTintAlpha = 0.3f;
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
@@ -1721,7 +1716,6 @@ UIImage *reorderImageBlack = nil;
 		frame.origin.x = 0;
 		
 		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		settings.grayscaleTintAlpha = 0.3f;
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
