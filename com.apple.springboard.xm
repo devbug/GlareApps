@@ -152,6 +152,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 - (void)layout {
 	%orig;
 	
+	if (!GlareAppsEnable) return;
+	
 	self.backgroundColor = nil;
 	self.buttonTable.backgroundColor = nil;
 	self.titleLabel.textColor = [colorHelper commonTextColor];
@@ -165,6 +167,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 
 - (void)layout {
 	%orig;
+	
+	if (!GlareAppsEnable) return;
 	
 	self.backgroundColor = nil;
 	self.buttonTable.backgroundColor = nil;
@@ -180,6 +184,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 - (void)setUseFakeEffectSource:(BOOL)useFakeEffectSource animated:(BOOL)animated {
 	%orig;//(NO, animated);
 	
+	if (!GlareAppsEnable) return;
+	
 	UIView *_fakeEffectSourceView = MSHookIvar<UIView *>(self, "_fakeEffectSourceView");
 	_fakeEffectSourceView.backgroundColor = [colorHelper defaultAlertViewRepresentationViewBackgroundColor];
 }
@@ -190,6 +196,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 
 - (void)layoutSubviews {
 	%orig;
+	
+	if (!GlareAppsEnable) return;
 	
 	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
 	
@@ -209,6 +217,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 - (void)layout {
 	%orig;
 	
+	if (!GlareAppsEnable) return;
+	
 	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
 	
 	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
@@ -223,6 +233,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 
 - (void)layout {
 	%orig;
+	
+	if (!GlareAppsEnable) return;
 	
 	_UIBackdropView *_backdropView = nil;
 	if (isFirmware71) {
@@ -261,7 +273,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 - (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
 	if (isWhiteness) return %orig;
 	
-	burnColor = colorHelper.color_0_9__0_2;
+	if (GlareAppsEnable)
+		burnColor = colorHelper.color_0_9__0_2;
 	
 	return %orig;
 }
@@ -273,7 +286,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 - (id)initWithFrame:(CGRect)frame {
 	_UIActionSheetBlendingSeparatorView *rtn = %orig;
 	
-	if (rtn && !isWhiteness) {
+	if (rtn && !isWhiteness && GlareAppsEnable) {
 		UIView *_colorBurnView = MSHookIvar<UIView *>(rtn, "_colorBurnView");
 		
 		[_colorBurnView.layer setCompositingFilter:nil];
@@ -287,7 +300,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 %hook UIAlertButton
 
 - (void)setHighlightImage:(UIImage *)image {
-	image = [image _flatImageWithColor:[colorHelper commonTextColor]];
+	if (GlareAppsEnable)
+		image = [image _flatImageWithColor:[colorHelper commonTextColor]];
 	
 	%orig;
 }
@@ -299,6 +313,8 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 
 - (void)viewWillAppear:(BOOL)animated {
 	%orig;
+	
+	if (!GlareAppsEnable) return;
 	
 	if (self.backdropView.style != kBackdropStyleForWhiteness)
 		[self.backdropView transitionToStyle:kBackdropStyleForWhiteness];
