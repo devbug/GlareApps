@@ -43,7 +43,6 @@ static NSArray *GlareAppsWhiteList = nil;
 
 void LoadSettings() {
 	NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
-	if (!dict) return;
 	
 	if (!GlareAppsWhiteList){
 		[GlareAppsWhiteList release];

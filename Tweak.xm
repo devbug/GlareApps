@@ -14,7 +14,6 @@ static NSArray *GlareAppsWhiteList = nil;
 
 static void LoadSettings() {
 	NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
-	if (!dict) return;
 	
 	GlareAppsEnable = [dict[@"GlareAppsEnable"] boolValue];
 	if (dict[@"GlareAppsEnable"] == nil)
