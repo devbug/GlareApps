@@ -720,6 +720,17 @@ void clearBar(UIView *view) {
 
 %end
 
+%hook _UIModalItemRepresentationView
+
+- (void)setUseFakeEffectSource:(BOOL)useFakeEffectSource animated:(BOOL)animated {
+	%orig;//(NO, animated);
+	
+	UIView *_fakeEffectSourceView = MSHookIvar<UIView *>(self, "_fakeEffectSourceView");
+	_fakeEffectSourceView.backgroundColor = [UIColor colorWithWhite:fabs(kDarkColorWithWhiteForWhiteness-0.1f) alpha:1.0f];
+}
+
+%end
+
 
 %hook UIColor
 
@@ -1361,6 +1372,17 @@ UIImage *reorderImageBlack = nil;
 	}
 	
 	return rtn;
+}
+
+%end
+
+%hook UIAlertButton
+
+- (void)setHighlightImage:(UIImage *)image {
+	if (!isWhiteness)
+		image = [image _flatImageWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	
+	%orig;
 }
 
 %end

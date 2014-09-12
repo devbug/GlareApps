@@ -159,6 +159,17 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 
 %end
 
+%hook _UIModalItemRepresentationView
+
+- (void)setUseFakeEffectSource:(BOOL)useFakeEffectSource animated:(BOOL)animated {
+	%orig;//(NO, animated);
+	
+	UIView *_fakeEffectSourceView = MSHookIvar<UIView *>(self, "_fakeEffectSourceView");
+	_fakeEffectSourceView.backgroundColor = [UIColor colorWithWhite:fabs(kDarkColorWithWhiteForWhiteness-0.1f) alpha:1.0f];
+}
+
+%end
+
 %hook _UIModalItemAlertBackgroundView
 
 - (void)layoutSubviews {
@@ -253,6 +264,16 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	}
 	
 	return rtn;
+}
+
+%end
+
+%hook UIAlertButton
+
+- (void)setHighlightImage:(UIImage *)image {
+	image = [image _flatImageWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	
+	%orig;
 }
 
 %end
