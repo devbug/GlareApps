@@ -217,6 +217,12 @@
 	return _color_1_0__0_8;
 }
 
+- (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha {
+	UIColor *color = [[UIColor alloc] initWithWhite:white alpha:alpha];
+	
+	return [color autorelease];
+}
+
 
 - (void)dealloc {
 	[_objects removeAllObjects];

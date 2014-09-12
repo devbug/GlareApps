@@ -578,7 +578,7 @@ void clearBar(UIView *view) {
 	if (!isWhiteness && selfText && ![self __glareapps_isActionSheetOrActivityGroup]
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
 		if (white != kLightColorWithWhiteForWhiteness)
-			textColor = [UIColor colorWithWhite:fabs(kLightColorWithWhiteForWhiteness - white) alpha:alpha];
+			textColor = [colorHelper colorWithWhite:fabs(kLightColorWithWhiteForWhiteness - white) alpha:alpha];
 	}
 	
 	%orig;
@@ -607,7 +607,7 @@ void clearBar(UIView *view) {
 		if (white == 0.5f && alpha == 1.0f)
 			textColor = [colorHelper systemGrayColor];
 		else if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
-			textColor = [UIColor colorWithWhite:fabs(1.0f-white) alpha:alpha];
+			textColor = [colorHelper colorWithWhite:fabs(1.0f-white) alpha:alpha];
 	}
 	
 	%orig;
@@ -662,7 +662,7 @@ void clearBar(UIView *view) {
 	
 	if ([[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
 		if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
-			textColor = [UIColor colorWithWhite:fabs(1.0f-white) alpha:alpha];
+			textColor = [colorHelper colorWithWhite:fabs(1.0f-white) alpha:alpha];
 	}
 	
 	%orig;

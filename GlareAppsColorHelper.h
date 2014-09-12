@@ -58,4 +58,6 @@
 - (UIColor *)musicNowPlayingViewTitlesDetailLabelTextColor;
 - (UIColor *)musicTableViewCellTextColor;
 
+- (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
+
 @end
