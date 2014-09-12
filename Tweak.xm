@@ -2159,9 +2159,9 @@ UIImage *reorderImageBlack = nil;
 	//CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadPrefsNotification, CFSTR("kr.slak.glareapps.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	LoadSettings();
 	
-	if (!isThisAppEnabled()) return;
-	
 	colorHelper = [GlareAppsColorHelper sharedInstance];
+	
+	if (!isThisAppEnabled()) return;
 	
 	kbRenderConfig = [[%c(UIKBRenderConfig) alloc] init];
 	kbRenderConfig.blurRadius = 20.0f;

@@ -137,9 +137,9 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	
 	self.backgroundColor = nil;
 	self.buttonTable.backgroundColor = nil;
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.subtitleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.messageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.titleLabel.textColor = [colorHelper commonTextColor];
+	self.subtitleLabel.textColor = [colorHelper commonTextColor];
+	self.messageLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -151,9 +151,9 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	
 	self.backgroundColor = nil;
 	self.buttonTable.backgroundColor = nil;
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.subtitleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
-	self.messageLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
+	self.titleLabel.textColor = [colorHelper commonTextColor];
+	self.subtitleLabel.textColor = [colorHelper commonTextColor];
+	self.messageLabel.textColor = [colorHelper commonTextColor];
 }
 
 %end
@@ -164,7 +164,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	%orig;//(NO, animated);
 	
 	UIView *_fakeEffectSourceView = MSHookIvar<UIView *>(self, "_fakeEffectSourceView");
-	_fakeEffectSourceView.backgroundColor = [UIColor colorWithWhite:fabs(kDarkColorWithWhiteForWhiteness-0.1f) alpha:1.0f];
+	_fakeEffectSourceView.backgroundColor = [colorHelper defaultAlertViewRepresentationViewBackgroundColor];
 }
 
 %end
@@ -244,7 +244,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 - (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
 	if (isWhiteness) return %orig;
 	
-	burnColor = [UIColor colorWithWhite:0.9f alpha:0.2f];
+	burnColor = colorHelper.color_0_9__0_2;
 	
 	return %orig;
 }
