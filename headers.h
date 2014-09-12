@@ -1,6 +1,11 @@
 
 #import <UIKit/UIKit.h>
-#import "UIApplication+GlareApps.h"
+#import "AdditionalHeaders/UIApplication+GlareApps.h"
+#import "AdditionalHeaders/UILabel+GlareApps.h"
+#import "AdditionalHeaders/UITableViewCell+GlareApps.h"
+#import "AdditionalHeaders/UITableViewHeaderFooterView+GlareApps.h"
+#import "AdditionalHeaders/UIView+GlareApps.h"
+#import "AdditionalHeaders/UIViewController+GlareApps.h"
 
 
 enum {

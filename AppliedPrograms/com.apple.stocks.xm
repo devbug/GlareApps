@@ -139,7 +139,7 @@
 		self.backgroundColor = [UIColor clearColor];
 	}
 	else {
-		self.backgroundColor = [UIColor colorWithWhite:(isWhiteness ? 0.77 : 0.11) alpha:0.2];
+		self.backgroundColor = [UIColor colorWithWhite:(isWhiteness ? 0.77f : 0.11f) alpha:0.2f];
 	}
 }
 

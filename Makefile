@@ -10,15 +10,15 @@ include theos/makefiles/aggregate.mk
 TWEAK_NAME = GlareApps
 GlareApps_FILES = Tweak.xm \
 				  com.apple.springboard.xm \
-				  com.apple.Preferences.xm \
-				  com.apple.mobilephone.xm \
-				  com.apple.mobileslideshow.xm \
-				  com.apple.Music.xm \
-				  com.apple.mobiletimer.xm \
-				  com.apple.AppStore.xm \
-				  com.apple.stocks.xm \
-				  com.apple.calculator.xm \
-				  com.apple.MobileSMS.xm
+				  AppliedPrograms/com.apple.Preferences.xm \
+				  AppliedPrograms/com.apple.mobilephone.xm \
+				  AppliedPrograms/com.apple.mobileslideshow.xm \
+				  AppliedPrograms/com.apple.Music.xm \
+				  AppliedPrograms/com.apple.mobiletimer.xm \
+				  AppliedPrograms/com.apple.AppStore.xm \
+				  AppliedPrograms/com.apple.stocks.xm \
+				  AppliedPrograms/com.apple.calculator.xm \
+				  AppliedPrograms/com.apple.MobileSMS.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics QuartzCore
 GlareApps_PRIVATE_FRAMEWORKS = MobileTimer SpringBoardServices BackBoardServices
 

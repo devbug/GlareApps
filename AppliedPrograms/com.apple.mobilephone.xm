@@ -106,7 +106,7 @@ NSInteger currentBackdropStyle				= 0;
 - (void)setText:(id)text needsFormat:(BOOL)format {
 	%orig;
 	
-	self.numberLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0];
+	self.numberLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:1.0f];
 }
 
 %end

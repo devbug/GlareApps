@@ -212,7 +212,7 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 - (void)updateColorThemeForFullscreen {
 	%orig;
 	
-	self.dayLabel.textColor = [UIColor colorWithWhite:0.7 alpha:kFullAlphaFactor];
+	self.dayLabel.textColor = [UIColor colorWithWhite:0.7f alpha:kFullAlphaFactor];
 }
 
 %end

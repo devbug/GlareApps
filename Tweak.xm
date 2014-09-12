@@ -368,10 +368,6 @@ void clearBar(UIView *view) {
 %end
 
 
-@interface UIView (GlareApps)
-- (void)__glareapps_backgroundTest;
-@end
-
 @implementation UIView (GlareApps)
 
 - (void)__glareapps_backgroundTest {
@@ -539,10 +535,6 @@ void clearBar(UIView *view) {
 
 %end
 
-
-@interface UILabel (GlareApps)
-- (BOOL)__glareapps_isActionSheetOrActivityGroup;
-@end
 
 @implementation UILabel (GlareApps)
 
@@ -909,10 +901,6 @@ void clearBar(UIView *view) {
 %end
 
 
-@interface UITableViewHeaderFooterView (GlareApps)
-- (void)__glareapps_setBackground;
-@end
-
 @implementation UITableViewHeaderFooterView (GlareApps)
 
 - (void)__glareapps_setBackground {
@@ -986,10 +974,6 @@ void setDisclosureImage(UIImageView *iv) {
 	if (iv.image != disclosureImage)
 		iv.image = disclosureImage;
 }
-
-@interface UITableViewCell (GlareApps)
-- (BOOL)__glareapps_isNeedsToSetJustClearBackground;
-@end
 
 @implementation UITableViewCell (GlareApps)
 
@@ -1483,10 +1467,6 @@ UIImage *reorderImageBlack = nil;
 #pragma mark -
 #pragma mark Additional BackdropView
 
-
-@interface UIViewController (GlareApps)
-- (BOOL)__glareapps_isNeedsToHasBackdrop;
-@end
 
 @implementation UIViewController (GlareApps)
 

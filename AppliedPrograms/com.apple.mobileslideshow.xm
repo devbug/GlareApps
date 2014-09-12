@@ -464,7 +464,7 @@
 %hook PUPhotoBrowserController
 
 - (UIColor *)photoBackgroundColor {
-	return [UIColor colorWithWhite:1.0 alpha:kTransparentAlphaFactor];
+	return [UIColor colorWithWhite:1.0f alpha:kTransparentAlphaFactor];
 }
 
 %end

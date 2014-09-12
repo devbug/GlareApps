@@ -294,7 +294,7 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 		[backdropView release];
 	}
 	
-	self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:kTransparentAlphaFactor];
+	self.backgroundColor = [UIColor colorWithWhite:1.0f alpha:kTransparentAlphaFactor];
 	
 	UIImageView *_imageView = MSHookIvar<UIImageView *>(self, "_imageView");
 	_imageView.backgroundColor = [UIColor clearColor];
@@ -620,13 +620,13 @@ UIImage *shuffleImage = nil;
 - (void)setTitle:(NSString *)title {
 	%orig;
 	
-	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor * 2.0];
+	self.titleLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor * 2.0f];
 }
 - (void)setArtist:(NSString *)artist {
 	%orig;
 	
 	if (!isFirmware71)
-		self.artistLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor * 2.0];
+		self.artistLabel.textColor = [UIColor colorWithWhite:kLightColorWithWhiteForWhiteness alpha:kTintColorAlphaFactor * 2.0f];
 }
 - (void)setAlbum:(NSString *)album {
 	%orig;
