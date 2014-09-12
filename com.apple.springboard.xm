@@ -38,11 +38,16 @@ extern NSString *const SBSAppSwitcherQuitAppNotification;
 
 
 
+static BOOL GlareAppsEnable = YES;
 static NSArray *GlareAppsWhiteList = nil;
 
 
-void LoadSettings() {
+static void LoadSettings() {
 	NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
+	
+	GlareAppsEnable = [dict[@"GlareAppsEnable"] boolValue];
+	if (dict[@"GlareAppsEnable"] == nil)
+		GlareAppsEnable = YES;
 	
 	if (!GlareAppsWhiteList){
 		[GlareAppsWhiteList release];
@@ -51,7 +56,20 @@ void LoadSettings() {
 	if (dict[@"WhiteList"] != nil)
 		GlareAppsWhiteList = [dict[@"WhiteList"] retain];
 	
+	isWhiteness = [dict[@"GlareAppsUseWhiteTheme"] boolValue];
+	if (dict[@"GlareAppsUseWhiteTheme"] == nil)
+		isWhiteness = NO;
+	
 	[dict release];
+}
+
+static void reloadPrefsNotification(CFNotificationCenterRef center,
+									void *observer,
+									CFStringRef name,
+									const void *object,
+									CFDictionaryRef userInfo) {
+	LoadSettings();
+	[colorHelper reloadSettings];
 }
 
 
@@ -106,7 +124,6 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 									CFStringRef name,
 									const void *object,
 									CFDictionaryRef userInfo) {
-	LoadSettings();
 	killAllApps(GlareAppsWhiteList);
 }
 
@@ -294,6 +311,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 
 %ctor {
 	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.springboard"]) {
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadPrefsNotification, CFSTR("kr.slak.glareapps.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadKillAllAppsNotification, CFSTR("kr.slak.glareapps.killallapps"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 		
 		%init;

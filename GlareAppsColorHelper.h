@@ -60,4 +60,6 @@
 
 - (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
 
+- (void)reloadSettings;
+
 @end

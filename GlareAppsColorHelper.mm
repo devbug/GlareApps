@@ -28,6 +28,10 @@
 	[dict release];
 }
 
+- (void)reloadSettings {
+	[self _loadSettings];
+}
+
 - (id)init {
 	if ((self = [super init])) {
 		_objects = [[NSMutableDictionary alloc] init];
