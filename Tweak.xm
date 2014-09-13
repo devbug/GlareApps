@@ -13,24 +13,26 @@ static NSArray *GlareAppsWhiteList = nil;
 
 
 static void LoadSettings() {
-	NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
-	
-	GlareAppsEnable = [dict[@"GlareAppsEnable"] boolValue];
-	if (dict[@"GlareAppsEnable"] == nil)
-		GlareAppsEnable = YES;
-	
-	if (!GlareAppsWhiteList){
-		[GlareAppsWhiteList release];
-		GlareAppsWhiteList = nil;
+	@synchronized (GlareAppsWhiteList) {
+		NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
+		
+		GlareAppsEnable = [dict[@"GlareAppsEnable"] boolValue];
+		if (dict[@"GlareAppsEnable"] == nil)
+			GlareAppsEnable = YES;
+		
+		if (!GlareAppsWhiteList){
+			[GlareAppsWhiteList release];
+			GlareAppsWhiteList = nil;
+		}
+		if (dict[@"WhiteList"] != nil)
+			GlareAppsWhiteList = [dict[@"WhiteList"] retain];
+		
+		isWhiteness = [dict[@"GlareAppsUseWhiteTheme"] boolValue];
+		if (dict[@"GlareAppsUseWhiteTheme"] == nil)
+			isWhiteness = NO;
+		
+		[dict release];
 	}
-	if (dict[@"WhiteList"] != nil)
-		GlareAppsWhiteList = [dict[@"WhiteList"] retain];
-	
-	isWhiteness = [dict[@"GlareAppsUseWhiteTheme"] boolValue];
-	if (dict[@"GlareAppsUseWhiteTheme"] == nil)
-		isWhiteness = NO;
-	
-	[dict release];
 }
 
 void reloadPrefsNotification(CFNotificationCenterRef center,
@@ -74,27 +76,37 @@ BOOL isTheAppUIServiceProcess(NSString *bundleIdentifier) {
 }
 
 BOOL isThisAppEnabled() {
+	if (GlareAppsWhiteList == nil)
+		LoadSettings();
+	
 	if (!GlareAppsEnable) return NO;
 	
 	if (isThisAppUIServiceProcess()) return YES;
 	
-	if (GlareAppsWhiteList) {
-		if (![GlareAppsWhiteList containsObject:[[NSBundle mainBundle] bundleIdentifier]])
-			return NO;
-	} else return NO;
+	@synchronized (GlareAppsWhiteList) {
+		if (GlareAppsWhiteList) {
+			if (![GlareAppsWhiteList containsObject:[[NSBundle mainBundle] bundleIdentifier]])
+				return NO;
+		} else return NO;
+	}
 	
 	return YES;
 }
 
 BOOL isTheAppEnabled(NSString *bundleIdentifier) {
+	if (GlareAppsWhiteList == nil)
+		LoadSettings();
+	
 	if (!GlareAppsEnable) return NO;
 	
 	if (isTheAppUIServiceProcess(bundleIdentifier)) return YES;
 	
-	if (GlareAppsWhiteList) {
-		if (![GlareAppsWhiteList containsObject:bundleIdentifier])
-			return NO;
-	} else return NO;
+	@synchronized (GlareAppsWhiteList) {
+		if (GlareAppsWhiteList) {
+			if (![GlareAppsWhiteList containsObject:bundleIdentifier])
+				return NO;
+		} else return NO;
+	}
 	
 	return YES;
 }

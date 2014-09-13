@@ -43,24 +43,26 @@ static NSArray *GlareAppsWhiteList = nil;
 
 
 static void LoadSettings() {
-	NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
-	
-	GlareAppsEnable = [dict[@"GlareAppsEnable"] boolValue];
-	if (dict[@"GlareAppsEnable"] == nil)
-		GlareAppsEnable = YES;
-	
-	if (!GlareAppsWhiteList){
-		[GlareAppsWhiteList release];
-		GlareAppsWhiteList = nil;
+	@synchronized (GlareAppsWhiteList) {
+		NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
+		
+		GlareAppsEnable = [dict[@"GlareAppsEnable"] boolValue];
+		if (dict[@"GlareAppsEnable"] == nil)
+			GlareAppsEnable = YES;
+		
+		if (!GlareAppsWhiteList){
+			[GlareAppsWhiteList release];
+			GlareAppsWhiteList = nil;
+		}
+		if (dict[@"WhiteList"] != nil)
+			GlareAppsWhiteList = [dict[@"WhiteList"] retain];
+		
+		isWhiteness = [dict[@"GlareAppsUseWhiteTheme"] boolValue];
+		if (dict[@"GlareAppsUseWhiteTheme"] == nil)
+			isWhiteness = NO;
+		
+		[dict release];
 	}
-	if (dict[@"WhiteList"] != nil)
-		GlareAppsWhiteList = [dict[@"WhiteList"] retain];
-	
-	isWhiteness = [dict[@"GlareAppsUseWhiteTheme"] boolValue];
-	if (dict[@"GlareAppsUseWhiteTheme"] == nil)
-		isWhiteness = NO;
-	
-	[dict release];
 }
 
 static void reloadPrefsNotification(CFNotificationCenterRef center,
@@ -124,7 +126,9 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 									CFStringRef name,
 									const void *object,
 									CFDictionaryRef userInfo) {
-	killAllApps(GlareAppsWhiteList);
+	@synchronized (GlareAppsWhiteList) {
+		killAllApps(GlareAppsWhiteList);
+	}
 }
 
 
@@ -329,6 +333,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.springboard"]) {
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadPrefsNotification, CFSTR("kr.slak.glareapps.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadKillAllAppsNotification, CFSTR("kr.slak.glareapps.killallapps"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+		LoadSettings();
 		
 		%init;
 	}
