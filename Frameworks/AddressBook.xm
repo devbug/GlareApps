@@ -124,50 +124,10 @@
 %end
 
 
-%hook ABMembersController
+%hook ABPeoplePickerNavigationController
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller willShowSearchResultsTableView:(UITableView *)tableView {
-	%orig;
-	
-	tableView.backgroundColor = [colorHelper clearColor];
-	
-	UIView *superview = controller._containerView.behindView;
-	
-	_UIBackdropView *backdropView = (_UIBackdropView *)[superview viewWithTag:0xc001];
-	[backdropView retain];
-	
-	if (backdropView == nil) {
-		CGRect frame = tableView.frame;
-		frame.origin.x = 0;
-		
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		
-		backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
-		backdropView.tag = 0xc001;
-		
-		[superview insertSubview:backdropView atIndex:0];
-	}
-	
-	[backdropView release];
-}
-
-%new
-- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView {
-	UIView *superview = controller._containerView.behindView;
-	
-	_UIBackdropView *backdropView = (_UIBackdropView *)[superview viewWithTag:0xc001];
-	
-	[backdropView removeFromSuperview];
-}
-
-- (void)searchDisplayControllerWillEndSearch:(UISearchDisplayController *)controller {
-	%orig;
-	
-	UIView *superview = controller._containerView.behindView;
-	
-	_UIBackdropView *backdropView = (_UIBackdropView *)[superview viewWithTag:0xc001];
-	
-	[backdropView removeFromSuperview];
+- (BOOL)__glareapps_shouldRemoveBackdropAfterPresenting {
+	return YES;
 }
 
 %end

@@ -1337,7 +1337,7 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
-#pragma mark UISearchBar
+#pragma mark UISearch
 
 
 %hook UISearchBar
@@ -1526,12 +1526,16 @@ UIImage *reorderImageBlack = nil;
 	return YES;
 }
 
+- (BOOL)__glareapps_shouldRemoveBackdropAfterPresenting {
+	return NO;
+}
+
 @end
 
 
 %hook UIViewController
 
-- (void)presentViewController:(UIViewController *)viewController withTransition:(UIViewAnimationTransition)transition completion:(id)fp_ {
+- (void)presentViewController:(UIViewController *)viewController withTransition:(UIViewAnimationTransition)transition completion:(void (^)(void))fp_ {
 	if ([viewController __glareapps_isNeedsToHasBackdrop]) {
 		if (viewController.view.subviews.count > 0 && [viewController.view.subviews[0] isKindOfClass:[_UIBackdropView class]]) {
 			_UIBackdropView *view = viewController.view.subviews[0];
@@ -1569,7 +1573,17 @@ UIImage *reorderImageBlack = nil;
 		}
 	}
 	
-	%orig;
+	void (^completion)(void) = ^{
+		if (fp_)
+			fp_();
+		
+		if ([viewController __glareapps_shouldRemoveBackdropAfterPresenting]) {
+			_UIBackdropView *backdropView = (_UIBackdropView *)[viewController.view viewWithTag:0xc001];
+			[backdropView removeFromSuperview];
+		}
+	};
+	
+	%orig(viewController, transition, completion);
 }
 
 %end
