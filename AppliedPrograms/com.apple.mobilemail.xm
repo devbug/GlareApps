@@ -14,6 +14,16 @@
 - (UIView *)backgroundView;
 @end
 
+@interface MailboxContentViewCell : UITableViewCell
+@property(retain, nonatomic) UIColor *originalBackgroundColor;
+@end
+
+@interface _CellStaticView : UIView
+@property(retain, nonatomic) UIColor *originalBackgroundColor;
+@end
+
+@interface MessageHeaderHeader : UIView @end
+
 /*@interface DOMNode : NSObject
 @property(copy) NSString *textContent;
 @end
@@ -65,6 +75,28 @@
 %end
 
 
+%hook MailboxContentViewCell
+
+- (id)_dateLabelTextColor {
+	return [colorHelper systemGrayColor];
+}
+
+- (id)_bodyAttributesWithColor:(id)color {
+	return %orig([colorHelper systemGrayColor]);
+}
+
+- (void)drawInStaticView:(id)staticView highlighted:(BOOL)highlighted {
+	UIImageView *_chevron = MSHookIvar<UIImageView *>(self, "_chevron");
+	_chevron.image = [_chevron.image _flatImageWithColor:[colorHelper commonTextColor]];
+	
+	self.backgroundColor = [colorHelper clearColor];
+	
+	%orig;
+}
+
+%end
+
+
 %hook UITableViewCellSelectedBackground
 
 - (void)setSelectionTintColor:(UIColor *)color {
@@ -86,6 +118,8 @@
 	UIView *_subjectWebView = MSHookIvar<UIView *>(self, "_subjectWebView");
 	_subjectWebView.opaque = NO;
 	_subjectWebView.backgroundColor = [colorHelper clearColor];
+	
+	self.backgroundColor = [colorHelper clearColor];
 }
 
 - (id)_subjectLineHTML:(BOOL)useHtml {
@@ -131,8 +165,17 @@
 
 - (void)layoutSubviews {
 	[self setBackgroundView:nil];
+	self.backgroundColor = [colorHelper clearColor];
+	self.opaque = NO;
 	
 	%orig;
+}
+
+- (void)setAlternateText:(id)text {
+	%orig;
+	
+	UILabel *_alternateLabel = MSHookIvar<UILabel *>(self, "_alternateLabel");
+	_alternateLabel.textColor = [colorHelper systemGrayColor];
 }
 
 - (void)dealloc {
