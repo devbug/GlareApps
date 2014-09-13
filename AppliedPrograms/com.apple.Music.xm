@@ -275,25 +275,7 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 
 - (void)layoutSubviews {
 	%orig;
-	
-	if ([self.superview isKindOfClass:%c(UISearchResultsTableView)]) {
-		_UIBackdropView *backdropView = (_UIBackdropView *)[self viewWithTag:0xc002];
-		[backdropView retain];
 		
-		CGRect frame = self.frame;
-		frame.origin.x = 0;
-		frame.origin.y = 0;
-		
-		if (backdropView == nil) {
-			backdropView = [[_UIBackdropView alloc] initWithFrame:frame style:kBackdropStyleForWhiteness];
-			backdropView.tag = 0xc002;
-			[self insertSubview:backdropView atIndex:0];
-		}
-		
-		backdropView.frame = frame;
-		[backdropView release];
-	}
-	
 	self.backgroundColor = [colorHelper themedFakeClearColor];
 	
 	UIImageView *_imageView = MSHookIvar<UIImageView *>(self, "_imageView");

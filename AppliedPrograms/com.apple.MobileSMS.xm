@@ -92,42 +92,6 @@
 %end
 
 
-%hook CKConversationSearcher
-
-- (void)searchDisplayController:(id)searchController willShowSearchResultsTableView:(UITableView *)resultsTableView {
-	%orig;
-	
-	UIView *superview = resultsTableView.superview;
-	
-	_UIBackdropView *backdropView = (_UIBackdropView *)[superview viewWithTag:0xc001];
-	[backdropView retain];
-	
-	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		
-		backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
-		backdropView.tag = 0xc001;
-		
-		[superview insertSubview:backdropView atIndex:0];
-	}
-	
-	backdropView.alpha = 1.0f;
-	
-	[backdropView release];
-}
-
-- (void)searchDisplayController:(id)searchController willHideSearchResultsTableView:(UITableView *)resultsTableView {
-	%orig;
-	
-	UIView *superview = resultsTableView.superview;
-	
-	_UIBackdropView *backdropView = (_UIBackdropView *)[superview viewWithTag:0xc001];
-	backdropView.alpha = 0.0f;
-}
-
-%end
-
-
 // for biteSMS
 %hook UIViewController
 

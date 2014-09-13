@@ -1373,23 +1373,22 @@ UIImage *reorderImageBlack = nil;
 
 %hook UISearchDisplayController
 
-- (void)showHideAnimationDidFinish {
+- (void)_setTableViewVisible:(BOOL)visible inView:(UIView *)view {
 	%orig;
 	
-	if (!self.isActive) {
-		UINavigationBar *navBar = self.navigationItem.navigationBar;
-		
-		if (!navBar) {
-			id _navigationControllerBookkeeper = MSHookIvar<id>(self, "_navigationControllerBookkeeper");
-			
-			if ([_navigationControllerBookkeeper isKindOfClass:[UINavigationController class]]) {
-				UINavigationController *nc = (UINavigationController *)_navigationControllerBookkeeper;
-				navBar = nc.navigationBar;
-			}
-		}
-		
-		[navBar setNeedsLayout];
+	_UIBackdropView *backdropView = (_UIBackdropView *)[self._containerView viewWithTag:0xc001];
+	[backdropView retain];
+	
+	if (backdropView == nil) {
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness];
+		backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
+		backdropView.tag = 0xc001;
+		[self._containerView insertSubview:backdropView atIndex:0];
 	}
+	
+	backdropView.alpha = visible ? 1.0f : 0.0f;
+	
+	[backdropView release];
 }
 
 %end

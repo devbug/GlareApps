@@ -178,7 +178,9 @@
 
 @interface UISearchBarBackground : _UIBarBackgroundImageView @end
 
-@interface UISearchResultsTableView : UITableView @end
+@interface UISearchResultsTableView : UITableView
+@property(nonatomic) UISearchDisplayController *controller;
+@end
 @interface UISearchDisplayControllerContainerView : UIView
 @property(readonly, nonatomic) UIView *behindView;
 @end
