@@ -1450,6 +1450,7 @@ UIImage *reorderImageBlack = nil;
 	if ([self isKindOfClass:%c(_UIModalItemsPresentingViewController)]) return NO;
 	if ([self isKindOfClass:[UIActivityViewController class]]) return NO;
 	if ([self isKindOfClass:%c(SLComposeViewController)]) return NO;
+	if ([self isKindOfClass:%c(MPInlineVideoFullscreenViewController)]) return NO;
 	//MFMessageComposeViewController
 	//MFMailComposeViewController
 	//SKComposeReviewViewController
