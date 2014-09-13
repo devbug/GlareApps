@@ -27,3 +27,5 @@
 - (id)tintColor;
 @end
 
+@interface MFComposeTextContentView : UITextContentView @end
+

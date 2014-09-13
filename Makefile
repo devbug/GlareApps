@@ -25,7 +25,8 @@ GlareApps_FILES = Tweak.xm \
 				  AppliedPrograms/com.apple.AppStore.xm \
 				  AppliedPrograms/com.apple.stocks.xm \
 				  AppliedPrograms/com.apple.calculator.xm \
-				  AppliedPrograms/com.apple.MobileSMS.xm
+				  AppliedPrograms/com.apple.MobileSMS.xm \
+				  AppliedPrograms/com.apple.mobilemail.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics QuartzCore
 GlareApps_PRIVATE_FRAMEWORKS = MobileTimer SpringBoardServices BackBoardServices
 

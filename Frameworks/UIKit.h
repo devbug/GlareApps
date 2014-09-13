@@ -127,6 +127,11 @@
 
 @interface UIGroupTableViewCellBackground : UIView @end
 
+@interface UITableViewCellSelectedBackground : UIView
+@property(retain, nonatomic) UIColor *selectionTintColor;
+@property(retain, nonatomic) UIColor *multiselectBackgroundColor;
+@end
+
 @interface UIView (private_api)
 + (BOOL)_isInAnimationBlock;
 - (void)_updateBackdropMaskViewsInScrollView:(id)arg1;
@@ -277,5 +282,30 @@
 
 @interface UIActivityGroupCancelButton : UIButton
 @property(retain, nonatomic) _UIBackdropView *backdropView;
+@end
+
+@interface UITextContentView : UIView
+@property(readonly, nonatomic) UITextPosition *endOfDocument;
+@property(readonly, nonatomic) UITextPosition *beginningOfDocument;
+@property(copy, nonatomic) NSDictionary *markedTextStyle;
+- (void)unmarkText;
+- (void)setMarkedText:(id)arg1 selectedRange:(struct _NSRange)arg2;
+@property(readonly, nonatomic) UITextRange *markedTextRange;
+@property(copy) UITextRange *selectedTextRange;
+- (void)replaceRange:(id)arg1 withText:(id)arg2;
+@property(nonatomic, getter=isEditing) BOOL editing;
+@property(nonatomic, getter=isEditable) BOOL editable;
+@property(nonatomic) struct _NSRange selectedRange;
+@property(copy, nonatomic) NSString *text;
+- (BOOL)hasText;
+@property(retain, nonatomic) UIColor *textColor;
+@property(retain, nonatomic) UIFont *font;
+@property(copy, nonatomic) NSAttributedString *attributedText;
+@property(nonatomic) BOOL allowsEditingTextAttributes;
+- (id)contentAsAttributedString;
+- (void)setContentToAttributedString:(id)arg1;
+- (id)contentAsHTMLString;
+- (void)setContentToHTMLString:(id)arg1;
+- (BOOL)isSMSTextView;
 @end
 

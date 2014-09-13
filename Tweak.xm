@@ -683,6 +683,63 @@ void clearBar(UIView *view) {
 %end
 
 
+%hook UITextContentView
+
+- (UIColor *)textColor {
+	return [colorHelper commonTextColor];
+}
+
+- (void)setTextColor:(UIColor *)color {
+	%orig([colorHelper commonTextColor]);
+}
+
+- (void)setText:(NSString *)text {
+	%orig;
+	
+	[self setTextColor:[colorHelper commonTextColor]];
+}
+- (void)setContentToAttributedString:(id)attributedString {
+	%orig;
+	
+	[self setTextColor:[colorHelper commonTextColor]];
+}
+- (void)setContentToHTMLString:(id)htmlString {
+	%orig;
+	
+	[self setTextColor:[colorHelper commonTextColor]];
+}
+
+- (id)initWithCoder:(id)code {
+	self = %orig;
+	
+	if (self) {
+		[self setTextColor:[colorHelper commonTextColor]];
+	}
+	
+	return self;
+}
+- (id)initWithFrame:(CGRect)frame webView:(id)webView {
+	self = %orig;
+	
+	if (self) {
+		[self setTextColor:[colorHelper commonTextColor]];
+	}
+	
+	return self;
+}
+- (id)initWithFrame:(CGRect)frame {
+	self = %orig;
+	
+	if (self) {
+		[self setTextColor:[colorHelper commonTextColor]];
+	}
+	
+	return self;
+}
+
+%end
+
+
 %hook UIColor
 
 + (id)darkTextColor {
