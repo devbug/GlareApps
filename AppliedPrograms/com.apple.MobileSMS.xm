@@ -50,21 +50,6 @@
 
 
 
-%hook SMSApplication
-
-%new
-- (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper keyWindowBackgroundColor];
-}
-
-%new
-- (void)application:(UIApplication *)application didChangeStatusBarOrientation:(UIInterfaceOrientation)oldStatusBarOrientation {
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = nil;
-}
-
-%end
-
-
 %hook UITableViewCell
 
 - (void)layoutSubviews {

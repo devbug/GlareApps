@@ -171,7 +171,7 @@ GlareAppsColorHelper *colorHelper			= nil;
 - (void)__glareapps_applicationDidFinishLaunching {
 	[[UIApplication sharedApplication] _setApplicationBackdropStyle:kBackdropStyleForWhiteness];
 	[[UIApplication sharedApplication] setStatusBarStyle:kBarStyleForWhiteness];
-	[[UIApplication sharedApplication] keyWindow].backgroundColor = nil;
+	[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper clearColor];
 }
 
 @end
@@ -301,7 +301,7 @@ GlareAppsColorHelper *colorHelper			= nil;
 	
 	//[[UIApplication sharedApplication] _setApplicationBackdropStyle:kBackdropStyleForWhiteness];
 	//[[UIApplication sharedApplication] setStatusBarStyle:kBarStyleForWhiteness];
-	//[[UIApplication sharedApplication] keyWindow].backgroundColor = nil;
+	//[[UIApplication sharedApplication] keyWindow].backgroundColor = [colorHelper clearColor];
 	
 	if ([$AppDelegate instancesRespondToSelector:@selector(application:willChangeStatusBarOrientation:)]) {
 		%init(Rotate_1, AppDelegate = $AppDelegate);

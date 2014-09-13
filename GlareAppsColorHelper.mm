@@ -112,10 +112,7 @@
 }
 
 - (UIColor *)keyWindowBackgroundColor {
-	if (_isWhiteness)
-		return _color_1_0__0_2;
-	
-	return _color_0_0__0_2;
+	return _clearColor;
 }
 
 - (UIColor *)systemGrayColor {
