@@ -1384,22 +1384,56 @@ UIImage *reorderImageBlack = nil;
 
 - (void)layoutSubviews {
 	self.searchBarStyle = UISearchBarStyleMinimal;
-	self.barStyle = kBarStyleForWhiteness;
 	
 	%orig;
 	
 	self.barTintColor = nil;
 	self.backgroundColor = [colorHelper clearColor];
 	self.backgroundImage = nil;
+	
+	_UIBackdropView *backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdrop");
+	backdropView.alpha = 1.0f;
+	backdropView.hidden = NO;
 }
 
 - (void)_setStatusBarTintColor:(UIColor *)color {
 	
 }
 
-- (void)_updateNeedForBackdrop {
-	[self _setBackdropStyle:kBackdropStyleForWhiteness];
+- (id)initWithCoder:(id)coder {
+	self = %orig;
 	
+	if (self) {
+		self.searchBarStyle = UISearchBarStyleMinimal;
+		self.barStyle = kBarStyleForWhiteness;
+		[self _setBackdropStyle:kBackdropStyleForWhiteness];
+		
+		self.barTintColor = nil;
+		self.backgroundColor = [colorHelper clearColor];
+		self.backgroundImage = nil;
+		self.translucent = YES;
+	}
+	
+	return self;
+}
+- (id)initWithFrame:(CGRect)frame {
+	self = %orig;
+	
+	if (self) {
+		self.searchBarStyle = UISearchBarStyleMinimal;
+		self.barStyle = kBarStyleForWhiteness;
+		[self _setBackdropStyle:kBackdropStyleForWhiteness];
+		
+		self.barTintColor = nil;
+		self.backgroundColor = [colorHelper clearColor];
+		self.backgroundImage = nil;
+		self.translucent = YES;
+	}
+	
+	return self;
+}
+
+- (void)_updateNeedForBackdrop {
 	%orig;
 	
 	_UIBackdropView *backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdrop");
@@ -1539,9 +1573,6 @@ UIImage *reorderImageBlack = nil;
 	if ([self isKindOfClass:[UIActivityViewController class]]) return NO;
 	if ([self isKindOfClass:%c(SLComposeViewController)]) return NO;
 	if ([self isKindOfClass:%c(MPInlineVideoFullscreenViewController)]) return NO;
-	//MFMessageComposeViewController
-	//MFMailComposeViewController
-	//SKComposeReviewViewController
 	
 	return YES;
 }
