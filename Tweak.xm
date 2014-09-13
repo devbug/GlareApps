@@ -979,16 +979,16 @@ void clearBar(UIView *view) {
 	if ([self isKindOfClass:%c(ABGroupHeaderFooterView)]) return;
 	
 	if (self.tableView && ![self.backgroundView isKindOfClass:%c(_UIBackdropView)]) {
-		self.backgroundColor = nil;
-		self.contentView.backgroundColor = [colorHelper clearColor];
-		self.tintColor = nil;
-		if ([self respondsToSelector:@selector(setBackgroundImage:)])
-			self.backgroundImage = nil;
-		
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
-		
 		if (![self.backgroundView isKindOfClass:[_UIBackdropView class]]) {
+			self.backgroundColor = nil;
+			self.contentView.backgroundColor = [colorHelper clearColor];
+			self.tintColor = nil;
+			if ([self respondsToSelector:@selector(setBackgroundImage:)])
+				self.backgroundImage = nil;
+			
+			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
+			settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
+			
 			_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
 			self.backgroundView = backdropView;
 			[backdropView release];
@@ -1446,6 +1446,24 @@ UIImage *reorderImageBlack = nil;
 	backdropView.alpha = visible ? 1.0f : 0.0f;
 	
 	[backdropView release];
+}
+
+- (void)searchBar:(id)searchBar textDidChange:(NSString *)text {
+	%orig;
+	
+	if (text.length == 0) {
+		_UIBackdropView *backdropView = (_UIBackdropView *)[self._containerView viewWithTag:0xc001];
+		backdropView.alpha = 0.0f;
+	}
+}
+
+- (void)setActive:(BOOL)active animated:(BOOL)animated {
+	%orig;
+	
+	if (!active) {
+		_UIBackdropView *backdropView = (_UIBackdropView *)[self._containerView viewWithTag:0xc001];
+		backdropView.alpha = 0.0f;
+	}
 }
 
 %end
