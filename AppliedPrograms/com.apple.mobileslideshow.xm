@@ -51,11 +51,6 @@
 @property(retain, nonatomic, setter=pu_setBanner:) PUAbstractNavigationBanner *pu_banner;
 @end
 
-@interface PLPhotoCommentEntryView : UIView
-@property(readonly, nonatomic) UITextView *textView;
-@property(readonly, nonatomic) UILabel *placeholderLabel;
-@end
-
 @interface PUViewControllerTransition : NSObject
 - (id)containerView;
 - (UIViewController *)toViewController;
@@ -280,7 +275,6 @@
 	
 	if (backdropView == nil) {
 		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		settings.grayscaleTintAlpha = 0.3f;
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
@@ -316,7 +310,6 @@
 	
 	if (backdropView == nil) {
 		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-		settings.grayscaleTintAlpha = 0.3f;
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
@@ -353,7 +346,6 @@
 		
 		if (backdropView == nil) {
 			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
-			settings.grayscaleTintAlpha = 0.3f;
 			
 			backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 			backdropView.tag = 0xc001;
@@ -374,28 +366,6 @@
 		_UIBackdropView *backdropView = (_UIBackdropView *)[self.view viewWithTag:0xc001];
 		[backdropView removeFromSuperview];
 	}
-}
-
-%end
-
-
-%hook PLPhotoCommentEntryView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	self.placeholderLabel.textColor = [colorHelper systemGrayColor];
-}
-
-%end
-
-%hook PLCommentsViewController
-
-- (void)_updateLayerMaskWithBoundsChange {
-	%orig;
-	
-	UIImageView *_gradientView = MSHookIvar<UIImageView *>(self, "_gradientView");
-	_gradientView.image = [_gradientView.image _flatImageWithColor:[colorHelper lightTextColor]];
 }
 
 %end

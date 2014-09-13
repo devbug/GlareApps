@@ -11,6 +11,12 @@ TWEAK_NAME = GlareApps
 GlareApps_FILES = Tweak.xm \
 				  GlareAppsColorHelper.mm \
 				  com.apple.springboard.xm \
+				  Frameworks/AddressBook.xm \
+				  Frameworks/ChatKit.xm \
+				  Frameworks/CommunicationsSetupUI.xm \
+				  Frameworks/MessageUI.xm \
+				  Frameworks/PhotoLibrary.xm \
+				  Frameworks/StoreKit.xm \
 				  AppliedPrograms/com.apple.Preferences.xm \
 				  AppliedPrograms/com.apple.mobilephone.xm \
 				  AppliedPrograms/com.apple.mobileslideshow.xm \
