@@ -132,6 +132,14 @@
 
 %end
 
+%hook ABAccountsAndGroupsNavigationController
+
+- (BOOL)__glareapps_shouldRemoveBackdropAfterPresenting {
+	return YES;
+}
+
+%end
+
 
 %hook ABPropertyCell
 

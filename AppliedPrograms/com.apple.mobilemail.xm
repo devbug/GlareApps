@@ -189,6 +189,15 @@
 %end
 
 
+%hook ComposeNavigationController
+
+- (BOOL)__glareapps_shouldRemoveBackdropAfterPresenting {
+	return YES;
+}
+
+%end
+
+
 
 
 %ctor {
