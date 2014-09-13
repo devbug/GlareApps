@@ -671,58 +671,6 @@ void clearBar(UIView *view) {
 %end
 
 
-%hook UIKBRenderConfig
-
-+ (id)darkConfig {
-	return kbRenderConfig;
-}
-+ (id)defaultConfig {
-	return kbRenderConfig;
-}
-
-%end
-
-
-%hook _UIModalItemContentView
-
-- (void)layout {
-	%orig;
-	
-	self.backgroundColor = nil;
-	self.buttonTable.backgroundColor = nil;
-	self.titleLabel.textColor = [colorHelper commonTextColor];
-	self.subtitleLabel.textColor = [colorHelper commonTextColor];
-	self.messageLabel.textColor = [colorHelper commonTextColor];
-}
-
-%end
-
-%hook _UIModalItemAlertContentView
-
-- (void)layout {
-	%orig;
-	
-	self.backgroundColor = nil;
-	self.buttonTable.backgroundColor = nil;
-	self.titleLabel.textColor = [colorHelper commonTextColor];
-	self.subtitleLabel.textColor = [colorHelper commonTextColor];
-	self.messageLabel.textColor = [colorHelper commonTextColor];
-}
-
-%end
-
-%hook _UIModalItemRepresentationView
-
-- (void)setUseFakeEffectSource:(BOOL)useFakeEffectSource animated:(BOOL)animated {
-	%orig;//(NO, animated);
-	
-	UIView *_fakeEffectSourceView = MSHookIvar<UIView *>(self, "_fakeEffectSourceView");
-	_fakeEffectSourceView.backgroundColor = [colorHelper defaultAlertViewRepresentationViewBackgroundColor];
-}
-
-%end
-
-
 %hook UIColor
 
 + (id)darkTextColor {
@@ -812,6 +760,44 @@ void clearBar(UIView *view) {
 %end
 
 
+%hook _UIContentUnavailableView
+
+- (void)_updateViewHierarchy {
+	%orig;
+	
+	self.backgroundColor = [colorHelper clearColor];
+}
+
+%end
+
+
+%hook UIKBRenderConfig
+
++ (id)darkConfig {
+	return kbRenderConfig;
+}
++ (id)defaultConfig {
+	return kbRenderConfig;
+}
+
+%end
+
+
+%hook _UIPopoverView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	self.backgroundColor = [colorHelper clearColor];
+	self.standardChromeView.backgroundColor = [colorHelper clearColor];
+	self.backgroundView.backgroundColor = [colorHelper clearColor];
+	self.contentView.backgroundColor = [colorHelper clearColor];
+	self.toolbarShine.alpha = 0.0f;
+}
+
+%end
+
+
 
 #pragma mark -
 #pragma mark UICollectionView
@@ -858,7 +844,7 @@ void clearBar(UIView *view) {
 
 
 #pragma mark -
-#pragma mark UITableView (basic)
+#pragma mark UITableView
 
 
 %hook UITableView
@@ -1148,7 +1134,141 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
-#pragma mark BackdropView Control
+#pragma mark UIAlert
+
+
+%hook _UIModalItemAlertBackgroundView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	UIImageView *_fillingView = MSHookIvar<UIImageView *>(self, "_fillingView");
+	_fillingView.alpha = (isWhiteness ? 1.0f : 0.0f);
+}
+
+%end
+
+
+%hook UIActionSheet
+
+- (void)layout {
+	%orig;
+	
+	_UIBackdropView *_backdropView = nil;
+	if (isFirmware71) {
+		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
+	}
+	else {
+		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
+	}
+	
+	if (![_backdropView isKindOfClass:[_UIBackdropView class]]) return;
+	
+	UIImage *grayscaleTintMaskImage = [_backdropView.inputSettings.grayscaleTintMaskImage retain];
+	UIImage *colorTintMaskImage = [_backdropView.inputSettings.colorTintMaskImage retain];
+	UIImage *filterMaskImage = [_backdropView.inputSettings.filterMaskImage retain];
+	
+	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultUltraDark);
+	if (_backdropView.style != style) {
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:style];
+		settings.blurRadius = 7.0f;
+		settings.grayscaleTintMaskImage = grayscaleTintMaskImage;
+		settings.colorTintMaskImage = colorTintMaskImage;
+		settings.filterMaskImage = filterMaskImage;
+		
+		[_backdropView transitionToSettings:settings];
+	}
+	
+	[grayscaleTintMaskImage release];
+	[colorTintMaskImage release];
+	[filterMaskImage release];
+}
+
+%end
+
+%hook _UIActionSheetBlendingHighlightView
+
+- (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
+	if (isWhiteness) return %orig;
+	
+	burnColor = colorHelper.color_0_9__0_2;
+	
+	return %orig;
+}
+
+%end
+
+%hook _UIActionSheetBlendingSeparatorView
+
+- (id)initWithFrame:(CGRect)frame {
+	_UIActionSheetBlendingSeparatorView *rtn = %orig;
+	
+	if (rtn && !isWhiteness) {
+		UIView *_colorBurnView = MSHookIvar<UIView *>(rtn, "_colorBurnView");
+		
+		[_colorBurnView.layer setCompositingFilter:nil];
+	}
+	
+	return rtn;
+}
+
+%end
+
+%hook UIAlertButton
+
+- (void)setHighlightImage:(UIImage *)image {
+	if (!isWhiteness)
+		image = [image _flatImageWithColor:[colorHelper commonTextColor]];
+	
+	%orig;
+}
+
+%end
+
+
+%hook _UIModalItemContentView
+
+- (void)layout {
+	%orig;
+	
+	self.backgroundColor = nil;
+	self.buttonTable.backgroundColor = nil;
+	self.titleLabel.textColor = [colorHelper commonTextColor];
+	self.subtitleLabel.textColor = [colorHelper commonTextColor];
+	self.messageLabel.textColor = [colorHelper commonTextColor];
+}
+
+%end
+
+%hook _UIModalItemAlertContentView
+
+- (void)layout {
+	%orig;
+	
+	self.backgroundColor = nil;
+	self.buttonTable.backgroundColor = nil;
+	self.titleLabel.textColor = [colorHelper commonTextColor];
+	self.subtitleLabel.textColor = [colorHelper commonTextColor];
+	self.messageLabel.textColor = [colorHelper commonTextColor];
+}
+
+%end
+
+%hook _UIModalItemRepresentationView
+
+- (void)setUseFakeEffectSource:(BOOL)useFakeEffectSource animated:(BOOL)animated {
+	%orig;//(NO, animated);
+	
+	UIView *_fakeEffectSourceView = MSHookIvar<UIView *>(self, "_fakeEffectSourceView");
+	_fakeEffectSourceView.backgroundColor = [colorHelper defaultAlertViewRepresentationViewBackgroundColor];
+}
+
+%end
+
+
+
+#pragma mark -
+#pragma mark UISearchBar
 
 
 %hook UISearchBar
@@ -1263,119 +1383,9 @@ UIImage *reorderImageBlack = nil;
 %end
 
 
-%hook _UIContentUnavailableView
 
-- (void)_updateViewHierarchy {
-	%orig;
-	
-	self.backgroundColor = [colorHelper clearColor];
-}
-
-%end
-
-
-%hook _UIModalItemAlertBackgroundView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	UIImageView *_fillingView = MSHookIvar<UIImageView *>(self, "_fillingView");
-	_fillingView.alpha = (isWhiteness ? 1.0f : 0.0f);
-}
-
-%end
-
-
-%hook UIActionSheet
-
-- (void)layout {
-	%orig;
-	
-	_UIBackdropView *_backdropView = nil;
-	if (isFirmware71) {
-		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
-	}
-	else {
-		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
-	}
-	
-	if (![_backdropView isKindOfClass:[_UIBackdropView class]]) return;
-	
-	UIImage *grayscaleTintMaskImage = [_backdropView.inputSettings.grayscaleTintMaskImage retain];
-	UIImage *colorTintMaskImage = [_backdropView.inputSettings.colorTintMaskImage retain];
-	UIImage *filterMaskImage = [_backdropView.inputSettings.filterMaskImage retain];
-	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultUltraDark);
-	if (_backdropView.style != style) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:style];
-		settings.blurRadius = 7.0f;
-		settings.grayscaleTintMaskImage = grayscaleTintMaskImage;
-		settings.colorTintMaskImage = colorTintMaskImage;
-		settings.filterMaskImage = filterMaskImage;
-		
-		[_backdropView transitionToSettings:settings];
-	}
-	
-	[grayscaleTintMaskImage release];
-	[colorTintMaskImage release];
-	[filterMaskImage release];
-}
-
-%end
-
-%hook _UIActionSheetBlendingHighlightView
-
-- (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
-	if (isWhiteness) return %orig;
-	
-	burnColor = colorHelper.color_0_9__0_2;
-	
-	return %orig;
-}
-
-%end
-
-%hook _UIActionSheetBlendingSeparatorView
-
-- (id)initWithFrame:(CGRect)frame {
-	_UIActionSheetBlendingSeparatorView *rtn = %orig;
-	
-	if (rtn && !isWhiteness) {
-		UIView *_colorBurnView = MSHookIvar<UIView *>(rtn, "_colorBurnView");
-		
-		[_colorBurnView.layer setCompositingFilter:nil];
-	}
-	
-	return rtn;
-}
-
-%end
-
-%hook UIAlertButton
-
-- (void)setHighlightImage:(UIImage *)image {
-	if (!isWhiteness)
-		image = [image _flatImageWithColor:[colorHelper commonTextColor]];
-	
-	%orig;
-}
-
-%end
-
-
-%hook _UIPopoverView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	self.backgroundColor = [colorHelper clearColor];
-	self.standardChromeView.backgroundColor = [colorHelper clearColor];
-	self.backgroundView.backgroundColor = [colorHelper clearColor];
-	self.contentView.backgroundColor = [colorHelper clearColor];
-	self.toolbarShine.alpha = 0.0f;
-}
-
-%end
+#pragma mark -
+#pragma mark BackdropView Control
 
 
 %hook _UIBackdropView
