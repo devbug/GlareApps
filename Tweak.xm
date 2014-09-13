@@ -1433,6 +1433,8 @@ UIImage *reorderImageBlack = nil;
 - (void)_setTableViewVisible:(BOOL)visible inView:(UIView *)view {
 	%orig;
 	
+	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.Music"]) return;
+	
 	_UIBackdropView *backdropView = (_UIBackdropView *)[self._containerView viewWithTag:0xc001];
 	[backdropView retain];
 	
