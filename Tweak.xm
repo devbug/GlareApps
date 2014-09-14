@@ -1493,15 +1493,6 @@ UIImage *reorderImageBlack = nil;
 	}
 }
 
-- (void)setActive:(BOOL)active animated:(BOOL)animated {
-	%orig;
-	
-	if (!active) {
-		_UIBackdropView *backdropView = (_UIBackdropView *)[self._containerView viewWithTag:0xc001];
-		backdropView.alpha = 0.0f;
-	}
-}
-
 %end
 
 
