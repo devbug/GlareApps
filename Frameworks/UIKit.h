@@ -3,16 +3,26 @@
 
 
 
+@interface CALayer (private_api)
+@property BOOL allowsGroupBlending;
+@end
+
 @class _UIBackdropView;
 @interface _UIBackdropViewSettings : NSObject
 + (id)settingsForPrivateStyle:(NSInteger)arg1;
 + (id)settingsForStyle:(NSInteger)arg1;
 + (id)settingsForPrivateStyle:(NSInteger)arg1 graphicsQuality:(NSInteger)arg2;
 + (id)settingsForStyle:(NSInteger)arg1 graphicsQuality:(NSInteger)arg2;
+@property(nonatomic) BOOL appliesTintAndBlurSettings;
+@property(nonatomic) BOOL usesContentView;
 @property(nonatomic) BOOL usesColorTintView;
+@property(nonatomic) BOOL usesGrayscaleTintView;
+@property(nonatomic) BOOL usesBackdropEffectView;
 @property(nonatomic) CGFloat scale;
 @property(retain, nonatomic) UIColor *legibleColor;
 @property(retain, nonatomic) UIImage *filterMaskImage;
+@property(copy, nonatomic) NSString *blurQuality;
+@property(nonatomic) NSInteger blurHardEdges;
 @property(nonatomic) CGFloat blurRadius;
 @property(retain, nonatomic) UIImage *colorTintMaskImage;
 @property(nonatomic) CGFloat colorTintMaskAlpha;
@@ -25,14 +35,29 @@
 @property(nonatomic) NSInteger graphicsQuality;
 @property(nonatomic) NSInteger style;
 @property(nonatomic, assign) _UIBackdropView *backdrop;
+@property(nonatomic) BOOL blursWithHardEdges;
 @end
 @interface _UIBackdropView : UIView
 + (id)allBackdropViews;
+@property(nonatomic) CGFloat _blurRadius;
+@property(copy, nonatomic) NSString *_blurQuality;
+@property(nonatomic) BOOL blurRadiusSetOnce;
+@property(nonatomic) BOOL backdropVisibilitySetOnce;
+@property(nonatomic) NSInteger blurHardEdges;
+@property(nonatomic) BOOL simulatesMasks;
 @property(copy, nonatomic) NSString *groupName;
+@property(nonatomic) BOOL applySettingsAfterLayout;
 @property(retain, nonatomic) UIImage *colorTintMaskImage;
 @property(retain, nonatomic) UIImage *grayscaleTintMaskImage;
 @property(retain, nonatomic) UIImage *filterMaskImage;
+@property(nonatomic) BOOL allowsColorSettingsSuppression;
+@property(nonatomic) BOOL wantsColorSettings;
+@property(nonatomic) BOOL requiresTintViews;
+@property(nonatomic) BOOL applyingTransition;
+@property(nonatomic) BOOL applyingBackdropChanges;
 @property(retain, nonatomic) _UIBackdropViewSettings *inputSettings;
+@property(nonatomic) NSTimeInterval appliesOutputSettingsAnimationDuration;
+@property(nonatomic) BOOL computesColorSettings;
 @property(nonatomic) BOOL blursBackground;
 @property(nonatomic) NSInteger style;
 - (void)applySettings:(id)arg1;
@@ -44,10 +69,20 @@
 - (void)transitionToSettings:(id)arg1;
 - (void)transitionToPrivateStyle:(NSInteger)arg1;
 - (void)transitionToStyle:(NSInteger)arg1;
+- (void)setBlursWithHardEdges:(BOOL)arg1;
+- (BOOL)blursWithHardEdges;
+- (void)setBlurQuality:(id)arg1;
+- (id)blurQuality;
+- (void)setBlurRadius:(CGFloat)arg1;
+- (CGFloat)blurRadius;
+- (void)removeOverlayBlendModeFromView:(id)arg1;
+- (void)applyOverlayBlendModeToView:(id)arg1;
+- (void)applyOverlayBlendMode:(CGBlendMode)arg1 toView:(id)arg2;
 - (void)removeMaskViews;
 - (void)updateMaskViewsForView:(id)arg1;
 - (void)updateMaskViewForView:(id)arg1 flag:(NSInteger)arg2;
 - (id)initWithFrame:(CGRect)arg1 style:(NSInteger)arg2;
+- (id)initWithPrivateStyle:(NSInteger)arg1;
 - (id)initWithStyle:(NSInteger)arg1;
 - (id)initWithSettings:(_UIBackdropViewSettings *)arg1;
 - (id)initWithFrame:(CGRect)arg1 settings:(_UIBackdropViewSettings *)arg2;
@@ -184,7 +219,7 @@
 @interface UISearchBarBackground : _UIBarBackgroundImageView @end
 
 @interface UISearchResultsTableView : UITableView
-@property(nonatomic) UISearchDisplayController *controller;
+@property(nonatomic, assign) UISearchDisplayController *controller;
 @end
 @interface UISearchDisplayControllerContainerView : UIView
 @property(readonly, nonatomic) UIView *behindView;
@@ -221,6 +256,7 @@
 - (void)setDrawsBackgroundInPalette:(BOOL)arg1;
 - (BOOL)drawsBackground;
 - (void)setDrawsBackground:(BOOL)arg1;
+- (void)_updateNeedForBackdrop;
 - (void)_updateBackgroundToBackdropStyle:(NSInteger)arg1;
 - (UISearchDisplayController *)controller;
 @end

@@ -7,6 +7,7 @@
 #import "AdditionalHeaders/UITableViewHeaderFooterView+GlareApps.h"
 #import "AdditionalHeaders/UIView+GlareApps.h"
 #import "AdditionalHeaders/UIViewController+GlareApps.h"
+#import "AdditionalHeaders/_UIBackdropView+GlareApps.h"
 #import "Frameworks/AddressBook.h"
 #import "Frameworks/CommunicationsSetupUI.h"
 #import "Frameworks/MessageUI.h"
@@ -50,6 +51,8 @@ extern NSString * const kCAFilterDifferenceBlendMode;
 extern NSString * const kCAFilterExclusionBlendMode;
 
 
+
+@class GlareAppsColorHelper;
 
 extern BOOL isWhiteness;
 extern BOOL isFirmware70;

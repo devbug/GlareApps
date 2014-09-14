@@ -1,4 +1,7 @@
 
+#import "headers.h"
+#import <objc/runtime.h>
+
 
 @interface GlareAppsColorHelper : NSObject
 
@@ -59,6 +62,13 @@
 - (UIColor *)musicTableViewCellTextColor;
 
 - (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
+
+- (void)addBlurView:(_UIBackdropView *)view;
+- (void)removeBlurView:(_UIBackdropView *)view;
+- (BOOL)isOwnBlurView:(_UIBackdropView *)backdrop;
+- (BOOL)nowWindowRotating;
+
+- (BOOL)needsToSetOwnBackgroundColorForBackdropView:(_UIBackdropView *)view;
 
 - (void)reloadSettings;
 

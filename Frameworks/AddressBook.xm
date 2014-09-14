@@ -99,31 +99,6 @@
 %end
 
 
-%hook ABMembersDataSource
-
-- (void)tableView:(UIView *)tableView willDisplayHeaderView:(UITableViewHeaderFooterView *)view forSection:(NSInteger)section {
-	%orig;
-	
-	if ([view isKindOfClass:[UITableViewHeaderFooterView class]]) {
-		if (![view.backgroundView isKindOfClass:%c(_UIBackdropView)]) {
-			view.contentView.backgroundColor = [colorHelper clearColor];
-			view.tintColor = nil;
-			if ([view respondsToSelector:@selector(setBackgroundImage:)])
-				view.backgroundImage = nil;
-			
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
-			settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
-			
-			_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
-			view.backgroundView = backdropView;
-			[backdropView release];
-		}
-	}
-}
-
-%end
-
-
 %hook ABPeoplePickerNavigationController
 
 - (BOOL)__glareapps_shouldRemoveBackdropAfterPresenting {

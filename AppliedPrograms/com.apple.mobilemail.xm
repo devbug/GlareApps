@@ -170,6 +170,7 @@
 	UIView *&_backgroundView = MSHookIvar<UIView *>(self, "_backgroundView");
 	
 	[self insertSubview:backdropView belowSubview:_backgroundView];
+	[colorHelper addBlurView:backdropView];
 	
 	[_backgroundView removeFromSuperview];
 	[_backgroundView release];

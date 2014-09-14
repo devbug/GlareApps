@@ -256,6 +256,15 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 %end
 
 
+%hook _UIBackdropView
+
+- (BOOL)__glareapps_shouldRejectOwnBackgroundColor {
+	return YES;
+}
+
+%end
+
+
 %hook MPUVignetteBackgroundView
 
 - (void)layoutSubviews {

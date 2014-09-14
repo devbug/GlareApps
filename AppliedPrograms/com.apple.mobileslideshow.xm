@@ -265,6 +265,7 @@
 		backdropView.tag = 0xc001;
 		
 		[self.view insertSubview:backdropView atIndex:0];
+		[colorHelper addBlurView:backdropView];
 	}
 	
 	backdropView.frame = frame;
@@ -300,6 +301,7 @@
 		backdropView.tag = 0xc001;
 		
 		[self.view insertSubview:backdropView atIndex:0];
+		[colorHelper addBlurView:backdropView];
 	}
 	
 	backdropView.frame = frame;
@@ -336,6 +338,7 @@
 			backdropView.tag = 0xc001;
 			
 			[self.view insertSubview:backdropView atIndex:0];
+			[colorHelper addBlurView:backdropView];
 		}
 		
 		backdropView.frame = frame;

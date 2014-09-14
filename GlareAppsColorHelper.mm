@@ -5,6 +5,8 @@
 
 @implementation GlareAppsColorHelper {
 	NSMutableDictionary *_objects;
+	NSMutableArray *_blurViews;
+	BOOL _nowWindowRotating;
 }
 
 + (instancetype)sharedInstance {
@@ -35,6 +37,9 @@
 - (id)init {
 	if ((self = [super init])) {
 		_objects = [[NSMutableDictionary alloc] init];
+		_blurViews = [[NSMutableArray alloc] init];
+		
+		_nowWindowRotating = NO;
 		
 		_clearColor = [[UIColor clearColor] retain];
 		_whiteColor = [[UIColor whiteColor] retain];
@@ -63,6 +68,9 @@
 		_color_0_9__1_0 = [[UIColor colorWithWhite:0.9f alpha:1.0f] retain];
 		_color_0_11__0_2 = [[UIColor colorWithWhite:0.11f alpha:0.2f] retain];
 		_color_0_77__0_2 = [[UIColor colorWithWhite:0.77f alpha:0.2f] retain];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowWillRotate:) name:@"UIWindowWillRotateNotification" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidRotate:) name:@"UIWindowDidRotateNotification" object:nil];
 		
 		[self _loadSettings];
 	}
@@ -225,10 +233,67 @@
 }
 
 
+- (void)addBlurView:(_UIBackdropView *)view {
+	if (![_blurViews containsObject:view]) {
+		[_blurViews addObject:view];
+		[view release];
+	}
+}
+
+- (void)removeBlurView:(_UIBackdropView *)view {
+	if ([_blurViews containsObject:view]) {
+		[view retain];
+		[_blurViews removeObject:view];
+	}
+}
+
+- (BOOL)nowWindowRotating {
+	return _nowWindowRotating;
+}
+
+- (BOOL)isOwnBlurView:(_UIBackdropView *)backdrop {
+	return [_blurViews containsObject:backdrop];
+}
+
+// UIWindowNewOrientationUserInfoKey
+- (void)windowWillRotate:(NSNotification *)notification {
+	_nowWindowRotating = YES;
+}
+
+- (void)windowDidRotate:(NSNotification *)notification {
+	_nowWindowRotating = NO;
+	
+	for (_UIBackdropView *v in [_UIBackdropView allBackdropViews]) {
+		if ([self needsToSetOwnBackgroundColorForBackdropView:v])
+			v.backgroundColor = _clearColor;
+	}
+}
+
+- (BOOL)needsToSetOwnBackgroundColorForBackdropView:(_UIBackdropView *)view {
+	if ([view __glareapps_shouldRejectOwnBackgroundColor])
+		return NO;
+	
+	if ([self isOwnBlurView:view])
+		return YES;
+	if ([view.superview isKindOfClass:[UITableViewHeaderFooterView class]])
+		return YES;
+	if ([view.superview isKindOfClass:objc_getClass("UISearchBarBackground")])
+		return YES;
+	if ([view.superview isKindOfClass:objc_getClass("UISearchDisplayControllerContainerView")])
+		return YES;
+	
+	return NO;
+}
+
+
 - (void)dealloc {
 	[_objects removeAllObjects];
 	[_objects release];
 	_objects = nil;
+	
+	[_blurViews removeAllObjects];
+	[_blurViews release];
+	_blurViews = nil;
 	
 	[_clearColor release];
 	[_whiteColor release];

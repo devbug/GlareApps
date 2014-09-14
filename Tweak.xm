@@ -546,6 +546,22 @@ void clearBar(UIView *view) {
 
 %end
 
+%hook UIWindow
+
+- (void)_commonInit {
+	%orig;
+	
+	self.backgroundColor = [colorHelper clearColor];
+}
+
+- (void)awakeFromNib {
+	%orig;
+	
+	self.backgroundColor = [colorHelper clearColor];
+}
+
+%end
+
 
 @implementation UILabel (GlareApps)
 
@@ -978,21 +994,21 @@ void clearBar(UIView *view) {
 - (void)__glareapps_setBackground {
 	if ([self isKindOfClass:%c(ABGroupHeaderFooterView)]) return;
 	
-	if (self.tableView && ![self.backgroundView isKindOfClass:%c(_UIBackdropView)]) {
-		if (![self.backgroundView isKindOfClass:[_UIBackdropView class]]) {
-			self.backgroundColor = nil;
-			self.contentView.backgroundColor = [colorHelper clearColor];
-			self.tintColor = nil;
-			if ([self respondsToSelector:@selector(setBackgroundImage:)])
-				self.backgroundImage = nil;
-			
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
-			settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
-			
-			_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
-			self.backgroundView = backdropView;
-			[backdropView release];
-		}
+	if (self.tableView && ![self.backgroundView isKindOfClass:[_UIBackdropView class]]) {
+		//self.backgroundColor = nil;
+		self.contentView.backgroundColor = [colorHelper clearColor];
+		self.tintColor = nil;
+		if ([self respondsToSelector:@selector(setBackgroundImage:)])
+			self.backgroundImage = nil;
+		
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
+		
+		_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
+		backdropView.tag = 0xc001;
+		self.backgroundView = backdropView;
+		[colorHelper addBlurView:backdropView];
+		[backdropView release];
 	}
 }
 
@@ -1477,6 +1493,7 @@ UIImage *reorderImageBlack = nil;
 		backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
 		[self._containerView insertSubview:backdropView atIndex:0];
+		[colorHelper addBlurView:backdropView];
 	}
 	
 	backdropView.alpha = visible ? 1.0f : 0.0f;
@@ -1501,7 +1518,22 @@ UIImage *reorderImageBlack = nil;
 #pragma mark BackdropView Control
 
 
+@implementation _UIBackdropView (GlareApps)
+
+- (BOOL)__glareapps_shouldRejectOwnBackgroundColor {
+	return NO;
+}
+
+@end
+
 %hook _UIBackdropView
+
+- (void)setBackgroundColor:(UIColor *)color {
+	if ([colorHelper nowWindowRotating] && [colorHelper needsToSetOwnBackgroundColorForBackdropView:self])
+		color = [colorHelper colorWithWhite:self.inputSettings.grayscaleTintLevel alpha:self.inputSettings.grayscaleTintAlpha];
+	
+	%orig;
+}
 
 - (void)transitionToSettings:(_UIBackdropViewSettings *)newSettings {
 	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:newSettings.style];
@@ -1547,6 +1579,12 @@ UIImage *reorderImageBlack = nil;
 	}
 	
 	return %orig;
+}
+
+- (void)dealloc {
+	[colorHelper removeBlurView:self];
+	
+	%orig;
 }
 
 %end
@@ -1607,6 +1645,7 @@ UIImage *reorderImageBlack = nil;
 				backdropView.tag = 0xc001;
 				
 				[viewController.view insertSubview:backdropView atIndex:0];
+				[colorHelper addBlurView:backdropView];
 				
 				backdropView.frame = frame;
 			}
@@ -1648,6 +1687,7 @@ UIImage *reorderImageBlack = nil;
 		backdropView.tag = 0xc001;
 		
 		[_window insertSubview:backdropView atIndex:0];
+		[colorHelper addBlurView:backdropView];
 	}
 	
 	[backdropView release];
