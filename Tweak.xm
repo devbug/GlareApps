@@ -1227,6 +1227,12 @@ UIImage *reorderImageBlack = nil;
 - (void)layoutSubviews {
 	%orig;
 	
+	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
+	
+	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+	if (_effectView.style != style)
+		[_effectView transitionToStyle:style];
+	
 	UIImageView *_fillingView = MSHookIvar<UIImageView *>(self, "_fillingView");
 	_fillingView.alpha = (isWhiteness ? 1.0f : 0.0f);
 }
@@ -1630,6 +1636,7 @@ UIImage *reorderImageBlack = nil;
 			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
 			
 			[backdropView transitionToSettings:settings];
+			[backdropView _setBlursBackground:YES];
 		}
 		else {
 			_UIBackdropView *backdropView = (_UIBackdropView *)[viewController.view viewWithTag:0xc001];
@@ -1660,7 +1667,7 @@ UIImage *reorderImageBlack = nil;
 		
 		if ([viewController __glareapps_shouldRemoveBackdropAfterPresenting]) {
 			_UIBackdropView *backdropView = (_UIBackdropView *)[viewController.view viewWithTag:0xc001];
-			[backdropView removeFromSuperview];
+			[backdropView _setBlursBackground:NO];
 		}
 	};
 	
