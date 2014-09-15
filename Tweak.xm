@@ -605,8 +605,8 @@ void clearBar(UIView *view) {
 	
 	if (!isWhiteness && selfText && ![self __glareapps_isActionSheetOrActivityGroup]
 			&& [[textColor description] hasPrefix:@"UIDeviceWhiteColorSpace"] && [textColor getWhite:&white alpha:&alpha]) {
-		if (white != kLightColorWithWhiteForWhiteness)
-			textColor = [colorHelper colorWithWhite:fabs(kLightColorWithWhiteForWhiteness - white) alpha:alpha];
+		if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
+			textColor = [colorHelper colorWithWhite:fabs(1.0f-white) alpha:alpha];
 	}
 	
 	if (textColor == nil)
