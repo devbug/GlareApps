@@ -609,6 +609,9 @@ void clearBar(UIView *view) {
 			textColor = [colorHelper colorWithWhite:fabs(kLightColorWithWhiteForWhiteness - white) alpha:alpha];
 	}
 	
+	if (textColor == nil)
+		textColor = [colorHelper commonTextColor];
+	
 	%orig;
 }
 
@@ -673,6 +676,8 @@ void clearBar(UIView *view) {
 		else if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
 			textColor = [colorHelper colorWithWhite:fabs(1.0f-white) alpha:alpha];
 	}
+	if (textColor == nil)
+		textColor = [colorHelper commonTextColor];
 	
 	%orig;
 }
@@ -764,6 +769,8 @@ void clearBar(UIView *view) {
 		if ((!isWhiteness && white < 0.5f) || (isWhiteness && white > 0.5f))
 			textColor = [colorHelper colorWithWhite:fabs(1.0f-white) alpha:alpha];
 	}
+	if (textColor == nil)
+		textColor = [colorHelper commonTextColor];
 	
 	%orig;
 }

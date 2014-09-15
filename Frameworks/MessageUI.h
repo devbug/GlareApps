@@ -8,6 +8,12 @@
 @property(readonly) UITextField *textField;
 @end
 
+// {{{ >= 7.1
+@interface MFComposeRecipientTextView : MFComposeHeaderView
+@property(readonly, nonatomic) UITextView *textView;
+@end
+// }}}
+
 @interface MFRecipientTableViewCellDetailView : UIView
 @property(readonly) UILabel *detailLabel;
 @property(readonly) UILabel *labelLabel;

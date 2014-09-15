@@ -28,6 +28,33 @@
 %end
 
 
+%hook MFComposeRecipientTextView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	self.textView.textColor = [colorHelper commonTextColor];
+	self.textView.backgroundColor = [colorHelper clearColor];
+	self.backgroundColor = [colorHelper clearColor];
+}
+
+- (void)atomTextViewDidBecomeFirstResponder:(UITextView *)textView {
+	%orig;
+	
+	self.textView.textColor = [colorHelper commonTextColor];
+	self.textView.backgroundColor = [colorHelper clearColor];
+}
+
+- (void)textViewDidChange:(UITextView *)textView {
+	%orig;
+	
+	self.textView.textColor = [colorHelper commonTextColor];
+	self.textView.backgroundColor = [colorHelper clearColor];
+}
+
+%end
+
+
 %hook MFMailComposeView
 
 - (BOOL)presentSearchResults:(NSArray *)searchResults {
