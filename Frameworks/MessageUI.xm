@@ -3,6 +3,18 @@
 
 
 
+%hook MFComposeHeaderView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	UIView *_separator = MSHookIvar<UIView *>(self, "_separator");
+	_separator.backgroundColor = [colorHelper defaultTableViewSeparatorColor];
+}
+
+%end
+
+
 %hook MFComposeRecipientView
 
 - (void)layoutSubviews {
@@ -11,6 +23,66 @@
 	self.textField.textColor = [colorHelper commonTextColor];
 	self.textField.backgroundColor = [colorHelper clearColor];
 	self.backgroundColor = [colorHelper clearColor];
+}
+
+%end
+
+
+%hook MFMailComposeView
+
+- (BOOL)presentSearchResults:(NSArray *)searchResults {
+	BOOL rtn = %orig;
+	
+	if (isPad) return rtn;
+	
+	UITableView *_searchResultsTable = MSHookIvar<UITableView *>(self, "_searchResultsTable");
+	
+	_UIBackdropView *backdropView = (_UIBackdropView *)[self.bodyScroller viewWithTag:0xc001];
+	[backdropView retain];
+	[backdropView removeFromSuperview];
+	
+	if (backdropView == nil) {
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		
+		backdropView = [[_UIBackdropView alloc] initWithFrame:_searchResultsTable.frame autosizesToFitSuperview:NO settings:settings];
+		backdropView.tag = 0xc001;
+		
+		[colorHelper addBlurView:backdropView];
+	}
+	
+	backdropView.frame = _searchResultsTable.frame;
+	backdropView.alpha = 1.0f;
+	
+	[self.bodyScroller insertSubview:backdropView belowSubview:_searchResultsTable];
+	
+	[backdropView release];
+	
+	return rtn;
+}
+
+- (void)dismissSearchResults {
+	_UIBackdropView *backdropView = (_UIBackdropView *)[self.bodyScroller viewWithTag:0xc001];
+	backdropView.alpha = 0.0f;
+	
+	%orig;
+}
+
+- (void)layoutSubviews {
+	%orig;
+	
+	UITableView *_searchResultsTable = MSHookIvar<UITableView *>(self, "_searchResultsTable");
+	_UIBackdropView *backdropView = (_UIBackdropView *)[self.bodyScroller viewWithTag:0xc001];
+	backdropView.frame = _searchResultsTable.frame;
+	backdropView.alpha = _searchResultsTable.superview != nil ? 1.0f : 0.0f;
+}
+
+- (void)_layoutSubviews:(BOOL)unknown changingView:(id)view toSize:(CGSize)unknownSize searchResultsWereDismissed:(BOOL)searchResultsDismissed {
+	%orig;
+	
+	UITableView *_searchResultsTable = MSHookIvar<UITableView *>(self, "_searchResultsTable");
+	_UIBackdropView *backdropView = (_UIBackdropView *)[self.bodyScroller viewWithTag:0xc001];
+	
+	backdropView.alpha = _searchResultsTable.superview != nil ? 1.0f : 0.0f;
 }
 
 %end

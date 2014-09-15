@@ -77,6 +77,15 @@
 %end
 
 
+%hook UIColor
+
++ (id)mailTransparentLightGrayColor {
+	return [colorHelper systemGrayColor];
+}
+
+%end
+
+
 %hook MailboxContentViewController
 
 - (void)viewDidAppear:(BOOL)arg1 {
@@ -116,7 +125,7 @@
 %hook UITableViewCellSelectedBackground
 
 - (void)setSelectionTintColor:(UIColor *)color {
-	%orig([colorHelper systemDarkGrayColor]);
+	%orig([colorHelper systemLightGrayColor]);
 }
 
 - (void)setMultiselectBackgroundColor:(UIColor *)color {

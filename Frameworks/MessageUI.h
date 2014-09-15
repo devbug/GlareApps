@@ -29,3 +29,8 @@
 
 @interface MFComposeTextContentView : UITextContentView @end
 
+@interface MFComposeScrollView : UIScrollView @end
+@interface MFMailComposeView : UIView /*UITransitionView*/
+@property(readonly, nonatomic) MFComposeScrollView *bodyScroller;
+@end
+
