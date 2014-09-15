@@ -33,8 +33,8 @@ GlareApps_PRIVATE_FRAMEWORKS = MobileTimer SpringBoardServices BackBoardServices
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
-after-install::
-	install.exec "killall -9 backboardd"
+#after-install::
+#	install.exec "killall -9 backboardd"
 
 ri:: remoteinstall
 remoteinstall:: all internal-remoteinstall after-remoteinstall
