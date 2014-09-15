@@ -159,7 +159,7 @@ BOOL isWhiteness							= NO;
 BOOL isFirmware70							= YES;
 BOOL isFirmware71							= NO;
 
-UIKBRenderConfig *kbRenderConfig			= nil;
+static UIKBRenderConfig *kbRenderConfig		= nil;
 
 GlareAppsColorHelper *colorHelper			= nil;
 
@@ -632,6 +632,8 @@ void clearBar(UIView *view) {
 	
 	if (rtn) {
 		self.textColor = [colorHelper commonTextColor];
+		if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
+			self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 	}
 	
 	return rtn;
@@ -642,6 +644,8 @@ void clearBar(UIView *view) {
 	
 	if (rtn) {
 		self.textColor = [colorHelper commonTextColor];
+		if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
+			self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 	}
 	
 	return rtn;
@@ -652,6 +656,8 @@ void clearBar(UIView *view) {
 	
 	if (rtn) {
 		self.textColor = [colorHelper commonTextColor];
+		if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
+			self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 	}
 	
 	return rtn;
@@ -697,6 +703,8 @@ void clearBar(UIView *view) {
 	
 	if (rtn) {
 		self.textColor = [colorHelper commonTextColor];
+		if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
+			self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 	}
 	
 	return rtn;
@@ -707,6 +715,8 @@ void clearBar(UIView *view) {
 	
 	if (rtn) {
 		self.textColor = [colorHelper commonTextColor];
+		if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
+			self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 	}
 	
 	return rtn;
@@ -717,6 +727,8 @@ void clearBar(UIView *view) {
 	
 	if (rtn) {
 		self.textColor = [colorHelper commonTextColor];
+		if ([self respondsToSelector:@selector(setKeyboardAppearance:)])
+			self.keyboardAppearance = (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 	}
 	
 	return rtn;
