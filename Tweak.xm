@@ -627,6 +627,36 @@ void clearBar(UIView *view) {
 
 %hook UITextView
 
+- (id)initWithFrame:(CGRect)frame {
+	id rtn = %orig;
+	
+	if (rtn) {
+		self.textColor = [colorHelper commonTextColor];
+	}
+	
+	return rtn;
+}
+
+- (id)init {
+	id rtn = %orig;
+	
+	if (rtn) {
+		self.textColor = [colorHelper commonTextColor];
+	}
+	
+	return rtn;
+}
+
+- (id)initWithCoder:(id)zone {
+	id rtn = %orig;
+	
+	if (rtn) {
+		self.textColor = [colorHelper commonTextColor];
+	}
+	
+	return rtn;
+}
+
 - (void)setTextColor:(UIColor *)textColor {
 	CGFloat white = 0.0f, alpha = 0.0f;
 	
@@ -662,6 +692,36 @@ void clearBar(UIView *view) {
 
 %hook UITextField
 
+- (id)initWithFrame:(CGRect)frame {
+	id rtn = %orig;
+	
+	if (rtn) {
+		self.textColor = [colorHelper commonTextColor];
+	}
+	
+	return rtn;
+}
+
+- (id)init {
+	id rtn = %orig;
+	
+	if (rtn) {
+		self.textColor = [colorHelper commonTextColor];
+	}
+	
+	return rtn;
+}
+
+- (id)initWithCoder:(id)zone {
+	id rtn = %orig;
+	
+	if (rtn) {
+		self.textColor = [colorHelper commonTextColor];
+	}
+	
+	return rtn;
+}
+
 - (UIKeyboardAppearance)keyboardAppearance {
 	return (isWhiteness ? UIKeyboardAppearanceLight : UIKeyboardAppearanceDark);
 }
@@ -694,6 +754,24 @@ void clearBar(UIView *view) {
 	}
 	
 	%orig;
+}
+
+%end
+
+%hook _UITextFieldRoundedRectBackgroundViewNeue
+
+- (id)_fillColor:(BOOL)enabled {
+	if (enabled)
+		return isWhiteness ? [colorHelper whiteColor] : [colorHelper clearColor];
+	
+	return [colorHelper systemDarkGrayColor];
+}
+
+- (id)_strokeColor:(BOOL)enabled {
+	if (enabled)
+		return [colorHelper systemLightGrayColor];
+	
+	return %orig;
 }
 
 %end

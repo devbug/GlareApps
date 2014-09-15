@@ -345,3 +345,8 @@
 - (BOOL)isSMSTextView;
 @end
 
+@interface _UITextFieldRoundedRectBackgroundViewNeue : UIImageView
+@property(retain, nonatomic) UIColor *fillColor;
+@property(retain, nonatomic) UIColor *strokeColor;
+@end
+
