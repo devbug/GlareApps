@@ -13,6 +13,7 @@
 #import "Frameworks/MessageUI.h"
 #import "Frameworks/PhotoLibrary.h"
 #import "Frameworks/StoreKit.h"
+#import "Frameworks/Sharing.h"
 #import "GlareAppsColorHelper.h"
 
 

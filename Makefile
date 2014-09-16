@@ -17,6 +17,7 @@ GlareApps_FILES = Tweak.xm \
 				  Frameworks/MessageUI.xm \
 				  Frameworks/PhotoLibrary.xm \
 				  Frameworks/StoreKit.xm \
+				  Frameworks/Sharing.xm \
 				  AppliedPrograms/com.apple.Preferences.xm \
 				  AppliedPrograms/com.apple.mobilephone.xm \
 				  AppliedPrograms/com.apple.mobileslideshow.xm \

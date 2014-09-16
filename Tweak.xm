@@ -980,6 +980,58 @@ void clearBar(UIView *view) {
 %end
 
 
+%hook UIActivityGroupViewController
+
+- (void)setDarkStyleOnLegacyApp:(BOOL)darkStyle {
+	%orig(!isWhiteness);
+}
+- (BOOL)darkStyleOnLegacyApp {
+	return !isWhiteness;
+}
+
+%end
+
+%hook _UIActivityGroupActivityCell
+
+- (void)layoutSubviews {
+	%orig;
+	
+	if (!isWhiteness) {
+		UICollectionView *collectionView = self._collectionView;
+		UIActivityGroupViewController *controller = collectionView._viewControllerForAncestor;
+		
+		if ([controller respondsToSelector:@selector(activityCategory)] && controller.activityCategory == UIActivityCategoryAction)
+			self.activityImageView.alpha = 0.4f;
+	}
+}
+
+%end
+
+%hook UIActivityGroupView
+
+- (void)updateConstraints {
+	%orig;
+	
+	for (UIView *v in self.subviews) {
+		if (v.tag == 1) {
+			v.backgroundColor = [colorHelper defaultTableViewSeparatorColor];
+		}
+	}
+}
+
+%end
+
+%hook UIActivityViewController
+
+- (void)viewDidLoad {
+	%orig;
+	
+	initHookForSharingFramework();
+}
+
+%end
+
+
 
 #pragma mark -
 #pragma mark UICollectionView

@@ -198,8 +198,27 @@
 
 @interface UIAlertSheetTextField : UITextField @end
 
+@interface UICollectionViewCell (private_api)
+- (id)_collectionView;
+@end
+
+@interface UIActivityGroupViewController : UICollectionViewController
+@property(nonatomic) BOOL darkStyleOnLegacyApp;
+@property(nonatomic) UIActivityCategory activityCategory;
+@end
+@interface UIActivityGroupView : UIView @end
 @interface UIActivityGroupListViewController : UIViewController
 @property(retain, nonatomic) _UIBackdropView *backdropView;
+@end
+
+@interface UIActivity (private_api)
+- (id)_activityImage;
+@end
+@interface _UIActivityFunctionImageView : UIImageView @end
+@interface _UIActivityGroupActivityCell : UICollectionViewCell
+@property(nonatomic) BOOL darkStyleOnLegacyApp;
+@property(retain, nonatomic) UILabel *activityLabel;
+@property(retain, nonatomic) _UIActivityFunctionImageView *activityImageView;
 @end
 
 @interface UIStatusBar : UIView
