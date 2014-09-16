@@ -853,6 +853,19 @@ void clearBar(UIView *view) {
 %end
 
 
+%hook _UICompatibilityTextView
+
+- (void)setTextColor:(UIColor *)color {
+	%orig;//([colorHelper commonTextColor]);
+}
+
+- (void)setAttributedText:(NSAttributedString *)text {
+	%orig(colorReplacedAttributedString(text));
+}
+
+%end
+
+
 %hook UIColor
 
 + (id)darkTextColor {

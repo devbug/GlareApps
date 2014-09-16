@@ -62,6 +62,7 @@
 - (UIColor *)musicTableViewCellTextColor;
 
 - (UIColor *)colorWithWhite:(CGFloat)white alpha:(CGFloat)alpha;
+- (UIColor *)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
 
 - (void)addBlurView:(_UIBackdropView *)view;
 - (void)removeBlurView:(_UIBackdropView *)view;

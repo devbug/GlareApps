@@ -104,6 +104,14 @@
 
 @interface _UITabBarBackgroundView : UIView @end
 
+@interface UITabBar (private_api)
+@property(nonatomic, setter=_setHidesShadow:) BOOL _hidesShadow;
+@end
+
+@interface UIToolbar (private_api)
+@property(nonatomic, setter=_setHidesShadow:) BOOL _hidesShadow;
+@end
+
 @interface _UIBarBackgroundImageView : UIImageView
 @property(nonatomic, getter=isTranslucent) BOOL translucent;
 - (id)image;
@@ -125,6 +133,7 @@
 - (id)backdropView:(id)arg1 willChangeToGraphicsQuality:(NSInteger)arg2;
 @end
 @interface UINavigationBar (private_api)
+@property(nonatomic, setter=_setHidesShadow:) BOOL _hidesShadow;
 - (_UINavigationBarBackground *)_backgroundView;
 @end
 

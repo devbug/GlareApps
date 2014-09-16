@@ -231,6 +231,11 @@
 	
 	return [color autorelease];
 }
+- (UIColor *)colorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha {
+	UIColor *color = [[UIColor alloc] initWithRed:red green:green blue:blue alpha:alpha];
+	
+	return [color autorelease];
+}
 
 
 - (void)addBlurView:(_UIBackdropView *)view {
