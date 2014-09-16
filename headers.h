@@ -1,19 +1,7 @@
 
 #import <UIKit/UIKit.h>
-#import "Frameworks/UIKit.h"
-#import "AdditionalHeaders/UIApplication+GlareApps.h"
-#import "AdditionalHeaders/UILabel+GlareApps.h"
-#import "AdditionalHeaders/UITableViewCell+GlareApps.h"
-#import "AdditionalHeaders/UITableViewHeaderFooterView+GlareApps.h"
-#import "AdditionalHeaders/UIView+GlareApps.h"
-#import "AdditionalHeaders/UIViewController+GlareApps.h"
-#import "AdditionalHeaders/_UIBackdropView+GlareApps.h"
-#import "Frameworks/AddressBook.h"
-#import "Frameworks/CommunicationsSetupUI.h"
-#import "Frameworks/MessageUI.h"
-#import "Frameworks/PhotoLibrary.h"
-#import "Frameworks/StoreKit.h"
-#import "Frameworks/Sharing.h"
+#import "Frameworks/Frameworks.h"
+#import "Categories/Categories.h"
 #import "GlareAppsColorHelper.h"
 
 
