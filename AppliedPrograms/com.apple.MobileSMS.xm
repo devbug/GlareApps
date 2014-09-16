@@ -61,22 +61,6 @@
 %end
 
 
-%hook CKConversationListController
-
-- (void)viewWillLayoutSubviews {
-	%orig;
-	
-	UITableView *_table = MSHookIvar<UITableView *>(self, "_table");
-	
-	UIView *placeholder = (_table.subviews.count >= 2 ? _table.subviews[0] : nil);
-	
-	if (![placeholder isKindOfClass:%c(UITableViewWrapperView)])
-		placeholder.backgroundColor = [colorHelper clearColor];
-}
-
-%end
-
-
 // for biteSMS
 %hook UIViewController
 

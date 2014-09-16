@@ -1087,6 +1087,7 @@ void clearBar(UIView *view) {
 	%orig;
 
 	if (self.superview) {
+		[self setTableHeaderBackgroundColor:[colorHelper clearColor]];
 		self.sectionIndexBackgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
 	}
 }

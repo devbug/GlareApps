@@ -59,17 +59,6 @@ NSInteger currentBackdropStyle				= 0;
 
 %end
 
-%hook UIViewController
-
-- (void)viewWillAppear:(BOOL)animated {
-	%orig;
-	
-	UIView *subview = (self.view.subviews.count > 0 ? self.view.subviews[0] : nil);
-	subview.backgroundColor = [colorHelper clearColor];
-}
-
-%end
-
 
 %hook PhoneApplication
 

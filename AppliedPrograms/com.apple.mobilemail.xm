@@ -86,20 +86,6 @@
 %end
 
 
-%hook MailboxContentViewController
-
-- (void)viewDidAppear:(BOOL)arg1 {
-	%orig;
-	
-	UIView *placeholder = (self.tableView.subviews.count >= 2 ? self.tableView.subviews[0] : nil);
-	
-	if (![placeholder isKindOfClass:%c(UITableViewWrapperView)] && ![placeholder isKindOfClass:[UIRefreshControl class]])
-		placeholder.alpha = 0.0f;
-}
-
-%end
-
-
 %hook MailboxContentViewCell
 
 - (id)_dateLabelTextColor {
