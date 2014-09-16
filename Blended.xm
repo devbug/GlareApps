@@ -129,18 +129,6 @@ void blendView(id control) {
 %end
 
 
-%hook UISegment
-
-- (void)layoutSubviews {
-	%orig;
-	
-	if (!self.isSelected)
-		blendView(self.label);
-}
-
-%end
-
-
 %hook UIStatusBar
 
 - (void)layoutSubviews {
