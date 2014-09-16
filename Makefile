@@ -31,7 +31,7 @@ GlareApps_FILES = Tweak.xm \
 				  AppliedPrograms/com.apple.MobileAddressBook.xm \
 				  AppliedPrograms/com.apple.mobilenotes.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics QuartzCore
-GlareApps_PRIVATE_FRAMEWORKS = MobileTimer SpringBoardServices BackBoardServices
+GlareApps_PRIVATE_FRAMEWORKS = SpringBoardServices BackBoardServices
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

@@ -81,9 +81,9 @@ enum {
 };
 
 
-extern "C" UIColor *MTButtonColor(NSUInteger type);
-extern "C" UIColor *MTButtonTextColor(NSUInteger type);
-extern "C" UIImage *MTButtonCircleImageForColorAndSize(NSUInteger type, NSUInteger size);
+//static UIColor *(*MTButtonColor)(NSUInteger type) = NULL;
+static UIColor *(*MTButtonTextColor)(NSUInteger type) = NULL;
+static UIImage *(*MTButtonCircleImageForColorAndSize)(NSUInteger type, NSUInteger size) = NULL;
 
 
 
@@ -137,6 +137,11 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 	//[self setBackgroundImage:MTButtonCircleImageForColorAndSize(colorType, self.size), forState:state];
 	
 	//%orig;
+	
+	if (MTButtonTextColor == NULL || MTButtonCircleImageForColorAndSize == NULL) {
+		%orig;
+		return;
+	}
 	
 	UIColor *color = MTButtonTextColor(colorType);
 	[self setTitleColor:(colorType == kMTButtonStyleDisabled ? color : [colorHelper whiteColor]) 
@@ -363,6 +368,10 @@ UIColor *new_MTButtonTextColor(NSUInteger type) {
 	if (!isThisAppEnabled()) return;
 	
 	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.mobiletimer"]) {
+		//MTButtonColor = (UIColor *(*)(NSUInteger)) MSFindSymbol(NULL, "_MTButtonColor");
+		MTButtonTextColor = (UIColor *(*)(NSUInteger)) MSFindSymbol(NULL, "_MTButtonTextColor");
+		MTButtonCircleImageForColorAndSize = (UIImage *(*)(NSUInteger, NSUInteger)) MSFindSymbol(NULL, "_MTButtonCircleImageForColorAndSize");
+		
 		//MSHookFunction((void *)MTButtonColor, (void *)new_MTButtonColor, (void **)&origin_MTButtonColor);
 		//MSHookFunction((void *)MTButtonTextColor, (void *)new_MTButtonTextColor, (void **)&origin_MTButtonTextColor);
 		
