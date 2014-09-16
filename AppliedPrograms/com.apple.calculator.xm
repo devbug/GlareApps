@@ -17,6 +17,15 @@
 %end
 
 
+%hook CalcValueView
+
++ (UIColor *)textColor {
+	return [colorHelper commonTextColor];
+}
+
+%end
+
+
 
 %ctor {
 	if (!isThisAppEnabled()) return;
