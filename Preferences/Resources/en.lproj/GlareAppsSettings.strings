@@ -4,6 +4,7 @@
 "RESPRING_REQUIRED" = "Respring required";
 "Use White theme" = "Use White theme";
 "DEFAULT_THEME_MSG" = "Default is Black theme.\nAnd each app restart is requried for applying.";
+"Use Blended mode" = "Use Blended mode";
 "Kill all apps" = "Kill all applied apps";
 "KILLALLAPPS_MSG" = "Include Preferences app";
 "MSG_COPYRIGHT" = "Glare Apps © 2014 deVbug";

@@ -103,6 +103,18 @@
 		PSSpecifier *theme = [PSSpecifier emptyGroupSpecifier];
 		[theme setProperty:[[self bundle] localizedStringForKey:@"DEFAULT_THEME_MSG" value:@"Default is Black theme." table:@"GlareAppsSettings"] forKey:@"footerText"];
 		
+		PSSpecifier *specifier5 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Use Blended mode" value:@"Use Blended mode" table:@"GlareAppsSettings"]
+																 target:self
+																	set:@selector(setPreferenceNumberValue:specifier:)
+																	get:@selector(getPreferenceNumberValue:)
+																 detail:nil
+																   cell:PSSwitchCell
+																   edit:nil];
+		[specifier5 setProperty:@"GlareAppsUseBlendedMode" forKey:@"key"];
+		[specifier5 setProperty:@"kr.slak.glareapps.prefnoti" forKey:@"PostNotification"];
+		[specifier5 setProperty:@"kr.slak.GlareApps" forKey:@"defaults"];
+		[specifier5 setProperty:@(NO) forKey:@"default"];
+		
 		PSConfirmationSpecifier *specifier4 = [PSConfirmationSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Kill all apps" value:@"Kill all applied apps" table:@"GlareAppsSettings"]
 																						 target:self
 																							set:nil
@@ -129,6 +141,8 @@
 															specifier2, 
 															theme, 
 															specifier3, 
+															groupSpecifier1, 
+															specifier5, 
 															killallapps, 
 															specifier4, 
 															footer, 

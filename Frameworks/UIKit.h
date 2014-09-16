@@ -296,6 +296,10 @@
 - (BOOL)transparentBackground;
 - (void)setTransparentBackground:(BOOL)arg1;
 @end
+@interface UISegment : UIImageView
+- (id)label;
+- (BOOL)isSelected;
+@end
 
 @interface _UIPopoverStandardChromeView : UIPopoverBackgroundView @end
 @interface _UIPopoverView : UIView

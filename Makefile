@@ -8,7 +8,7 @@ include theos/makefiles/common.mk
 include theos/makefiles/aggregate.mk
 
 TWEAK_NAME = GlareApps
-GlareApps_FILES = Tweak.xm \
+GlareApps_FILES = Tweak.xm Blended.xm \
 				  GlareAppsColorHelper.mm \
 				  com.apple.springboard.xm \
 				  Frameworks/AddressBook.xm \

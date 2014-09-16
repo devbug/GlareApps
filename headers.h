@@ -44,6 +44,7 @@ extern NSString * const kCAFilterExclusionBlendMode;
 @class GlareAppsColorHelper;
 
 extern BOOL isWhiteness;
+extern BOOL useBlendedMode;
 extern BOOL isFirmware70;
 extern BOOL isFirmware71;
 extern GlareAppsColorHelper *colorHelper;
@@ -72,6 +73,9 @@ BOOL isTheAppEnabled(NSString *bundleIdentifier);
 void clearBar(UIView *view);
 void setLabelTextColorIfHasBlackColor(UILabel *label);
 NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *text);
+
+UIColor *blendColor();
+void blendView(id control);
 
 
 

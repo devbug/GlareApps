@@ -12,6 +12,17 @@ static BOOL GlareAppsEnable = YES;
 static NSArray *GlareAppsWhiteList = nil;
 
 
+BOOL isWhiteness							= NO;
+BOOL useBlendedMode							= NO;
+BOOL isFirmware70							= YES;
+BOOL isFirmware71							= NO;
+
+static UIKBRenderConfig *kbRenderConfig		= nil;
+
+GlareAppsColorHelper *colorHelper			= nil;
+
+
+
 static void LoadSettings() {
 	@synchronized (GlareAppsWhiteList) {
 		NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:@"/User/Library/Preferences/kr.slak.GlareApps.plist"];
@@ -30,6 +41,10 @@ static void LoadSettings() {
 		isWhiteness = [dict[@"GlareAppsUseWhiteTheme"] boolValue];
 		if (dict[@"GlareAppsUseWhiteTheme"] == nil)
 			isWhiteness = NO;
+		
+		useBlendedMode = [dict[@"GlareAppsUseBlendedMode"] boolValue];
+		if (dict[@"GlareAppsUseBlendedMode"] == nil)
+			useBlendedMode = NO;
 		
 		[dict release];
 	}
@@ -153,15 +168,6 @@ NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *tex
 
 #pragma mark -
 #pragma mark Global
-
-
-BOOL isWhiteness							= NO;
-BOOL isFirmware70							= YES;
-BOOL isFirmware71							= NO;
-
-static UIKBRenderConfig *kbRenderConfig		= nil;
-
-GlareAppsColorHelper *colorHelper			= nil;
 
 
 
