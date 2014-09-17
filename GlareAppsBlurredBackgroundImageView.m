@@ -142,7 +142,6 @@
 }
 
 - (void)_setBlurRadius:(CGFloat)radius {
-	return;
 	CALayer *layer = [_backgroundImageView layer];
 	if (_blursBackground && [self isParallaxEnabled]) {
 		CAFilter *filter = [CAFilter filterWithName:@"gaussianBlur"];
@@ -583,7 +582,7 @@
 		//_backdropView.groupName = @"GlareAppsNowPlayingBackdropBackgroundView";
 	}
 	
-	//[_backdropView _setBlursBackground:![self isParallaxEnabled] && _blursBackground];
+	[_backdropView _setBlursBackground:![self isParallaxEnabled] && _blursBackground];
 	
 	[self _setBlurRadius:_backdropView.blurRadius];
 }
