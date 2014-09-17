@@ -11,6 +11,9 @@ UIColor *blendColor() {
 void blendView(id control) {
 	UIView *view = (UIView *)control;
 	
+	if (view.alpha == 0.0f) return;
+	if (view.hidden) return;
+	
 	if ([view respondsToSelector:@selector(setOpaque:)])
 		view.opaque = NO;
 	
@@ -26,7 +29,7 @@ void blendView(id control) {
 		[view performSelector:@selector(setTextColor:) withObject:blendedColor];
 	
 	if ([view respondsToSelector:@selector(_setDrawsAsBackdropOverlayWithBlendMode:)]) {
-		[view _setBackdropMaskViewFlags:7];
+		[view _setBackdropMaskViewFlags:2];
 		[view _setDrawsAsBackdropOverlayWithBlendMode:!isWhiteness ? kCGBlendModeOverlay : kCGBlendModeMultiply];
 	}
 }
