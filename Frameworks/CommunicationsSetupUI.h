@@ -1,6 +1,5 @@
 
-#import "headers.h"
-
+#import "../headers.h"
 
 
 @interface CNFRegSigninLearnMoreView : UIView

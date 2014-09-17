@@ -1,10 +1,18 @@
 
-#import "headers.h"
-
+#import "../headers.h"
 
 
 @interface CALayer (private_api)
 @property BOOL allowsGroupBlending;
+@end
+
+@interface _UIParallaxMotionEffect : UIMotionEffect
+@property(nonatomic) struct UIOffset slideMagnitude;
+@property(nonatomic) CGFloat rotatingSphereRadius;
+@property(nonatomic) CGFloat maximumVerticalTiltAngle;
+@property(nonatomic) CGFloat maximumHorizontalTiltAngle;
+@property(nonatomic) CGFloat verticalSlideAccelerationBoostFactor;
+@property(nonatomic) CGFloat horizontalSlideAccelerationBoostFactor;
 @end
 
 @class _UIBackdropView;
@@ -47,6 +55,7 @@
 @property(nonatomic) BOOL simulatesMasks;
 @property(copy, nonatomic) NSString *groupName;
 @property(nonatomic) BOOL applySettingsAfterLayout;
+@property(nonatomic) NSInteger maskMode;
 @property(retain, nonatomic) UIImage *colorTintMaskImage;
 @property(retain, nonatomic) UIImage *grayscaleTintMaskImage;
 @property(retain, nonatomic) UIImage *filterMaskImage;
@@ -132,6 +141,7 @@
 - (void)backdropView:(id)arg1 didChangeToGraphicsQuality:(NSInteger)arg2;
 - (id)backdropView:(id)arg1 willChangeToGraphicsQuality:(NSInteger)arg2;
 @end
+@interface UINavigationButton : UIButton @end
 @interface UINavigationBar (private_api)
 @property(nonatomic, setter=_setHidesShadow:) BOOL _hidesShadow;
 - (_UINavigationBarBackground *)_backgroundView;
