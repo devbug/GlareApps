@@ -287,7 +287,16 @@
 }
 
 - (UIImage *)_getImageFromMPAVItem:(MPAVItem *)item {
-	MPImageCache *cache = item.imageCache;
+	MPImageCache *cache = nil;
+	// <= 7.0.6
+	if ([item respondsToSelector:@selector(imageCache)]) {
+		cache = item.imageCache;
+	}
+	// >= 7.1
+	else {
+		MusicNowPlayingObserver *nowPlayingObserver = [objc_getClass("MusicNowPlayingObserver") sharedObserver];
+		cache = nowPlayingObserver.imageCache;
+	}
 	MPMediaItem *mediaItem = item.mediaItem;
 	MPMediaItemArtwork *artwork = mediaItem.artwork;
 	CGSize imageSize = artwork.bounds.size;

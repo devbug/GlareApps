@@ -34,6 +34,12 @@
 - (id)_cachedImageForKey:(id)arg1;
 - (id)cachedImageForRequest:(id)arg1;
 @end
+// for iOS 7.1
+@interface MPNowPlayingObserver : NSObject
+@property (assign, getter=isEnabled, nonatomic) BOOL enabled;
+@property (nonatomic, readonly) MPImageCache *imageCache;
+@end
+
 @interface MPAVItem : NSObject
 @property(readonly, nonatomic) MPMediaItem *mediaItem;
 @property(readonly, nonatomic) unsigned long long persistentID;
@@ -53,8 +59,9 @@
 + (id)sharedAVPlayer;
 @end
 
-@interface MusicNowPlayingObserver : NSObject {
+@interface MusicNowPlayingObserver : MPNowPlayingObserver  /* NSObject (< 7.1) */ {
 	MusicAVPlayer *_avPlayer;
 }
++ (id)sharedObserver; // >= 7.1
 @end
 
