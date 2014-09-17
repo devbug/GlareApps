@@ -1171,52 +1171,107 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 - (void)__glareapps_applicationDidFinishLaunching {
 	%orig;
 	
-	UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+	UIWindow *keyWindow = [UIApplication sharedApplication].delegate.window;
 	keyWindow.layer.allowsGroupBlending = NO;
 	keyWindow.layer.allowsGroupOpacity = NO;
 	
-	[keyWindow insertSubview:backgroundImageView atIndex:0];
+	UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+	
+	if (!UIDeviceOrientationIsValidInterfaceOrientation(orientation))
+		orientation = UIDeviceOrientationPortrait;
+	
+	CGRect frame = [UIScreen mainScreen].bounds;
+	CGFloat minValue = MIN(frame.size.width, frame.size.height);
+	CGFloat maxValue = MAX(frame.size.width, frame.size.height);
+	
+	if (UIDeviceOrientationIsPortrait(orientation)) {
+		frame.size.width = minValue;
+		frame.size.height = maxValue;
+	}
+	else {
+		frame.size.width = maxValue;
+		frame.size.height = minValue;
+	}
+	
+	backgroundImageView.frame = frame;
+	backgroundImageView.latestOrientation = orientation;
+	
+	[keyWindow.subviews[0] insertSubview:backgroundImageView atIndex:0];
 	backgroundImageView.alpha = 0.0f;
+	
+	if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
+		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(__glareapps_didRotate:)
+													 name:@"UIDeviceOrientationDidChangeNotification" 
+												   object:nil];
+	}
+}
+
+%new
+- (void)__glareapps_didRotate:(NSNotification *)notification {
+	UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+	
+	if (UIDeviceOrientationIsValidInterfaceOrientation(orientation)) {
+		CGRect frame = [UIScreen mainScreen].bounds;
+		CGFloat minValue = MIN(frame.size.width, frame.size.height);
+		CGFloat maxValue = MAX(frame.size.width, frame.size.height);
+		
+		if (UIDeviceOrientationIsPortrait(orientation)) {
+			frame.size.width = minValue;
+			frame.size.height = maxValue;
+		}
+		else {
+			frame.size.width = maxValue;
+			frame.size.height = minValue;
+		}
+		
+		backgroundImageView.frame = frame;
+		[backgroundImageView updateBackgroundViewForOrientation:orientation];
+	}
 }
 
 %end
 
+
+@interface MusicNowPlayingObserver (GlareApps)
+- (void)__glareapps_setNowPlayingAlbumArtAnimated:(BOOL)animated;
+@end
+
 %hook MusicNowPlayingObserver
+
+%new
+- (void)__glareapps_setNowPlayingAlbumArtAnimated:(BOOL)animated {
+	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
+	
+	backgroundImageView.latestOrientation = [[UIDevice currentDevice] orientation];
+	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:animated];
+	
+	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+}
 
 - (void)_playbackStateDidChangeNotification:(id)notification {
 	%orig;
 	
-	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
-	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:YES];
-	
-	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+	[self __glareapps_setNowPlayingAlbumArtAnimated:YES];
 }
 
 - (void)_itemDidChangeNotification:(id)notification {
 	%orig;
 	
-	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
-	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:YES];
-	
-	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+	[self __glareapps_setNowPlayingAlbumArtAnimated:YES];
 }
 
 - (void)_mediaArtworkDidLoadNotification:(id)notification {
 	%orig;
 	
-	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
-	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:NO];
-	
-	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+	[self __glareapps_setNowPlayingAlbumArtAnimated:NO];
 }
 
 - (void)_radioArtworkDidLoadNotification:(id)notification {
 	%orig;
 	
-	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
-	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:NO];
-	
-	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+	[self __glareapps_setNowPlayingAlbumArtAnimated:NO];
 }
 
 %end
@@ -1236,6 +1291,7 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 			backgroundImageView.style = kBackdropStyleForWhiteness;
 			backgroundImageView.isFlickerTransition = NO;
 			backgroundImageView.blurRadius = 20.0f;
+			backgroundImageView.graphicQuality = kBackdropGraphicQualityForceOn;
 			[backgroundImageView setParallaxEnabled:NO];
 			[backgroundImageView reconfigureBackdropFromCurrentSettings];
 		}
