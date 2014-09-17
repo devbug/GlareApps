@@ -8,6 +8,7 @@ include theos/makefiles/common.mk
 
 BUNDLE_NAME = GlareAppsSettings
 GlareAppsSettings_FILES = GlareAppsSettings.m \
+						  GlareAppsMiscellaneousListController.m \
 						  ../../FilteredAppListTableView/PSFilteredAppListCell.m \
 						  ../../FilteredAppListTableView/PSFilteredAppListListController.m
 GlareAppsSettings_INSTALL_PATH = /Library/PreferenceBundles

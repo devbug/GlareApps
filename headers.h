@@ -45,6 +45,7 @@ extern NSString * const kCAFilterExclusionBlendMode;
 
 extern BOOL isWhiteness;
 extern BOOL useBlendedMode;
+extern BOOL useMusicAppAlbumArtBackdrop;
 extern BOOL isFirmware70;
 extern BOOL isFirmware71;
 extern GlareAppsColorHelper *colorHelper;

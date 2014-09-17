@@ -88,32 +88,13 @@
 		PSSpecifier *groupSpecifier1 = [PSSpecifier emptyGroupSpecifier];
 		[groupSpecifier1 setProperty:[[self bundle] localizedStringForKey:@"EACHAPP_RESTART_REQUIRED" value:@"Each app restart is required" table:@"GlareAppsSettings"] forKey:@"footerText"];
 		
-		PSSpecifier *specifier3 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Use White theme" value:@"Use White theme" table:@"GlareAppsSettings"]
+		PSSpecifier *specifier3 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Miscellaneous" value:@"Miscellaneous" table:@"GlareAppsSettings"]
 																 target:self
-																	set:@selector(setPreferenceNumberValue:specifier:)
-																	get:@selector(getPreferenceNumberValue:)
-																 detail:nil
-																   cell:PSSwitchCell
+																	set:nil
+																	get:nil
+																 detail:[GlareAppsMiscellaneousListController class]
+																   cell:PSLinkCell
 																   edit:nil];
-		[specifier3 setProperty:@"GlareAppsUseWhiteTheme" forKey:@"key"];
-		[specifier3 setProperty:@"kr.slak.glareapps.prefnoti" forKey:@"PostNotification"];
-		[specifier3 setProperty:@"kr.slak.GlareApps" forKey:@"defaults"];
-		[specifier3 setProperty:@(NO) forKey:@"default"];
-		
-		PSSpecifier *theme = [PSSpecifier emptyGroupSpecifier];
-		[theme setProperty:[[self bundle] localizedStringForKey:@"DEFAULT_THEME_MSG" value:@"Default is Black theme." table:@"GlareAppsSettings"] forKey:@"footerText"];
-		
-		PSSpecifier *specifier5 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Use Blended mode" value:@"Use Blended mode" table:@"GlareAppsSettings"]
-																 target:self
-																	set:@selector(setPreferenceNumberValue:specifier:)
-																	get:@selector(getPreferenceNumberValue:)
-																 detail:nil
-																   cell:PSSwitchCell
-																   edit:nil];
-		[specifier5 setProperty:@"GlareAppsUseBlendedMode" forKey:@"key"];
-		[specifier5 setProperty:@"kr.slak.glareapps.prefnoti" forKey:@"PostNotification"];
-		[specifier5 setProperty:@"kr.slak.GlareApps" forKey:@"defaults"];
-		[specifier5 setProperty:@(NO) forKey:@"default"];
 		
 		PSConfirmationSpecifier *specifier4 = [PSConfirmationSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Kill all apps" value:@"Kill all applied apps" table:@"GlareAppsSettings"]
 																						 target:self
@@ -139,10 +120,8 @@
 															specifier1, 
 															groupSpecifier1, 
 															specifier2, 
-															theme, 
+															[PSSpecifier emptyGroupSpecifier], 
 															specifier3, 
-															groupSpecifier1, 
-															specifier5, 
 															killallapps, 
 															specifier4, 
 															footer, 

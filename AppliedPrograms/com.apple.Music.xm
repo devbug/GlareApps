@@ -1,5 +1,6 @@
 
 #import "headers.h"
+#import "BlurredBackgroundImageView.h"
 
 
 
@@ -164,6 +165,8 @@
 
 
 BOOL EnableNowPlayingBlurring				= YES;
+
+static BlurredBackgroundImageView *backgroundImageView = nil;
 
 
 
@@ -1159,12 +1162,83 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 
 
 
+#pragma mark -
+#pragma mark NowPlaying Album art Backdrop
+
+
+%hook UIApplication
+
+- (void)__glareapps_applicationDidFinishLaunching {
+	%orig;
+	
+	UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+	keyWindow.layer.allowsGroupBlending = NO;
+	keyWindow.layer.allowsGroupOpacity = NO;
+	
+	[keyWindow insertSubview:backgroundImageView atIndex:0];
+	backgroundImageView.alpha = 0.0f;
+}
+
+%end
+
+%hook MusicNowPlayingObserver
+
+- (void)_playbackStateDidChangeNotification:(id)notification {
+	%orig;
+	
+	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
+	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:YES];
+	
+	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+}
+
+- (void)_itemDidChangeNotification:(id)notification {
+	%orig;
+	
+	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
+	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:YES];
+	
+	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+}
+
+- (void)_mediaArtworkDidLoadNotification:(id)notification {
+	%orig;
+	
+	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
+	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:NO];
+	
+	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+}
+
+- (void)_radioArtworkDidLoadNotification:(id)notification {
+	%orig;
+	
+	MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
+	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:NO];
+	
+	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+}
+
+%end
+
+
+
+
 %ctor {
 	if (!isThisAppEnabled()) return;
 	
 	if ([[[NSBundle mainBundle] bundleIdentifier] isEqualToString:@"com.apple.Music"]) {
 		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadMusicPrefsNotification, CFSTR("me.devbug.BlurredMusicApp.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 		loadMusicSettings();
+		
+		if (useMusicAppAlbumArtBackdrop) {
+			backgroundImageView = [[BlurredBackgroundImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+			backgroundImageView.style = kBackdropStyleForWhiteness;
+			backgroundImageView.isFlickerTransition = NO;
+			backgroundImageView.blurRadius = 20.0f;
+			[backgroundImageView setParallaxEnabled:NO];
+			[backgroundImageView reconfigureBackdropFromCurrentSettings];
+		}
 		
 		%init;
 		

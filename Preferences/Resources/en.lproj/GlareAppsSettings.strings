@@ -2,9 +2,13 @@
 "WhiteList Apps" = "Applied apps";
 "EACHAPP_RESTART_REQUIRED" = "Each app restart is required";
 "RESPRING_REQUIRED" = "Respring required";
+"Miscellaneous" = "Miscellaneous";
 "Use White theme" = "Use White theme";
 "DEFAULT_THEME_MSG" = "Default is Black theme.\nAnd each app restart is requried for applying.";
 "Use Blended mode" = "Use Blended mode";
+"MUSICAPP_" = "Music app";
+"MUSICAPP_RESTART_REQUIRED" = "Music app restart is required";
+"Use AlbumArt Backdrop" = "Use AlbumArt Backdrop";
 "Kill all apps" = "Kill all applied apps";
 "KILLALLAPPS_MSG" = "Include Preferences app";
 "MSG_COPYRIGHT" = "Glare Apps © 2014 deVbug";

@@ -5,3 +5,4 @@
 #import "PhotoLibrary.h"
 #import "StoreKit.h"
 #import "Sharing.h"
+#import "MediaPlayer.h"

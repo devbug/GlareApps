@@ -247,3 +247,6 @@ extern NSString *PSValuesDataSourceKey; // valuesDataSource
 @interface GlareAppsSettingsListController : GlareAppsListController //<PSFilteredAppListDelegate>
 @end
 
+@interface GlareAppsMiscellaneousListController : GlareAppsListController
+@end
+

@@ -14,6 +14,8 @@ static NSArray *GlareAppsWhiteList = nil;
 
 BOOL isWhiteness							= NO;
 BOOL useBlendedMode							= NO;
+BOOL useGlobalAlbumArtBackdrop				= NO;
+BOOL useMusicAppAlbumArtBackdrop			= NO;
 BOOL isFirmware70							= YES;
 BOOL isFirmware71							= NO;
 
@@ -45,6 +47,10 @@ static void LoadSettings() {
 		useBlendedMode = [dict[@"GlareAppsUseBlendedMode"] boolValue];
 		if (dict[@"GlareAppsUseBlendedMode"] == nil)
 			useBlendedMode = NO;
+		
+		useMusicAppAlbumArtBackdrop = [dict[@"GlareAppsUseMusicAppAlbumArtBackdrop"] boolValue];
+		if (dict[@"GlareAppsUseMusicAppAlbumArtBackdrop"] == nil)
+			useMusicAppAlbumArtBackdrop = NO;
 		
 		[dict release];
 	}
