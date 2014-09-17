@@ -22,7 +22,7 @@ GlareApps_FILES = Tweak.xm Blended.xm \
 				  AppliedPrograms/com.apple.mobilephone.xm \
 				  AppliedPrograms/com.apple.mobileslideshow.xm \
 				  AppliedPrograms/com.apple.Music.xm \
-				  BlurredBackgroundImageView.m \
+				  GlareAppsBlurredBackgroundImageView.m \
 				  AppliedPrograms/com.apple.mobiletimer.xm \
 				  AppliedPrograms/com.apple.AppStore.xm \
 				  AppliedPrograms/com.apple.stocks.xm \

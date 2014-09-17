@@ -17,7 +17,7 @@ enum {
 };
 
 
-@interface BlurredBackgroundImageView : UIView {
+@interface GlareAppsBlurredBackgroundImageView : UIView {
 	UIImageView *_backgroundImageView;
 	_UIBackdropView *_backdropView;
 }

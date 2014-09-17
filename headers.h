@@ -3,6 +3,7 @@
 #import "Frameworks/Frameworks.h"
 #import "Categories/Categories.h"
 #import "GlareAppsColorHelper.h"
+#import "GlareAppsBlurredBackgroundImageView.h"
 
 
 enum {

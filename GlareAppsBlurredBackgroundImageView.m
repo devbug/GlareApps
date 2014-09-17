@@ -1,4 +1,4 @@
-#import "BlurredBackgroundImageView.h"
+#import "GlareAppsBlurredBackgroundImageView.h"
 #import <objc/runtime.h>
 #import <QuartzCore/CAFilter.h>
 
@@ -6,7 +6,7 @@
 #define isLargeScreen						(([[UIScreen mainScreen] bounds].size.height >= 568.0f) ? YES : NO)
 
 
-@implementation BlurredBackgroundImageView {
+@implementation GlareAppsBlurredBackgroundImageView {
 	_UIParallaxMotionEffect *_parallax;
 	BOOL _parallaxEnabled;
 	BOOL _isDarkness;
@@ -579,8 +579,8 @@
 	}
 	else {
 		_backdropView = [[objc_getClass("_UIBackdropView") alloc] initWithSettings:settings];
-		_backdropView.maskMode = 0;
-		_backdropView.groupName = @"GlareAppsBackdropBackgroundView";
+		//_backdropView.maskMode = 0;
+		//_backdropView.groupName = @"GlareAppsNowPlayingBackdropBackgroundView";
 	}
 	
 	//[_backdropView _setBlursBackground:![self isParallaxEnabled] && _blursBackground];

@@ -1,6 +1,5 @@
 
 #import "headers.h"
-#import "BlurredBackgroundImageView.h"
 
 
 
@@ -166,7 +165,7 @@
 
 BOOL EnableNowPlayingBlurring				= YES;
 
-static BlurredBackgroundImageView *backgroundImageView = nil;
+static GlareAppsBlurredBackgroundImageView *backgroundImageView = nil;
 
 
 
@@ -1287,10 +1286,10 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 		loadMusicSettings();
 		
 		if (useMusicAppAlbumArtBackdrop) {
-			backgroundImageView = [[BlurredBackgroundImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+			backgroundImageView = [[GlareAppsBlurredBackgroundImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 			backgroundImageView.style = kBackdropStyleForWhiteness;
 			backgroundImageView.isFlickerTransition = NO;
-			backgroundImageView.blurRadius = 20.0f;
+			backgroundImageView.blurRadius = isPad ? 20.0f : 15.0f;
 			backgroundImageView.graphicQuality = kBackdropGraphicQualityForceOn;
 			[backgroundImageView setParallaxEnabled:NO];
 			[backgroundImageView reconfigureBackdropFromCurrentSettings];
