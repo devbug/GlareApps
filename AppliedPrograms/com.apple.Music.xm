@@ -155,6 +155,12 @@
 @property(readonly, nonatomic) UINavigationController *radioNavigationController;
 @end
 
+// iPad
+@interface MAPAAppDelegate : MAAppDelegate {
+	UINavigationController *_nowPlayingNavigationController;
+}
+@end
+
 @interface MusicMiniPlayerTransportControls : MPTransportControls @end
 
 
@@ -168,6 +174,30 @@ BOOL EnableNowPlayingBlurring				= YES;
 static GlareAppsBlurredBackgroundImageView *backgroundImageView = nil;
 
 
+
+
+UINavigationController *getCurrentNavigationController() {
+	MAAppDelegate *delegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
+	UINavigationController *nvc = nil;
+	
+	if (isPad) {
+		nvc = MSHookIvar<UINavigationController *>(delegate, "_nowPlayingNavigationController");
+	}
+	else {
+		UIViewController *vc = [delegate tabBarController].selectedViewController;
+		nvc = (UINavigationController *)vc;
+		
+		if (![vc isKindOfClass:[UINavigationController class]]) {
+			nvc = vc.navigationController;
+		}
+		
+		if (![[delegate tabBarController].tabBar.selectedItem isEqual:vc.tabBarItem]) {
+			nvc = [[delegate tabBarController] moreNavigationController];
+		}
+	}
+	
+	return nvc;
+}
 
 
 // {{{
@@ -195,6 +225,26 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 	[UIApplication sharedApplication].statusBar.foregroundColor = [colorHelper commonTextColor];
 	
 	%orig;
+	
+	if (!EnableNowPlayingBlurring && useBlendedMode && useMusicAppAlbumArtBackdrop && ![self isKindOfClass:%c(MusicNowPlayingViewController)]) {
+		MAAppDelegate *delegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
+		
+		UINavigationBar *navBar = [[delegate tabBarController] moreNavigationController].navigationBar;
+		navBar._backgroundView.alpha = 1.0f;
+		
+		navBar = [delegate radioNavigationController].navigationBar;
+		navBar._backgroundView.alpha = 1.0f;
+		
+		navBar = vc.navigationController.navigationBar;
+		navBar._backgroundView.alpha = 1.0f;
+	}
+	
+	if (useMusicAppAlbumArtBackdrop) {
+		MusicAVPlayer *avPlayer = [%c(MusicAVPlayer) sharedAVPlayer];
+		
+		if (!avPlayer.isPlaying)
+			backgroundImageView.alpha = 0.0f;
+	}
 }
 
 %end
@@ -803,6 +853,20 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	_playButton.tintColor = TINT_COLOR;
 	_previousButton.tintColor = TINT_COLOR;
 	_nextButton.tintColor = TINT_COLOR;
+	
+	if (useBlendedMode) {
+		UIButton *_shuffleButton = MSHookIvar<UIButton *>(self, "_shuffleButton");
+		UIButton *_repeatButton = MSHookIvar<UIButton *>(self, "_repeatButton");
+		UIButton *_createButton = MSHookIvar<UIButton *>(self, "_createButton");
+		
+		[_shuffleButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		[_repeatButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		[_createButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		
+		blendView(_shuffleButton);
+		blendView(_repeatButton);
+		blendView(_createButton);
+	}
 }
 
 %end
@@ -815,25 +879,35 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	
 	if (!isEnabledRedrawControls(self)) return;
 	
-	UIImageView *valueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
-	valueImageView.image = [valueImageView.image _flatImageWithColor:TINT_COLOR];
+	UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
+	maxValueImageView.image = [maxValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
 	
-	valueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
-	valueImageView.image = [valueImageView.image _flatImageWithColor:TINT_COLOR];
+	UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
+	minValueImageView.image = [minValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
 	
 	UIImageView *_maxTrackView = MSHookIvar<UIImageView *>(self, "_maxTrackView");
-	_maxTrackView.alpha = 1.0f;
+	_maxTrackView.alpha = useBlendedMode ? 0.4f : 1.0f;
 	
 	UIImageView *_minTrackView = MSHookIvar<UIImageView *>(self, "_minTrackView");
-	_minTrackView.alpha = 0.4f;
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-		self.minimumTrackTintColor = TINT_COLOR;
+	_minTrackView.alpha = useBlendedMode ? 1.0f : 0.4f;
+	if (isPad) {
+		self.minimumTrackTintColor = useBlendedMode ? blendColor() : TINT_COLOR;
+	}
+	
+	if (useBlendedMode) {
+		maxValueImageView.alpha = 1.0f;
+		blendView(maxValueImageView);
+		minValueImageView.alpha = 1.0f;
+		blendView(minValueImageView);
+		blendView(_maxTrackView);
+		UIImageView *_minTrackView = MSHookIvar<UIImageView *>(self, "_minTrackView");
+		blendView(_minTrackView);
 	}
 }
 
 - (id)maximumTrackImageForState:(UIControlState)state {
-	if (!EnableNowPlayingBlurring && ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
-		return [self _trackImageWithTintColor:TINT_COLOR_WITH_ALPHA(0.1*TINT_FRACTION)];
+	if (!EnableNowPlayingBlurring && (!isPad || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
+		return [self _trackImageWithTintColor:useBlendedMode ? blendColor() : TINT_COLOR_WITH_ALPHA(0.1*TINT_FRACTION)];
 	}
 	else if (isPad && ![self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
 		return [self _trackImageWithTintColor:TINT_COLOR_WITH_ALPHA(0.1*TINT_FRACTION)];
@@ -843,8 +917,8 @@ BOOL isEnabledRedrawControls(UIView *self) {
 }
 
 - (id)minimumTrackImageForState:(UIControlState)state {
-	if (!EnableNowPlayingBlurring && ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
-		return [self _trackImageWithTintColor:TINT_COLOR];
+	if (!EnableNowPlayingBlurring && (!isPad || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
+		return [self _trackImageWithTintColor:useBlendedMode ? blendColor() : TINT_COLOR];
 	}
 	else if (isPad && ![self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
 		return [self _trackImageWithTintColor:TINT_COLOR];
@@ -856,7 +930,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 - (id)thumbImageForState:(UIControlState)state {
 	UIImage *image = %orig;
 	
-	if (!EnableNowPlayingBlurring && ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
+	if (!EnableNowPlayingBlurring && (!isPad || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
 		return [image _flatImageWithColor:TINT_COLOR];
 	}
 	else if (isPad && ![self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
@@ -871,6 +945,20 @@ BOOL isEnabledRedrawControls(UIView *self) {
 
 %hook MPDetailSlider
 
+- (void)_updateTimeDisplayForTime:(NSTimeInterval)time {
+	%orig;
+	
+	if (!isEnabledRedrawControls(self)) return;
+	
+	if (useBlendedMode && [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
+		UILabel *_currentTimeLabel = MSHookIvar<UILabel *>(self, "_currentTimeLabel");
+		UILabel *_currentTimeInverseLabel = MSHookIvar<UILabel *>(self, "_currentTimeInverseLabel");
+		
+		blendView(_currentTimeLabel);
+		blendView(_currentTimeInverseLabel);
+	}
+}
+
 - (void)layoutSubviews {
 	%orig;
 	
@@ -880,6 +968,17 @@ BOOL isEnabledRedrawControls(UIView *self) {
 		
 		UIImageView *_maxTrackView = MSHookIvar<UIImageView *>(self, "_maxTrackView");
 		_maxTrackView.alpha = 1.0f;
+		
+		if (useBlendedMode) {
+			_minTrackView.alpha = 1.0f;
+			blendView(_minTrackView);
+			_maxTrackView.alpha = 0.4f;
+			blendView(_maxTrackView);
+			
+			UIImageView *_thumbImageView = MSHookIvar<UIImageView *>(self, "_thumbImageView");
+			_thumbImageView.alpha = 1.0f;
+			blendView(_thumbImageView);
+		}
 	}
 }
 
@@ -894,17 +993,27 @@ BOOL isEnabledRedrawControls(UIView *self) {
 
 - (void)setMaximumTrackImage:(UIImage *)image forState:(UIControlState)state {
 	if (isEnabledRedrawControls(self)) {
-		image = [image _flatImageWithColor:TINT_COLOR_WITH_ALPHA(0.1f*TINT_FRACTION)];
+		image = [image _flatImageWithColor:useBlendedMode ? blendColor() : TINT_COLOR_WITH_ALPHA(0.1f*TINT_FRACTION)];
 	}
 	
 	%orig;
 }
 - (void)setMinimumTrackImage:(UIImage *)image forState:(UIControlState)state {
 	if (isEnabledRedrawControls(self)) {
-		image = [image _flatImageWithColor:TINT_COLOR];
+		image = [image _flatImageWithColor:useBlendedMode ? blendColor() : TINT_COLOR];
 	}
 	
 	%orig;
+}
+
+- (id)thumbImageForState:(UIControlState)state {
+	UIImage *image = %orig;
+	
+	if (isEnabledRedrawControls(self) && useBlendedMode) {
+		return [image _flatImageWithColor:blendColor()];
+	}
+	
+	return image;
 }
 
 %end
@@ -926,35 +1035,89 @@ BOOL isEnabledRedrawControls(UIView *self) {
 
 %hook MusicNowPlayingViewController
 
+%new
+- (void)__glareapps_updateNavigationBar {
+	if (EnableNowPlayingBlurring) return;
+	
+	UINavigationBar *navBar = getCurrentNavigationController().navigationBar;
+	
+	if (isPad) {
+		navBar = MSHookIvar<UINavigationBar *>(self, "_padFakeNavigationBar");
+	}
+	
+	if (useBlendedMode && useMusicAppAlbumArtBackdrop) {
+		UIView *_contentView = MSHookIvar<UIView *>(self, "_contentView");
+		_contentView.hidden = YES;
+		
+		navBar._backgroundView.alpha = 0.0f;
+	}
+	else {
+		clearBar(navBar);
+		
+		UILabel *_titleView = [navBar valueForKey:@"_titleView"];
+		if ([_titleView respondsToSelector:@selector(text)]) {
+			_titleView.textColor = TINT_COLOR;
+		}
+	}
+}
+
 - (void)viewDidLayoutSubviews {
 	%orig;
 	
 	if (EnableNowPlayingBlurring) return;
 	
-	UINavigationBar *navBar = self.navigationController.navigationBar;
-	if (!navBar) {
-		MAAppDelegate *delegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
-		navBar = [[delegate radioNavigationController] navigationBar];
-		
-		if (!navBar) {
-			navBar = [[[delegate tabBarController] moreNavigationController] navigationBar];
-		}
-	}
-	
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-		navBar = MSHookIvar<UINavigationBar *>(self, "_padFakeNavigationBar");
-	}
-	
-	clearBar(navBar);
-	
-	UILabel *_titleView = [navBar valueForKey:@"_titleView"];
-	if ([_titleView respondsToSelector:@selector(text)]) {
-		_titleView.textColor = TINT_COLOR;
-	}
+	[self performSelector:@selector(__glareapps_updateNavigationBar)];
 	
 	MusicNowPlayingTitlesView *_titlesView = MSHookIvar<MusicNowPlayingTitlesView *>(self, "_titlesView");
 	_titlesView._titleLabel.textColor = TINT_COLOR;
 	_titlesView._detailLabel.textColor = TINT_COLOR_WITH_ALPHA(0.6);
+	
+	if (useBlendedMode) {
+		blendView(_titlesView._titleLabel);
+		blendView(_titlesView._detailLabel);
+	}
+}
+
+- (void)_updateForCurrentItemAnimated:(BOOL)animated {
+	%orig;
+	
+	if (EnableNowPlayingBlurring) return;
+	
+	if (!useMusicAppAlbumArtBackdrop) return;
+	if (backgroundImageView.alpha != 0.0f) return;
+	
+	UIImageView *_contentView = MSHookIvar<UIImageView *>(self, "_contentView");
+	if (![_contentView respondsToSelector:@selector(image)]) return;
+	
+	MPAVItem *_item = MSHookIvar<MPAVItem *>(self, "_item");
+	
+	UIImage *albumArt = [backgroundImageView _getImageFromMPAVItem:_item];
+	
+	if (albumArt == nil)
+		albumArt = _contentView.image;
+	
+	backgroundImageView.latestOrientation = [[UIDevice currentDevice] orientation];
+	[backgroundImageView updateBackgroundImage:albumArt animated:NO];
+	
+	backgroundImageView.alpha = 1.0f;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	%orig;
+	
+	if (EnableNowPlayingBlurring) return;
+	
+	if (useMusicAppAlbumArtBackdrop)
+		backgroundImageView.alpha = 1.0f;
+}
+
+- (void)_updateNavigationItemAnimated:(BOOL)animated {
+	%orig;
+	
+	if (EnableNowPlayingBlurring) return;
+	
+	if (animated)
+		[self performSelector:@selector(__glareapps_updateNavigationBar)];
 }
 
 %end
@@ -1148,6 +1311,10 @@ void loadMusicSettings() {
 	EnableNowPlayingBlurring = [dict[@"EnableNowPlayingBlurring"] boolValue];
 	if (dict[@"EnableNowPlayingBlurring"] == nil)
 		EnableNowPlayingBlurring = YES;
+	
+	if (![[NSFileManager defaultManager] fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/BlurredMusicApp.dylib"]) {
+		EnableNowPlayingBlurring = NO;
+	}
 }
 
 static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
@@ -1198,7 +1365,7 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 	[keyWindow.subviews[0] insertSubview:backgroundImageView atIndex:0];
 	backgroundImageView.alpha = 0.0f;
 	
-	if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)) {
+	if (isPad) {
 		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 		[[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(__glareapps_didRotate:)
@@ -1246,7 +1413,14 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 	backgroundImageView.latestOrientation = [[UIDevice currentDevice] orientation];
 	[backgroundImageView updateBackgroundImage:[backgroundImageView _getImageFromMPAVItem:avPlayer.currentItem] animated:animated];
 	
-	backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+	UINavigationController *nvc = getCurrentNavigationController();
+	
+	if ([nvc.topViewController isKindOfClass:%c(MusicNowPlayingViewController)]) {
+		backgroundImageView.alpha = 1.0f;
+	}
+	else {
+		backgroundImageView.alpha = avPlayer.currentItem && avPlayer.isPlaying ? 1.0f : 0.0f;
+	}
 }
 
 - (void)_playbackStateDidChangeNotification:(id)notification {
