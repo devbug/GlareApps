@@ -1351,7 +1351,34 @@ UIImage *reorderImageBlack = nil;
 
 
 #pragma mark -
-#pragma mark UITabBar
+#pragma mark UIBars
+
+
+%hook UINavigationBar
+
+- (void)setTranslucent:(BOOL)t {}
+- (void)setBackgroundColor:(UIColor *)c {}
+- (void)setBarTintColor:(UIColor *)c {}
+
+%end
+
+
+%hook UIToolbar
+
+- (void)setTranslucent:(BOOL)t {}
+- (void)setBackgroundColor:(UIColor *)c {}
+- (void)setBarTintColor:(UIColor *)c {}
+
+%end
+
+
+%hook UITabBar
+
+- (void)setTranslucent:(BOOL)t {}
+- (void)setBackgroundColor:(UIColor *)c {}
+- (void)setBarTintColor:(UIColor *)c {}
+
+%end
 
 
 %hook UITabBarButton
