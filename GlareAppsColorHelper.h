@@ -28,6 +28,7 @@
 @property (nonatomic, readonly) UIColor *color_0_1__1_0;
 @property (nonatomic, readonly) UIColor *color_0_3__1_0;
 @property (nonatomic, readonly) UIColor *color_0_7__1_0;
+@property (nonatomic, readonly) UIColor *color_0_75__1_0;
 @property (nonatomic, readonly) UIColor *color_0_9__0_2;
 @property (nonatomic, readonly) UIColor *color_0_9__1_0;
 @property (nonatomic, readonly) UIColor *color_0_11__0_2;
@@ -36,6 +37,7 @@
 
 + (instancetype)sharedInstance;
 
+- (UIColor *)maskColorForBlendedMode;
 - (UIColor *)fakeWhiteClearColor;
 - (UIColor *)fakeBlackClearColor;
 - (UIColor *)themedFakeClearColor;

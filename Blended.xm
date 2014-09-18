@@ -5,7 +5,7 @@
 
 
 UIColor *blendColor() {
-	return colorHelper.color_0_7__1_0;
+	return [colorHelper maskColorForBlendedMode];
 }
 
 void blendView(id control) {
