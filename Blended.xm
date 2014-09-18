@@ -44,34 +44,29 @@ void blendView(id control) {
 	
 	self.tintColor = blendColor();
 	
-	UILabel *_titleView = MSHookIvar<UILabel *>(self, "_titleView");
-	blendView(_titleView);
+	for (UIView *v in self.subviews) {
+		if (v == self._backgroundView) continue;
+		
+		blendView(v);
+	}
 }
 
 - (id)_titleTextColor {
 	return blendColor();
 }
 
-%end
-
-
-%hook UINavigationButton
-
-- (void)layoutSubviews {
-	%orig;
-	
-	blendView(self);
+- (id)buttonItemTextColor {
+	return blendColor();
 }
 
-%end
-
-
-%hook UINavigationItemButtonView
-
-- (void)layoutSubviews {
+- (void)_updateNavigationBarItemsForStyle:(UIBarStyle)style previousTintColor:(id)color {
 	%orig;
 	
-	blendView(self);
+	for (UIView *v in self.subviews) {
+		if (v == self._backgroundView) continue;
+		
+		blendView(v);
+	}
 }
 
 %end
@@ -79,21 +74,8 @@ void blendView(id control) {
 
 %hook UINavigationItemView
 
-- (void)layoutSubviews {
-	%orig;
-	
-	blendView(self);
-}
-
-%end
-
-
-%hook _UINavigationBarBackIndicatorView
-
-- (void)layoutSubviews {
-	%orig;
-	
-	blendView(self);
+- (id)_currentTextColorForBarStyle:(UIBarStyle)style {
+	return blendColor();
 }
 
 %end
@@ -115,7 +97,8 @@ void blendView(id control) {
 - (void)layoutSubviews {
 	%orig;
 	
-	blendView(self);
+	if ([self.superview isKindOfClass:[UITabBar class]])
+		blendView(self);
 }
 
 %end

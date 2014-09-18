@@ -144,6 +144,7 @@
 @interface UINavigationButton : UIButton @end
 @interface UINavigationBar (private_api)
 @property(nonatomic, setter=_setHidesShadow:) BOOL _hidesShadow;
+- (BOOL)isMinibar;
 - (_UINavigationBarBackground *)_backgroundView;
 @end
 
@@ -327,6 +328,7 @@
 @interface UIMoreListController : UIViewController @end
 
 @interface UITabBarCustomizeView : UIView @end
+@interface UITabBarButton : UIButton @end
 
 @interface _UINavigationPaletteBackground : UIView {
 	_UIBackdropView *_adaptiveBackdrop;
