@@ -117,11 +117,21 @@ void blendView(id control) {
 
 %hook UIStatusBar
 
-- (void)layoutSubviews {
-	%orig;
+- (void)setForegroundColor:(UIColor *)color {
 	
-	self.foregroundColor = blendColor();
-	blendView(self);
+}
+
+- (id)initWithFrame:(CGRect)frame {
+	self = %orig;
+	
+	if (self) {
+		UIColor *&_foregroundColor = MSHookIvar<UIColor *>(self, "_foregroundColor");
+		[_foregroundColor release];
+		_foregroundColor = [blendColor() copy];
+		blendView(self);
+	}
+	
+	return self;
 }
 
 %end
