@@ -27,6 +27,7 @@
 @property (nonatomic, readonly) UIColor *color_0_0__0_9;
 @property (nonatomic, readonly) UIColor *color_0_1__1_0;
 @property (nonatomic, readonly) UIColor *color_0_3__1_0;
+@property (nonatomic, readonly) UIColor *color_0_55__1_0;
 @property (nonatomic, readonly) UIColor *color_0_7__1_0;
 @property (nonatomic, readonly) UIColor *color_0_75__1_0;
 @property (nonatomic, readonly) UIColor *color_0_9__0_2;

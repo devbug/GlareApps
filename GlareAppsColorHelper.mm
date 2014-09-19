@@ -63,6 +63,7 @@
 		_color_0_0__0_9 = [[UIColor colorWithWhite:0.0f alpha:0.9f] retain];
 		_color_0_1__1_0 = [[UIColor colorWithWhite:0.0f alpha:1.0f] retain];
 		_color_0_3__1_0 = [[UIColor colorWithWhite:0.3f alpha:1.0f] retain];
+		_color_0_55__1_0 = [[UIColor colorWithWhite:0.55f alpha:1.0f] retain];
 		_color_0_75__1_0 = [[UIColor colorWithWhite:0.75f alpha:1.0f] retain];
 		_color_0_7__1_0 = [[UIColor colorWithWhite:0.7f alpha:1.0f] retain];
 		_color_0_9__0_2 = [[UIColor colorWithWhite:0.9f alpha:0.2f] retain];
@@ -80,6 +81,9 @@
 }
 
 - (UIColor *)maskColorForBlendedMode {
+	if (_isWhiteness)
+		return _color_0_55__1_0;
+	
 	return _color_0_75__1_0;
 }
 
@@ -327,6 +331,7 @@
 	[_color_0_0__0_9 release]; _color_0_0__0_9 = nil;
 	[_color_0_1__1_0 release]; _color_0_1__1_0 = nil;
 	[_color_0_3__1_0 release]; _color_0_3__1_0 = nil;
+	[_color_0_55__1_0 release]; _color_0_55__1_0 = nil;
 	[_color_0_7__1_0 release]; _color_0_7__1_0 = nil;
 	[_color_0_75__1_0 release]; _color_0_75__1_0 = nil;
 	[_color_0_9__0_2 release]; _color_0_9__0_2 = nil;
