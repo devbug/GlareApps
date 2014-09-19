@@ -50,7 +50,7 @@ NSInteger currentBackdropStyle				= 0;
 }
 
 - (void)_setBackgroundStyle:(NSInteger)style {
-	if (style < 1) style = (isFirmware71 ? 3 : 2) + (isWhiteness ? 0 : 1);
+	if (style < 1) style = (isFirmware70 ? 2 : 3) + (isWhiteness ? 0 : 1);
 	
 	currentBackdropStyle = style;
 	

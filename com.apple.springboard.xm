@@ -244,7 +244,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	if (isFirmware71) {
 		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
 	}
-	else {
+	else if (isFirmware70) {
 		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
 	}
 	

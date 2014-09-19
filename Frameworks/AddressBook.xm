@@ -11,7 +11,7 @@
 	self.backgroundColor = [colorHelper clearColor];
 	self.contactNameView.backgroundColor = [colorHelper clearColor];
 	
-	if (!isFirmware71) {
+	if (isFirmware70) {
 		self.contactNameView.meLabel.backgroundColor = [colorHelper clearColor];
 		self.contactNameView.meLabel.textColor = [colorHelper systemGrayColor];
 		self.contactNameView.nameLabel.backgroundColor = [colorHelper clearColor];

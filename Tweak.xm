@@ -1468,7 +1468,7 @@ UIImage *reorderImageBlack = nil;
 	if (isFirmware71) {
 		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backgroundView");
 	}
-	else {
+	else if (isFirmware70) {
 		_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
 	}
 	
@@ -1930,7 +1930,7 @@ UIImage *reorderImageBlack = nil;
 
 %ctor
 {
-	isFirmware70 = (kCFCoreFoundationVersionNumber < 874.24);
+	isFirmware70 = (kCFCoreFoundationVersionNumber < 847.24);
 	isFirmware71 = (kCFCoreFoundationVersionNumber >= 847.24);
 	
 	//CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, &reloadPrefsNotification, CFSTR("kr.slak.glareapps.prefnoti"), NULL, CFNotificationSuspensionBehaviorCoalesce);
@@ -1947,7 +1947,7 @@ UIImage *reorderImageBlack = nil;
 	kbRenderConfig.keycapOpacity = isFirmware71 ? 1.0f : 0.82f;
 	if (isFirmware71)
 		kbRenderConfig.lightLatinKeycapOpacity = 1.0f;
-	else
+	else if (isFirmware70)
 		kbRenderConfig.keyborderOpacity = 1.0f;
 	
 	%init;

@@ -565,13 +565,13 @@ UIImage *shuffleImage = nil;
 - (void)setArtist:(NSString *)artist {
 	%orig;
 	
-	if (!isFirmware71)
+	if (isFirmware70)
 		self.artistLabel.textColor = [colorHelper musicTableViewCellTextColor];
 }
 - (void)setAlbum:(NSString *)album {
 	%orig;
 	
-	if (!isFirmware71)
+	if (isFirmware70)
 		self.albumLabel.textColor = [colorHelper systemGrayColor];
 }
 
