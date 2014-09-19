@@ -65,3 +65,75 @@
 + (id)sharedObserver; // >= 7.1
 @end
 
+
+@interface MPVolumeSlider : UISlider
+- (id)_maxTrackImageForStyle:(UIControlState)arg1;
+- (id)_minTrackImageForStyle:(UIControlState)arg1;
+- (id)_thumbImageForStyle:(UIControlState)arg1;
+@end
+
+@interface MPDetailSlider : UISlider {
+	UILabel *_currentTimeInverseLabel;
+	UILabel *_currentTimeLabel;
+}
+- (struct CGRect)thumbViewRect;
+- (id)_colorSliceImageWithColor:(id)arg1 height:(CGFloat)arg2;
+@end
+
+@interface MPButton : UIButton @end
+
+@interface MPTransportControls : UIView {
+	MPButton *_alternatesButton;
+	MPButton *_bookmarkButton;
+	MPButton *_chaptersButton;
+	MPButton *_devicePickerButton;
+	MPButton *_emailButton;
+	MPButton *_fastForward15SecondsButton;
+	MPButton *_likeOrBanButton;
+	MPButton *_nextButton;
+	MPButton *_playButton;
+	MPButton *_previousButton;
+	MPButton *_rewind15SecondsButton;
+	MPButton *_rewind30SecondsButton;
+	MPButton *_scaleButton;
+	MPButton *_toggleFullscreenButton;
+}
+@end
+
+@interface MPPlaybackControlsView : UIView {
+	MPButton *_fastFowardButton;
+	MPButton *_geniusButton;
+	MPButton *_mailButton;
+	MPButton *_playbackSpeedButton;
+	MPDetailSlider *_progressControl;
+	MPButton *_radioButton;
+	MPButton *_radioHistoryButton;
+	MPButton *_radioShareButton;
+	MPButton *_trackInfoButton;
+	MPButton *_repeatButton;
+	MPButton *_rewindButton;
+	UIView *_rewindButtonBezel;
+	MPButton *_shuffleButton;
+	UILabel *_trackInfoLabel;
+}
+@property(readonly, nonatomic) UIImage *shuffleButtonImage;
+@property(readonly, nonatomic) UIImage *repeatButtonImage;
+@property(readonly, nonatomic) UIImage *mailButtonImage;
+@end
+
+@interface _MPUMarqueeContentView : UIView @end
+@interface MPUMarqueeView : UIView
+@property(readonly, nonatomic) UIView *contentView;
+@property(nonatomic) CGSize contentSize;
+@property(nonatomic) CGFloat contentGap;
+@end
+@interface MPUNowPlayingTitlesView : UIView {
+	UILabel *_detailLabel;
+	MPUMarqueeView *_detailMarqueeView;
+	UILabel *_titleLabel;
+	MPUMarqueeView *_titleMarqueeView;
+}
+- (void)_updateAttributedTitleLabel;
+- (UILabel *)_detailLabel;
+- (UILabel *)_titleLabel;
+@end

@@ -57,56 +57,7 @@
 
 
 
-@interface MPVolumeSlider : UISlider @end
-
-@interface MPDetailSlider : UISlider {
-	UILabel *_currentTimeInverseLabel;
-	UILabel *_currentTimeLabel;
-}
-- (struct CGRect)thumbViewRect;
-@end
-
-@interface MPButton : UIButton @end
-
-@interface MPTransportControls : UIView {
-	MPButton *_alternatesButton;
-	MPButton *_bookmarkButton;
-	MPButton *_chaptersButton;
-	MPButton *_devicePickerButton;
-	MPButton *_emailButton;
-	MPButton *_fastForward15SecondsButton;
-	MPButton *_likeOrBanButton;
-	MPButton *_nextButton;
-	MPButton *_playButton;
-	MPButton *_previousButton;
-	MPButton *_rewind15SecondsButton;
-	MPButton *_rewind30SecondsButton;
-	MPButton *_scaleButton;
-	MPButton *_toggleFullscreenButton;
-}
-@end
-
 @interface MusicNowPlayingTransportControls : MPTransportControls @end
-@interface MPPlaybackControlsView : UIView {
-	MPButton *_fastFowardButton;
-	MPButton *_geniusButton;
-	MPButton *_mailButton;
-	MPButton *_playbackSpeedButton;
-	MPDetailSlider *_progressControl;
-	MPButton *_radioButton;
-	MPButton *_radioHistoryButton;
-	MPButton *_radioShareButton;
-	MPButton *_trackInfoButton;
-	MPButton *_repeatButton;
-	MPButton *_rewindButton;
-	UIView *_rewindButtonBezel;
-	MPButton *_shuffleButton;
-	UILabel *_trackInfoLabel;
-}
-@property(readonly, nonatomic) UIImage *shuffleButtonImage;
-@property(readonly, nonatomic) UIImage *repeatButtonImage;
-@property(readonly, nonatomic) UIImage *mailButtonImage;
-@end
 @interface MusicNowPlayingPlaybackControlsView : MPPlaybackControlsView {
 	UIButton *_createButton;
 	UIButton *_infoButton;
@@ -124,22 +75,6 @@
 - (id)_trackImageWithTintColor:(id)tintColor;
 @end
 
-@interface _MPUMarqueeContentView : UIView @end
-@interface MPUMarqueeView : UIView
-@property(readonly, nonatomic) UIView *contentView;
-@property(nonatomic) CGSize contentSize;
-@property(nonatomic) CGFloat contentGap;
-@end
-@interface MPUNowPlayingTitlesView : UIView {
-	UILabel *_detailLabel;
-	MPUMarqueeView *_detailMarqueeView;
-	UILabel *_titleLabel;
-	MPUMarqueeView *_titleMarqueeView;
-}
-- (void)_updateAttributedTitleLabel;
-- (UILabel *)_detailLabel;
-- (UILabel *)_titleLabel;
-@end
 @interface MusicNowPlayingTitlesView : MPUNowPlayingTitlesView @end
 
 @interface MusicNowPlayingViewController : UIViewController @end
@@ -874,7 +809,80 @@ BOOL isEnabledRedrawControls(UIView *self) {
 %end
 
 
+%hook MusicMiniPlayerPlaybackControlsView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	if (useBlendedMode) {
+		UIButton *_shuffleButton = MSHookIvar<UIButton *>(self, "_shuffleButton");
+		UIButton *_repeatButton = MSHookIvar<UIButton *>(self, "_repeatButton");
+		UIButton *_createButton = MSHookIvar<UIButton *>(self, "_createButton");
+		
+		[_shuffleButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		[_repeatButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		[_createButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		
+		blendView(_shuffleButton);
+		blendView(_repeatButton);
+		blendView(_createButton);
+	}
+}
+
+%end
+
+
 %hook MusicNowPlayingVolumeSlider
+
+- (void)_updateTrackTintForVolumeControlAvailability {
+	if (!isEnabledRedrawControls(self)) {
+		%orig;
+		return;
+	}
+	
+	@autoreleasepool {
+		UIColor *&_maximumTintUsedForTrackImageColor = MSHookIvar<UIColor *>(self, "_maximumTintUsedForTrackImageColor");
+		UIColor *&_minimumTintUsedForTrackImageColor = MSHookIvar<UIColor *>(self, "_minimumTintUsedForTrackImageColor");
+		
+		UIColor *maxColor = useBlendedMode ? blendColor() : TINT_COLOR_WITH_ALPHA(0.1*TINT_FRACTION);
+		UIColor *minColor = useBlendedMode ? blendColor() : TINT_COLOR;
+		
+		if (![_maximumTintUsedForTrackImageColor isEqual:maxColor]) {
+			UIImage *image = [self _trackImageWithTintColor:maxColor];
+			[self setMaximumTrackImage:image forState:UIControlStateNormal];
+			[_maximumTintUsedForTrackImageColor release];
+			_maximumTintUsedForTrackImageColor = [maxColor retain];
+		}
+		
+		if (![_minimumTintUsedForTrackImageColor isEqual:minColor]) {
+			UIImage *image = [self _trackImageWithTintColor:minColor];
+			[self setMinimumTrackImage:image forState:UIControlStateNormal];
+			[_minimumTintUsedForTrackImageColor release];
+			_minimumTintUsedForTrackImageColor = [minColor retain];
+		}
+	}
+}
+
+- (void)didMoveToSuperview {
+	%orig;
+	
+	[self _updateTrackTintForVolumeControlAvailability];
+	
+	@autoreleasepool {
+		if (isEnabledRedrawControls(self)) {
+			UIImage *thumbImage = [[self _thumbImageForStyle:UIControlStateNormal] _flatImageWithColor:TINT_COLOR];
+			[self setThumbImage:thumbImage forState:UIControlStateNormal];
+			
+			UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
+			UIImage *maxValueImage = [maxValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
+			[self setMaximumValueImage:maxValueImage];
+			
+			UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
+			UIImage *minValueImage = [minValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
+			[self setMinimumValueImage:minValueImage];
+		}
+	}
+}
 
 - (void)layoutSubviews {
 	%orig;
@@ -882,24 +890,17 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	if (!isEnabledRedrawControls(self)) return;
 	
 	@autoreleasepool {
-		UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
-		maxValueImageView.image = [maxValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
-		
-		UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
-		minValueImageView.image = [minValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
-		
 		UIImageView *_maxTrackView = MSHookIvar<UIImageView *>(self, "_maxTrackView");
 		_maxTrackView.alpha = useBlendedMode ? 0.4f : 1.0f;
 		
 		UIImageView *_minTrackView = MSHookIvar<UIImageView *>(self, "_minTrackView");
 		_minTrackView.alpha = useBlendedMode ? 1.0f : 0.4f;
-		if (isPad) {
-			self.minimumTrackTintColor = useBlendedMode ? blendColor() : TINT_COLOR;
-		}
 		
 		if (useBlendedMode) {
+			UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
 			maxValueImageView.alpha = 1.0f;
 			blendView(maxValueImageView);
+			UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
 			minValueImageView.alpha = 1.0f;
 			blendView(minValueImageView);
 			blendView(_maxTrackView);
@@ -907,41 +908,6 @@ BOOL isEnabledRedrawControls(UIView *self) {
 			blendView(_minTrackView);
 		}
 	}
-}
-
-- (id)maximumTrackImageForState:(UIControlState)state {
-	if (!EnableNowPlayingBlurring && (!isPad || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
-		return [self _trackImageWithTintColor:useBlendedMode ? blendColor() : TINT_COLOR_WITH_ALPHA(0.1*TINT_FRACTION)];
-	}
-	else if (isPad && ![self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
-		return [self _trackImageWithTintColor:TINT_COLOR_WITH_ALPHA(0.1*TINT_FRACTION)];
-	}
-	
-	return %orig;
-}
-
-- (id)minimumTrackImageForState:(UIControlState)state {
-	if (!EnableNowPlayingBlurring && (!isPad || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
-		return [self _trackImageWithTintColor:useBlendedMode ? blendColor() : TINT_COLOR];
-	}
-	else if (isPad && ![self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
-		return [self _trackImageWithTintColor:TINT_COLOR];
-	}
-	
-	return %orig;
-}
-
-- (id)thumbImageForState:(UIControlState)state {
-	UIImage *image = %orig;
-	
-	if (!EnableNowPlayingBlurring && (!isPad || [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)])) {
-		return [image _flatImageWithColor:TINT_COLOR];
-	}
-	else if (isPad && ![self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
-		return [image _flatImageWithColor:TINT_COLOR];
-	}
-	
-	return image;
 }
 
 %end
@@ -954,7 +920,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	
 	if (!isEnabledRedrawControls(self)) return;
 	
-	if (useBlendedMode && [self.superview isKindOfClass:%c(MusicNowPlayingPlaybackControlsView)]) {
+	if (useBlendedMode) {
 		UILabel *_currentTimeLabel = MSHookIvar<UILabel *>(self, "_currentTimeLabel");
 		UILabel *_currentTimeInverseLabel = MSHookIvar<UILabel *>(self, "_currentTimeInverseLabel");
 		
