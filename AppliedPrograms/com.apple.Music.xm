@@ -237,8 +237,6 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 		
 		navBar = vc.navigationController.navigationBar;
 		navBar._backgroundView.alpha = 1.0f;
-		
-		[backgroundImageView removeMaskViews];
 	}
 	
 	if (useMusicAppAlbumArtBackdrop) {
@@ -247,6 +245,8 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 		if (!avPlayer.isPlaying)
 			backgroundImageView.alpha = 0.0f;
 	}
+	
+	[backgroundImageView removeMaskViews];
 }
 
 %end
