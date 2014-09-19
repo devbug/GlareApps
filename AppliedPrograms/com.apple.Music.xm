@@ -237,6 +237,8 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 		
 		navBar = vc.navigationController.navigationBar;
 		navBar._backgroundView.alpha = 1.0f;
+		
+		[backgroundImageView removeMaskViews];
 	}
 	
 	if (useMusicAppAlbumArtBackdrop) {
@@ -879,29 +881,31 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	
 	if (!isEnabledRedrawControls(self)) return;
 	
-	UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
-	maxValueImageView.image = [maxValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
-	
-	UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
-	minValueImageView.image = [minValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
-	
-	UIImageView *_maxTrackView = MSHookIvar<UIImageView *>(self, "_maxTrackView");
-	_maxTrackView.alpha = useBlendedMode ? 0.4f : 1.0f;
-	
-	UIImageView *_minTrackView = MSHookIvar<UIImageView *>(self, "_minTrackView");
-	_minTrackView.alpha = useBlendedMode ? 1.0f : 0.4f;
-	if (isPad) {
-		self.minimumTrackTintColor = useBlendedMode ? blendColor() : TINT_COLOR;
-	}
-	
-	if (useBlendedMode) {
-		maxValueImageView.alpha = 1.0f;
-		blendView(maxValueImageView);
-		minValueImageView.alpha = 1.0f;
-		blendView(minValueImageView);
-		blendView(_maxTrackView);
+	@autoreleasepool {
+		UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
+		maxValueImageView.image = [maxValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
+		
+		UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
+		minValueImageView.image = [minValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
+		
+		UIImageView *_maxTrackView = MSHookIvar<UIImageView *>(self, "_maxTrackView");
+		_maxTrackView.alpha = useBlendedMode ? 0.4f : 1.0f;
+		
 		UIImageView *_minTrackView = MSHookIvar<UIImageView *>(self, "_minTrackView");
-		blendView(_minTrackView);
+		_minTrackView.alpha = useBlendedMode ? 1.0f : 0.4f;
+		if (isPad) {
+			self.minimumTrackTintColor = useBlendedMode ? blendColor() : TINT_COLOR;
+		}
+		
+		if (useBlendedMode) {
+			maxValueImageView.alpha = 1.0f;
+			blendView(maxValueImageView);
+			minValueImageView.alpha = 1.0f;
+			blendView(minValueImageView);
+			blendView(_maxTrackView);
+			UIImageView *_minTrackView = MSHookIvar<UIImageView *>(self, "_minTrackView");
+			blendView(_minTrackView);
+		}
 	}
 }
 

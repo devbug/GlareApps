@@ -1403,6 +1403,23 @@ UIImage *reorderImageBlack = nil;
 %end
 
 
+%hook UIStatusBar
+
+// fix memory leak
+- (void)setForegroundColor:(UIColor *)color {
+	if (isFirmware71) {
+		UIColor *c = [color copy];
+		%orig(c);
+		[c release];
+		return;
+	}
+	
+	%orig;
+}
+
+%end
+
+
 
 #pragma mark -
 #pragma mark UIPickerView
