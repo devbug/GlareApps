@@ -758,6 +758,71 @@ UIImage *shuffleImage = nil;
 %end
 
 
+%hook MusicMiniPlayerPlaybackControlsView
+
+- (void)layoutSubviews {
+	%orig;
+	
+	if (useBlendedMode) {
+		UIButton *_shuffleButton = MSHookIvar<UIButton *>(self, "_shuffleButton");
+		UIButton *_repeatButton = MSHookIvar<UIButton *>(self, "_repeatButton");
+		UIButton *_createButton = MSHookIvar<UIButton *>(self, "_createButton");
+		
+		[_shuffleButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		[_repeatButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		[_createButton setTitleColor:blendColor() forState:UIControlStateNormal];
+		
+		blendView(_shuffleButton);
+		blendView(_repeatButton);
+		blendView(_createButton);
+	}
+}
+
+%end
+
+
+%hook MPHAlbumHeaderView
+
+- (void)setCountAttributedString:(NSAttributedString *)text {
+	%orig(colorReplacedAttributedString(text));
+}
+
+- (UIColor *)secondaryTextColor {
+	return [colorHelper systemDarkGrayColor];
+}
+
+- (void)setSecondaryTextColor:(UIColor *)color {
+	%orig([colorHelper systemDarkGrayColor]);
+}
+
+%end
+
+
+%hook MPHCZAlbumTracksCellConfiguration
+
++ (UIColor *)tableViewCellBackgroundColor {
+	return [colorHelper clearColor];
+}
+
+%end
+
+
+%hook MPHCZAlbumTableViewController
+
+- (id)_createTableViewBackgroundView {
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+	
+	_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
+	//backdropView.tag = 0xc001;
+	
+	//[colorHelper addBlurView:backdropView];
+	
+	return [backdropView autorelease];
+}
+
+%end
+
+
 
 #pragma mark -
 #pragma mark NowPlaying
@@ -790,29 +855,6 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	_playButton.tintColor = TINT_COLOR;
 	_previousButton.tintColor = TINT_COLOR;
 	_nextButton.tintColor = TINT_COLOR;
-	
-	if (useBlendedMode) {
-		UIButton *_shuffleButton = MSHookIvar<UIButton *>(self, "_shuffleButton");
-		UIButton *_repeatButton = MSHookIvar<UIButton *>(self, "_repeatButton");
-		UIButton *_createButton = MSHookIvar<UIButton *>(self, "_createButton");
-		
-		[_shuffleButton setTitleColor:blendColor() forState:UIControlStateNormal];
-		[_repeatButton setTitleColor:blendColor() forState:UIControlStateNormal];
-		[_createButton setTitleColor:blendColor() forState:UIControlStateNormal];
-		
-		blendView(_shuffleButton);
-		blendView(_repeatButton);
-		blendView(_createButton);
-	}
-}
-
-%end
-
-
-%hook MusicMiniPlayerPlaybackControlsView
-
-- (void)layoutSubviews {
-	%orig;
 	
 	if (useBlendedMode) {
 		UIButton *_shuffleButton = MSHookIvar<UIButton *>(self, "_shuffleButton");
