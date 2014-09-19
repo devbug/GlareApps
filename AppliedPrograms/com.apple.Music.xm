@@ -571,7 +571,35 @@ UIImage *shuffleImage = nil;
 - (void)setAlbum:(NSString *)album {
 	%orig;
 	
-	self.albumLabel.textColor = [colorHelper systemGrayColor];
+	if (!isFirmware71)
+		self.albumLabel.textColor = [colorHelper systemGrayColor];
+}
+
+// >= 7.1
+- (void)_updateAlbumArtistLabelPhone {
+	%orig;
+	
+	NSAttributedString *text = self.artistLabel.attributedText;
+	
+	if (self.artistLabel != nil && text != nil) {
+		NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithAttributedString:text];
+		[attributedString enumerateAttributesInRange:(NSRange){0,[attributedString length]} 
+											 options:NSAttributedStringEnumerationReverse 
+										  usingBlock:^(NSDictionary *attributes, NSRange range, BOOL *stop) {
+			NSMutableDictionary *mutableAttributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
+			UIColor *color = mutableAttributes[@"NSColor"];
+			if ([[color description] hasPrefix:@"UIDeviceWhiteColorSpace"]) {
+				// colorReplacedAttributedString()로 인해 이미 처리됨.
+			}
+			else {
+				mutableAttributes[@"NSColor"] = [colorHelper systemGrayColor];
+			}
+			[attributedString setAttributes:mutableAttributes range:range];
+		}];
+		
+		self.artistLabel.attributedText = attributedString;
+		[attributedString release];
+	}
 }
 
 %end
