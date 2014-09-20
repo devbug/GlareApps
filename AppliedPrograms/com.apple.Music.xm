@@ -778,9 +778,15 @@ UIImage *shuffleImage = nil;
 	UIButton *_previousButton = MSHookIvar<UIButton *>(self, "_previousButton");
 	UIButton *_nextButton = MSHookIvar<UIButton *>(self, "_nextButton");
 	
-	_playButton.tintColor = TINT_COLOR;
-	_previousButton.tintColor = TINT_COLOR;
-	_nextButton.tintColor = TINT_COLOR;
+	_playButton.tintColor = useBlendedMode ? blendColor() : TINT_COLOR;
+	_previousButton.tintColor = useBlendedMode ? blendColor() : TINT_COLOR;
+	_nextButton.tintColor = useBlendedMode ? blendColor() : TINT_COLOR;
+	
+	if (useBlendedMode) {
+		blendView(_playButton);
+		blendView(_previousButton);
+		blendView(_nextButton);
+	}
 }
 
 %end
@@ -803,6 +809,9 @@ UIImage *shuffleImage = nil;
 		blendView(_shuffleButton);
 		blendView(_repeatButton);
 		blendView(_createButton);
+		
+		MusicNowPlayingTitlesView *_titlesView = MSHookIvar<MusicNowPlayingTitlesView *>(self, "_titlesView");
+		blendView(_titlesView._titleLabel);
 	}
 }
 
@@ -880,9 +889,9 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	UIButton *_previousButton = MSHookIvar<UIButton *>(_transportControls, "_previousButton");
 	UIButton *_nextButton = MSHookIvar<UIButton *>(_transportControls, "_nextButton");
 	
-	_playButton.tintColor = TINT_COLOR;
-	_previousButton.tintColor = TINT_COLOR;
-	_nextButton.tintColor = TINT_COLOR;
+	_playButton.tintColor = useBlendedMode ? blendColor() : TINT_COLOR;
+	_previousButton.tintColor = useBlendedMode ? blendColor() : TINT_COLOR;
+	_nextButton.tintColor = useBlendedMode ? blendColor() : TINT_COLOR;
 	
 	if (useBlendedMode) {
 		UIButton *_shuffleButton = MSHookIvar<UIButton *>(self, "_shuffleButton");
@@ -893,9 +902,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 		[_repeatButton setTitleColor:blendColor() forState:UIControlStateNormal];
 		[_createButton setTitleColor:blendColor() forState:UIControlStateNormal];
 		
-		blendView(_shuffleButton);
-		blendView(_repeatButton);
-		blendView(_createButton);
+		blendView(self);
 	}
 }
 
@@ -967,15 +974,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 		_minTrackView.alpha = useBlendedMode ? 1.0f : 0.4f;
 		
 		if (useBlendedMode) {
-			UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
-			maxValueImageView.alpha = 1.0f;
-			blendView(maxValueImageView);
-			UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
-			minValueImageView.alpha = 1.0f;
-			blendView(minValueImageView);
-			blendView(_maxTrackView);
-			UIImageView *_minTrackView = MSHookIvar<UIImageView *>(self, "_minTrackView");
-			blendView(_minTrackView);
+			blendView(self);
 		}
 	}
 }
@@ -1011,13 +1010,9 @@ BOOL isEnabledRedrawControls(UIView *self) {
 		
 		if (useBlendedMode) {
 			_minTrackView.alpha = 1.0f;
-			blendView(_minTrackView);
 			_maxTrackView.alpha = 0.4f;
-			blendView(_maxTrackView);
 			
-			UIImageView *_thumbImageView = MSHookIvar<UIImageView *>(self, "_thumbImageView");
-			_thumbImageView.alpha = 1.0f;
-			blendView(_thumbImageView);
+			blendView(self);
 		}
 	}
 }
@@ -1061,11 +1056,20 @@ BOOL isEnabledRedrawControls(UIView *self) {
 
 %hook MPURatingControl
 
++ (id)ratingDotImage {
+	UIImage *image = %orig;
+	
+	if (!EnableNowPlayingBlurring)
+		image = [image _flatImageWithColor:useBlendedMode ? blendColor() : TINT_COLOR];
+	
+	return image;
+}
+
 + (id)ratingStarImage {
 	UIImage *image = %orig;
 	
 	if (!EnableNowPlayingBlurring)
-		image = [image _flatImageWithColor:TINT_COLOR];
+		image = [image _flatImageWithColor:useBlendedMode ? blendColor() : TINT_COLOR];
 	
 	return image;
 }
@@ -1115,6 +1119,9 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	if (useBlendedMode) {
 		blendView(_titlesView._titleLabel);
 		blendView(_titlesView._detailLabel);
+		
+		MPURatingControl *_ratingControl = MSHookIvar<MPURatingControl *>(self, "_ratingControl");
+		blendView(_ratingControl);
 	}
 }
 
