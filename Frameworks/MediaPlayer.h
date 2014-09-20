@@ -67,6 +67,7 @@
 
 
 @interface MPVolumeSlider : UISlider
+@property(readonly, nonatomic) NSInteger style;
 - (id)_maxTrackImageForStyle:(UIControlState)arg1;
 - (id)_minTrackImageForStyle:(UIControlState)arg1;
 - (id)_thumbImageForStyle:(UIControlState)arg1;
@@ -137,3 +138,5 @@
 - (UILabel *)_detailLabel;
 - (UILabel *)_titleLabel;
 @end
+
+@interface MPURatingControl : UIControl @end

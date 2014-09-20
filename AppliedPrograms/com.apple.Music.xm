@@ -98,6 +98,10 @@
 
 @interface MusicMiniPlayerTransportControls : MPTransportControls @end
 
+@interface NSBundle (__MusicUIBundle)
++ (id)musicUIBundle;
+@end
+
 
 #define TINT_COLOR							[colorHelper commonTextColor]
 #define TINT_COLOR_WITH_ALPHA(a)			[colorHelper commonTextColorWithAlpha:a]
@@ -947,15 +951,15 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	
 	@autoreleasepool {
 		if (isEnabledRedrawControls(self)) {
-			UIImage *thumbImage = [[self _thumbImageForStyle:UIControlStateNormal] _flatImageWithColor:TINT_COLOR];
+			UIImage *thumbImage = [[self _thumbImageForStyle:self.style] _flatImageWithColor:useBlendedMode ? blendColor() : TINT_COLOR];
 			[self setThumbImage:thumbImage forState:UIControlStateNormal];
 			
-			UIImageView *maxValueImageView = MSHookIvar<UIImageView *>(self, "_maxValueImageView");
-			UIImage *maxValueImage = [maxValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
+			UIImage *maxValueImage = [UIImage imageNamed:@"volume-maximum-value-image" inBundle:[NSBundle musicUIBundle]];
+			maxValueImage = [maxValueImage _flatImageWithColor:useBlendedMode ? blendColor() : [colorHelper systemGrayColor]];
 			[self setMaximumValueImage:maxValueImage];
 			
-			UIImageView *minValueImageView = MSHookIvar<UIImageView *>(self, "_minValueImageView");
-			UIImage *minValueImage = [minValueImageView.image _flatImageWithColor:useBlendedMode ? [colorHelper systemDarkGrayColor] : TINT_COLOR];
+			UIImage *minValueImage = [UIImage imageNamed:@"volume-minimum-value-image" inBundle:[NSBundle musicUIBundle]];
+			minValueImage = [minValueImage _flatImageWithColor:useBlendedMode ? blendColor() : [colorHelper systemGrayColor]];
 			[self setMinimumValueImage:minValueImage];
 		}
 	}

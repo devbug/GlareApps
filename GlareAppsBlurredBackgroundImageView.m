@@ -39,7 +39,8 @@
 		self.clipsToBounds = YES;
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.autoresizesSubviews = YES;
-		self.backgroundColor = [UIColor blackColor];
+		self.backgroundColor = [UIColor clearColor];
+		self.opaque = NO;
 		
 		[self _makeBackdropView];
 		_backgroundImageView = [[UIImageView alloc] initWithFrame:frame];

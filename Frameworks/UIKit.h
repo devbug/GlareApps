@@ -247,9 +247,14 @@
 @property(retain, nonatomic) UIColor *foregroundColor;
 @end
 
-@interface UIImage (Private)
+@interface UIImage (private_api)
++ (UIImage *)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 //- (id)_flatImageWithWhite:(CGFloat)arg1 alpha:(CGFloat)arg2;
 - (id)_flatImageWithColor:(UIColor *)arg1;
+@end
+
+@interface UIImageView (private_api)
+@property(nonatomic) NSInteger drawMode;
 @end
 
 @interface UIBarButtonItem (private_api)
@@ -397,5 +402,9 @@
 @interface _UITextFieldRoundedRectBackgroundViewNeue : UIImageView
 @property(retain, nonatomic) UIColor *fillColor;
 @property(retain, nonatomic) UIColor *strokeColor;
+@end
+
+@interface UISlider (private_api)
+- (void)_setUseLookNeue:(BOOL)arg1;
 @end
 
