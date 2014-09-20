@@ -117,6 +117,10 @@ void blendView(id control) {
 
 %hook UIStatusBar
 
+- (void)setForegroundColor:(UIColor *)color animationParameters:(id)params {
+	
+}
+
 - (void)setForegroundColor:(UIColor *)color {
 	
 }
