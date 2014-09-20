@@ -281,11 +281,13 @@
 
 
 - (void)_setBackgoundImage:(UIImage *)image {
-	_backgroundImageView.frame = [self _getBackgroundImageFrameForArtworkSize:image.size];
+	_backgroundImageView.frame = image == nil ? CGRectZero : [self _getBackgroundImageFrameForArtworkSize:image.size];
 	_backgroundImageView.image = image;
 }
 
 - (UIImage *)_getImageFromMPAVItem:(MPAVItem *)item {
+	if (item == nil) return nil;
+	
 	MPImageCache *cache = nil;
 	// <= 7.0.6
 	if ([item respondsToSelector:@selector(imageCache)]) {
@@ -626,7 +628,7 @@
 				}];
 			}
 			else {
-				_backgroundImageView.frame = [self _getBackgroundImageFrameForArtworkSize:image.size];
+				_backgroundImageView.frame = image == nil ? CGRectZero : [self _getBackgroundImageFrameForArtworkSize:image.size];
 				
 				[UIView transitionWithView:_backgroundImageView
 				duration:0.6f
