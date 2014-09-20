@@ -97,8 +97,14 @@ void blendView(id control) {
 - (void)layoutSubviews {
 	%orig;
 	
-	if ([self.superview isKindOfClass:[UITabBar class]])
-		blendView(self);
+	if (self._selected) {
+		self._swappableImageView.alpha = 1.0f;
+	}
+	else {
+		self._swappableImageView.alpha = isWhiteness ? 0.3f : 0.2f;
+	}
+	
+	blendView(self);
 }
 
 %end

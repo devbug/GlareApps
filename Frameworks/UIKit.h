@@ -328,7 +328,10 @@
 @interface UIMoreListController : UIViewController @end
 
 @interface UITabBarCustomizeView : UIView @end
-@interface UITabBarButton : UIButton @end
+@interface UITabBarButton : UIButton
+@property(nonatomic, getter=_isSelected, setter=_setSelected:) BOOL _selected;
+- (UIImageView *)_swappableImageView;
+@end
 
 @interface _UINavigationPaletteBackground : UIView {
 	_UIBackdropView *_adaptiveBackdrop;
