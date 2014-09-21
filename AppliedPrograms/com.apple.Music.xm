@@ -157,15 +157,11 @@ BOOL temporaryUnlockStatusBarForegroundColorSetting = NO;
 %hook MAAppDelegate
 
 - (void)navigationController:(UINavigationController *)nav willShowViewController:(UIViewController *)vc animated:(BOOL)animated {
-	if (EnableNowPlayingBlurring && [self isKindOfClass:%c(MusicNowPlayingViewController)]) {
-		temporaryUnlockStatusBarForegroundColorSetting = YES;
-	}
-	
 	[UIApplication sharedApplication].statusBar.foregroundColor = [colorHelper commonTextColor];
 	
 	%orig;
 	
-	if (!EnableNowPlayingBlurring && useBlendedMode && useMusicAppAlbumArtBackdrop && ![self isKindOfClass:%c(MusicNowPlayingViewController)]) {
+	if (!EnableNowPlayingBlurring && useBlendedMode && useMusicAppAlbumArtBackdrop && ![vc isKindOfClass:%c(MusicNowPlayingViewController)]) {
 		MAAppDelegate *delegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
 		
 		UINavigationBar *navBar = [[delegate tabBarController] moreNavigationController].navigationBar;
