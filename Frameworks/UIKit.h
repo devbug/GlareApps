@@ -115,10 +115,13 @@
 
 @interface UITabBar (private_api)
 @property(nonatomic, setter=_setHidesShadow:) BOOL _hidesShadow;
+@property(retain, nonatomic, setter=_setBackgroundView:) UIView *_backgroundView;
 @end
 
 @interface UIToolbar (private_api)
 @property(nonatomic, setter=_setHidesShadow:) BOOL _hidesShadow;
+- (BOOL)_isInNavigationBar;
+- (UIView *)_backgroundView;
 @end
 
 @interface _UIBarBackgroundImageView : UIImageView

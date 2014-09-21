@@ -81,12 +81,18 @@ void blendView(id control) {
 %end
 
 
-%hook UIToolbarButton
+%hook UIToolbar
 
 - (void)layoutSubviews {
 	%orig;
 	
-	blendView(self);
+	self.tintColor = blendColor();
+	
+	for (UIView *v in self.subviews) {
+		if (v == self._backgroundView) continue;
+		
+		blendView(v);
+	}
 }
 
 %end
