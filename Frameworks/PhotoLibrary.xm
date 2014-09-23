@@ -51,20 +51,25 @@
 
 // 만약 backdropview를 전체 스타일처럼 변경한다면 툴바 아이콘 색깔도 변경이 필요.
 // 그때 쓰면 됨.
-/*- (id)_newButtonItemWithIcon:(id)icon title:(id)title target:(id)target action:(SEL)action tag:(NSInteger)tag {
+// blendedmode 사용할 때만 아이콘 색상 변경
+- (id)_newButtonItemWithIcon:(id)icon title:(id)title target:(id)target action:(SEL)action tag:(NSInteger)tag {
+	if (!useBlendedMode) return %orig;
+	
 	UIBarButtonItem *item = %orig;
 	UIButton *customView = (UIButton *)item.customView;
 	UIImage *image = [customView imageForState:UIControlStateNormal];
 	
-	image = [image _flatImageWithColor:[colorHelper commonTextColor]];
+	image = [image _flatImageWithColor:blendColor()];
 	[customView setImage:image forState:UIControlStateNormal];
 	
 	return item;
-}*/
+}
 
-// 툴바, navbar의 스타일을 원본 스타일(Dark)처럼 적용시킴.
+// blendedmode 사용 안 할 때, 툴바, navbar의 스타일을 원본 스타일(Dark)처럼 적용시킴.
 - (void)viewDidAppear:(BOOL)animated {
 	%orig;
+	
+	if (useBlendedMode) return;
 	
 	self.toolbar.barStyle = UIBarStyleBlack;
 	self.navigationBar.barStyle = UIBarStyleBlack;
