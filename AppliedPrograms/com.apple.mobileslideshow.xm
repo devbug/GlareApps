@@ -383,19 +383,17 @@
 
 %hook PUPhotoBrowserZoomTransition
 
-- (void)_transitionDidFinishAnimationForOperation:(NSInteger)operation {
-	// push
-	if (operation == 1)
+- (void)_transitionDidFinishAnimationForOperation:(UINavigationControllerOperation)operation {
+	if (operation == UINavigationControllerOperationPush)
 		self.fromViewController.view.alpha = kRealFullAlphaFactor;
 	
 	%orig;
 }
 
-- (void)_transitionWillBeginAnimationForOperation:(NSInteger)operation {
+- (void)_transitionWillBeginAnimationForOperation:(UINavigationControllerOperation)operation {
 	%orig;
 	
-	// push
-	if (operation == 1)
+	if (operation == UINavigationControllerOperationPush)
 		self.fromViewController.view.alpha = kRealTransparentAlphaFactor;
 }
 
