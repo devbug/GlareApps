@@ -24,6 +24,7 @@
 @end
 
 @interface ABContactCell : UITableViewCell
+@property(readonly, nonatomic) UIView *separatorView;
 // < 7.1
 @property(retain, nonatomic) UIColor *separatorColor;
 // >= 7.1

@@ -189,6 +189,9 @@
 	
 	self.backgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
 	self.textLabel.backgroundColor = [colorHelper clearColor];
+	
+	if (useBlendedMode)
+		blendView(self.separatorView);
 }
 
 - (void)setBackgroundColor:(UIColor *)color {
