@@ -74,8 +74,7 @@ BOOL isThisAppUIServiceProcess() {
 			|| [executablePath hasSuffix:@"/GameCenterUIService"]
 			|| [executablePath hasSuffix:@"/MusicUIService"]
 			|| [executablePath hasSuffix:@"/PassbookUIService"]
-			|| [executablePath hasSuffix:@"/StoreKitUIService"]
-			|| [executablePath hasSuffix:@"/WebViewService"])
+			|| [executablePath hasSuffix:@"/StoreKitUIService"])
 		return YES;
 	
 	return NO;
@@ -89,8 +88,7 @@ BOOL isTheAppUIServiceProcess(NSString *bundleIdentifier) {
 			|| [bundleIdentifier isEqualToString:@"com.apple.gamecenter.GameCenterUIService"]
 			|| [bundleIdentifier isEqualToString:@"com.apple.MusicUIService"]
 			|| [bundleIdentifier isEqualToString:@"com.apple.PassbookUIService"]
-			|| [bundleIdentifier isEqualToString:@"com.apple.ios.StoreKitUIService"]
-			|| [bundleIdentifier isEqualToString:@"com.apple.WebViewService"])
+			|| [bundleIdentifier isEqualToString:@"com.apple.ios.StoreKitUIService"])
 		return YES;
 	
 	return NO;
