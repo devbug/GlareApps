@@ -16,6 +16,8 @@ BOOL isWhiteness							= NO;
 BOOL useBlendedMode							= NO;
 BOOL useGlobalAlbumArtBackdrop				= NO;
 BOOL useMusicAppAlbumArtBackdrop			= NO;
+BOOL showMusicAppAlbumArt					= YES;
+CGFloat musicAppAlbumArtBackdropBlurRadius	= 20.0f;
 BOOL isFirmware70							= YES;
 BOOL isFirmware71							= NO;
 
@@ -51,6 +53,14 @@ static void LoadSettings() {
 		useMusicAppAlbumArtBackdrop = [dict[@"GlareAppsUseMusicAppAlbumArtBackdrop"] boolValue];
 		if (dict[@"GlareAppsUseMusicAppAlbumArtBackdrop"] == nil)
 			useMusicAppAlbumArtBackdrop = NO;
+		
+		showMusicAppAlbumArt = [dict[@"GlareAppsShowMusicAppAlbumArt"] boolValue];
+		if (dict[@"GlareAppsShowMusicAppAlbumArt"] == nil)
+			showMusicAppAlbumArt = YES;
+		
+		musicAppAlbumArtBackdropBlurRadius = [dict[@"GlareAppsMusicAppAlbumArtBackdropBlurRadius"] floatValue];
+		if (dict[@"GlareAppsMusicAppAlbumArtBackdropBlurRadius"] == nil)
+			musicAppAlbumArtBackdropBlurRadius = (isPad ? 20.0f : 15.0f);
 		
 		[dict release];
 	}

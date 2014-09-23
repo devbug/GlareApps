@@ -9,6 +9,8 @@
 "MUSICAPP_" = "Music app";
 "MUSICAPP_RESTART_REQUIRED" = "Music app restart is required";
 "Use AlbumArt Backdrop" = "Use AlbumArt Backdrop";
+"Show AlbumArt" = "Show AlbumArt";
+"Backdrop Blur Radius" = "Backdrop Blur Radius";
 "Kill all apps" = "Kill all applied apps";
 "KILLALLAPPS_MSG" = "Include Preferences app";
 "MSG_COPYRIGHT" = "Glare Apps © 2014 deVbug";

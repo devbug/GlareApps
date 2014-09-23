@@ -1089,10 +1089,12 @@ BOOL isEnabledRedrawControls(UIView *self) {
 		navBar = MSHookIvar<UINavigationBar *>(self, "_padFakeNavigationBar");
 	}
 	
-	if (useBlendedMode && useMusicAppAlbumArtBackdrop) {
+	if (useMusicAppAlbumArtBackdrop) {
 		UIView *_contentView = MSHookIvar<UIView *>(self, "_contentView");
-		_contentView.hidden = YES;
-		
+		_contentView.hidden = !showMusicAppAlbumArt;
+	}
+	
+	if (useBlendedMode && useMusicAppAlbumArtBackdrop) {
 		navBar._backgroundView.alpha = 0.0f;
 	}
 	else {
@@ -1510,7 +1512,7 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 			backgroundImageView = [[GlareAppsBlurredBackgroundImageView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 			backgroundImageView.style = kBackdropStyleForWhiteness;
 			backgroundImageView.isFlickerTransition = NO;
-			backgroundImageView.blurRadius = isPad ? 20.0f : 15.0f;
+			backgroundImageView.blurRadius = musicAppAlbumArtBackdropBlurRadius;
 			backgroundImageView.graphicQuality = kBackdropGraphicQualityForceOn;
 			[backgroundImageView setParallaxEnabled:NO];
 			[backgroundImageView reconfigureBackdropFromCurrentSettings];

@@ -48,6 +48,8 @@ extern NSString * const kCAFilterExclusionBlendMode;
 extern BOOL isWhiteness;
 extern BOOL useBlendedMode;
 extern BOOL useMusicAppAlbumArtBackdrop;
+extern BOOL showMusicAppAlbumArt;
+extern CGFloat musicAppAlbumArtBackdropBlurRadius;
 extern BOOL isFirmware70;
 extern BOOL isFirmware71;
 extern GlareAppsColorHelper *colorHelper;

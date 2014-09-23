@@ -62,6 +62,7 @@
 
 
 @interface PSTableCell (Firmware32)
++ (id)stringFromCellType:(NSInteger)arg1;
 - (void)setTitle:(id)arg1;
 - (void)setShouldHideTitle:(BOOL)arg1;
 - (void)setChecked:(BOOL)arg1;
@@ -231,6 +232,9 @@ extern NSString *PSValidValuesKey; // validValues
 extern NSString *PSValueChangedNotificationKey; // PostNotification
 extern NSString *PSValueKey; // value
 extern NSString *PSValuesDataSourceKey; // valuesDataSource
+
+
+extern BOOL PSIsiPad() NS_AVAILABLE_IOS(6_0);
 
 
 #endif
