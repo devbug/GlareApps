@@ -78,6 +78,7 @@ void setLabelTextColorIfHasBlackColor(UILabel *label);
 NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *text);
 
 UIColor *blendColor();
+CGBlendMode blendMode();
 void blendView(id control);
 
 

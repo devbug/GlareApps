@@ -172,7 +172,7 @@
 @end
 
 @interface UITableView (private_api)
-- (NSInteger)_separatorBackdropOverlayBlendMode;
+- (CGBlendMode)_separatorBackdropOverlayBlendMode;
 - (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)arg1;
 - (void)_setSeparatorBackdropOverlayBlendModeForUIAppearance:(CGBlendMode)arg1;
 - (UIView *)_tableHeaderBackgroundView;
@@ -180,6 +180,8 @@
 @end
 
 @interface UITableViewCell (private_api)
+- (CGBlendMode)_separatorBackdropOverlayBlendMode;
+- (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)arg1;
 - (UIView *)_currentAccessoryView:(BOOL)arg1;
 @end
 

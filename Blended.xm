@@ -8,6 +8,10 @@ UIColor *blendColor() {
 	return [colorHelper maskColorForBlendedMode];
 }
 
+CGBlendMode blendMode() {
+	return !isWhiteness ? kCGBlendModeOverlay : kCGBlendModeMultiply;
+}
+
 void blendView(id control) {
 	UIView *view = (UIView *)control;
 	
@@ -30,7 +34,7 @@ void blendView(id control) {
 	
 	if ([view respondsToSelector:@selector(_setDrawsAsBackdropOverlayWithBlendMode:)]) {
 		[view _setBackdropMaskViewFlags:2];
-		[view _setDrawsAsBackdropOverlayWithBlendMode:!isWhiteness ? kCGBlendModeOverlay : kCGBlendModeMultiply];
+		[view _setDrawsAsBackdropOverlayWithBlendMode:blendMode()];
 	}
 }
 
@@ -148,6 +152,53 @@ void blendView(id control) {
 	}
 	
 	return self;
+}
+
+%end
+
+
+%hook UITableView
+
+- (CGBlendMode)_separatorBackdropOverlayBlendMode {
+	return blendMode();
+}
+
+- (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)blendedMode {
+	%orig(blendMode());
+}
+
+- (void)layoutSubviews {
+	%orig;
+	
+	[self _setSeparatorBackdropOverlayBlendMode:blendMode()];
+}
+
+%end
+
+
+%hook UITableViewCell
+
+- (CGBlendMode)_separatorBackdropOverlayBlendMode {
+	return blendMode();
+}
+
+- (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)blendedMode {
+	%orig(blendMode());
+}
+
+- (void)layoutSubviews {
+	%orig;
+	
+	[self _setSeparatorBackdropOverlayBlendMode:blendMode()];
+}
+
+%end
+
+
+%hook GlareAppsColorHelper
+
+- (UIColor *)defaultTableViewSeparatorColor {
+	return self.color_0_55__1_0;
 }
 
 %end
