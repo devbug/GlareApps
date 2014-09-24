@@ -982,17 +982,28 @@ void clearBar(UIView *view) {
 	
 	self.backgroundColor = [colorHelper clearColor];
 	
-	if (isWhiteness) {
-		UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
-		UILabel *_messageLabel = MSHookIvar<UILabel *>(self, "_messageLabel");
-		//UIButton *_actionButton = MSHookIvar<UIButton *>(self, "_actionButton");
-		
-		blendView(_titleLabel);
-		blendView(_messageLabel);
-		
-		_titleLabel.textColor = [colorHelper commonTextColor];
-		_messageLabel.textColor = [colorHelper commonTextColor];
+	UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
+	UILabel *_messageLabel = MSHookIvar<UILabel *>(self, "_messageLabel");
+	//UIButton *_actionButton = MSHookIvar<UIButton *>(self, "_actionButton");
+	
+	blendView(_titleLabel);
+	blendView(_messageLabel);
+	
+	if (isFirmware70) {
+		_titleLabel.textColor = isWhiteness ? colorHelper.blackColor : [colorHelper colorWithWhite:0.85f alpha:1.0f];
+		_messageLabel.textColor = isWhiteness ? colorHelper.blackColor : [colorHelper colorWithWhite:0.85f alpha:1.0f];
 	}
+}
+
+// >= 7.1
+- (CGFloat)_labelAlpha {
+	return 1.0f;
+}
+- (id)_flatTextColor {
+	return isWhiteness ? colorHelper.blackColor : [colorHelper colorWithWhite:0.85f alpha:1.0f];
+}
+- (id)_vibrantBaseColor {
+	return isWhiteness ? colorHelper.blackColor : [colorHelper colorWithWhite:0.85f alpha:1.0f];
 }
 
 %end
