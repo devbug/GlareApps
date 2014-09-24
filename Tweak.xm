@@ -981,6 +981,18 @@ void clearBar(UIView *view) {
 	%orig;
 	
 	self.backgroundColor = [colorHelper clearColor];
+	
+	if (isWhiteness) {
+		UILabel *_titleLabel = MSHookIvar<UILabel *>(self, "_titleLabel");
+		UILabel *_messageLabel = MSHookIvar<UILabel *>(self, "_messageLabel");
+		//UIButton *_actionButton = MSHookIvar<UIButton *>(self, "_actionButton");
+		
+		blendView(_titleLabel);
+		blendView(_messageLabel);
+		
+		_titleLabel.textColor = [colorHelper commonTextColor];
+		_messageLabel.textColor = [colorHelper commonTextColor];
+	}
 }
 
 %end
