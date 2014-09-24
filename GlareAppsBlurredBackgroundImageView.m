@@ -44,6 +44,8 @@
 		
 		[self _makeBackdropView];
 		_backgroundImageView = [[UIImageView alloc] initWithFrame:frame];
+		_backgroundImageView.backgroundColor = [UIColor clearColor];
+		_backgroundImageView.opaque = NO;
 		
 		[self addSubview:_backgroundImageView];
 		[self addSubview:_backdropView];
@@ -350,6 +352,21 @@
 		image = [artwork imageWithSize:imageSize];
 	}
 	
+	// MPRadioAVItem
+	if (image == nil) {
+		MPMediaItemImageRequest *request = [item imageCacheRequestWithSize:newSize time:0.0f usePlaceholderAsFallback:YES];
+		request.finalSize = newSize;
+		if ([request respondsToSelector:@selector(setFillToSquareAspectRatio:)]) {
+			request.fillToSquareAspectRatio = YES;
+		}
+		
+		image = [cache cachedImageForRequest:request];
+		
+		if (imageSize.width != imageSize.height) {
+			image = [[request _newBitmapImageFromImage:image finalSize:newSize] autorelease];
+		}
+	}
+	
 	return image;
 }
 
@@ -581,6 +598,8 @@
 	}
 	else {
 		_backdropView = [[objc_getClass("_UIBackdropView") alloc] initWithSettings:settings];
+		_backdropView.backgroundColor = [UIColor clearColor];
+		_backdropView.opaque = NO;
 		//_backdropView.maskMode = 0;
 		//_backdropView.groupName = @"GlareAppsNowPlayingBackdropBackgroundView";
 	}

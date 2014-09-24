@@ -43,9 +43,15 @@
 @interface MPAVItem : NSObject
 @property(readonly, nonatomic) MPMediaItem *mediaItem;
 @property(readonly, nonatomic) unsigned long long persistentID;
-- (id)imageCacheRequestWithSize:(struct CGSize)arg1 time:(double)arg2 usePlaceholderAsFallback:(BOOL)arg3;
-- (id)imageCacheRequestWithSize:(struct CGSize)arg1 time:(double)arg2;
+- (id)imageCacheRequestWithSize:(struct CGSize)arg1 time:(NSTimeInterval)arg2 usePlaceholderAsFallback:(BOOL)arg3;
+- (id)imageCacheRequestWithSize:(struct CGSize)arg1 time:(NSTimeInterval)arg2;
 @property(readonly, nonatomic) MPImageCache *imageCache;
+@end
+@interface MPRadioAVItem : MPAVItem
+- (id)imageCacheRequestWithSize:(struct CGSize)arg1 time:(NSTimeInterval)arg2 usePlaceholderAsFallback:(BOOL)arg3;
+// < 7.1
+- (UIImage *)_cachedArtworkImage;
+- (id)imageCache;
 @end
 
 @interface MPAVController : NSObject
