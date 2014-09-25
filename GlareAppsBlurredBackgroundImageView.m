@@ -311,7 +311,7 @@
 	
 	UIImage *image = nil;
 	
-	if (MAX(imageSize.width, imageSize.height) > 568.0f) {
+	if (cache && MAX(imageSize.width, imageSize.height) > 568.0f) {
 		NSString *artworkCacheID = [mediaItem valueForProperty:@"MPMediaItemPropertyArtworkCacheID"];
 		if (artworkCacheID && [artworkCacheID longLongValue] > 1) {
 			MPMediaItemImageRequest *request = [[objc_getClass("MPMediaItemImageRequest") alloc] initWithMediaItem:mediaItem];
@@ -322,7 +322,7 @@
 			
 			image = [cache cachedImageForRequest:request];
 			
-			if (imageSize.width != imageSize.height) {
+			if (image && imageSize.width != imageSize.height) {
 				image = [[request _newBitmapImageFromImage:image finalSize:newSize] autorelease];
 			}
 			
@@ -338,7 +338,7 @@
 			
 			image = [cache cachedImageForRequest:request];
 			
-			if (imageSize.width != imageSize.height) {
+			if (image && imageSize.width != imageSize.height) {
 				image = [[request _newBitmapImageFromImage:image finalSize:newSize] autorelease];
 			}
 		}
@@ -353,7 +353,7 @@
 	}
 	
 	// MPRadioAVItem
-	if (image == nil) {
+	if (image == nil && cache) {
 		MPMediaItemImageRequest *request = [item imageCacheRequestWithSize:newSize time:0.0f usePlaceholderAsFallback:YES];
 		request.finalSize = newSize;
 		if ([request respondsToSelector:@selector(setFillToSquareAspectRatio:)]) {
@@ -362,7 +362,7 @@
 		
 		image = [cache cachedImageForRequest:request];
 		
-		if (imageSize.width != imageSize.height) {
+		if (image && imageSize.width != imageSize.height) {
 			image = [[request _newBitmapImageFromImage:image finalSize:newSize] autorelease];
 		}
 	}
