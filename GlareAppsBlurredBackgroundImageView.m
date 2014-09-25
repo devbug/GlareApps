@@ -604,7 +604,7 @@
 		//_backdropView.groupName = @"GlareAppsNowPlayingBackdropBackgroundView";
 	}
 	
-	[_backdropView _setBlursBackground:![self isParallaxEnabled] && _blursBackground];
+	[_backdropView _setBlursBackground:![self isParallaxEnabled] && _blursBackground && _backdropView.blurRadius > 0.0f];
 	
 	[self _setBlurRadius:_backdropView.blurRadius];
 }
