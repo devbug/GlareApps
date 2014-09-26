@@ -121,7 +121,7 @@
 - (void)_updateFilters;
 - (void)removeOverlayBlendModeFromView:(id)arg1;
 - (void)applyOverlayBlendModeToView:(id)arg1;
-- (void)applyOverlayBlendMode:(CGBlendMode)arg1 toView:(id)arg2;
+- (void)applyOverlayBlendMode:(NSInteger)arg1 toView:(id)arg2;
 - (void)removeMaskViews;
 - (void)updateMaskViewsForView:(id)arg1;
 - (void)updateMaskViewForView:(id)arg1 flag:(NSInteger)arg2;
@@ -211,16 +211,16 @@
 @end
 
 @interface UITableView (private_api)
-- (CGBlendMode)_separatorBackdropOverlayBlendMode;
-- (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)arg1;
-- (void)_setSeparatorBackdropOverlayBlendModeForUIAppearance:(CGBlendMode)arg1;
+- (NSInteger)_separatorBackdropOverlayBlendMode;
+- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)arg1;
+- (void)_setSeparatorBackdropOverlayBlendModeForUIAppearance:(NSInteger)arg1;
 - (UIView *)_tableHeaderBackgroundView;
 - (void)setTableHeaderBackgroundColor:(id)arg1;
 @end
 
 @interface UITableViewCell (private_api)
-- (CGBlendMode)_separatorBackdropOverlayBlendMode;
-- (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)arg1;
+- (NSInteger)_separatorBackdropOverlayBlendMode;
+- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)arg1;
 - (UIView *)_currentAccessoryView:(BOOL)arg1;
 - (void)_updateCellMaskViewsForView:(id)arg1 backdropView:(id)arg2;
 @end
@@ -262,7 +262,7 @@
 @property(readonly, nonatomic) UIView *_backdropMaskViewForGrayscaleTint;
 - (void)_setBackdropMaskViewFlags:(NSInteger)arg1;
 - (NSInteger)_backdropMaskViewFlags;
-- (void)_setDrawsAsBackdropOverlayWithBlendMode:(CGBlendMode)arg1;
+- (void)_setDrawsAsBackdropOverlayWithBlendMode:(NSInteger)arg1;
 - (void)_setDrawsAsBackdropOverlay:(BOOL)arg1;
 - (BOOL)_drawsAsBackdropOverlay;
 - (void)sendSubviewToBack:(id)arg1;

@@ -40,6 +40,13 @@ enum {
 	kBackdropGraphicQualityForceOn = 100,
 };
 
+enum {
+	kBackdropOverlayBlendModeNormal = 0,
+	kBackdropOverlayBlendModePlusD = 1,
+	kBackdropOverlayBlendModePlusL = 2,
+	kBackdropOverlayBlendModeColorDodge = 3,
+};
+
 
 extern NSString * const kCAFilterNormalBlendMode;
 extern NSString * const kCAFilterMultiplyBlendMode;
@@ -53,6 +60,8 @@ extern NSString * const kCAFilterSoftLightBlendMode;
 extern NSString * const kCAFilterHardLightBlendMode;
 extern NSString * const kCAFilterDifferenceBlendMode;
 extern NSString * const kCAFilterExclusionBlendMode;
+extern NSString * const kCAFilterPlusD;
+extern NSString * const kCAFilterPlusL;
 
 
 
@@ -93,7 +102,7 @@ void setLabelTextColorIfHasBlackColor(UILabel *label);
 NSMutableAttributedString *colorReplacedAttributedString(NSAttributedString *text);
 
 UIColor *blendColor();
-CGBlendMode blendMode();
+NSInteger blendMode();
 void blendView(id control);
 
 

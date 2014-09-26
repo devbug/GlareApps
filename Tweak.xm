@@ -1532,7 +1532,7 @@ UIImage *reorderImageBlack = nil;
 - (id)initWithFrame:(CGRect)frame colorBurnColor:(id)burnColor plusDColor:(id)plusDColor {
 	if (isWhiteness) return %orig;
 	
-	burnColor = colorHelper.color_0_9__0_2;
+	burnColor = [colorHelper maskColorForBlendedMode];
 	
 	return %orig;
 }
@@ -1546,8 +1546,10 @@ UIImage *reorderImageBlack = nil;
 	
 	if (rtn && !isWhiteness) {
 		UIView *_colorBurnView = MSHookIvar<UIView *>(rtn, "_colorBurnView");
+		UIView *_plusDView = MSHookIvar<UIView *>(rtn, "_plusDView");
 		
-		[_colorBurnView.layer setCompositingFilter:nil];
+		[_colorBurnView.layer setCompositingFilter:kCAFilterColorDodgeBlendMode];
+		[_plusDView.layer setCompositingFilter:nil];
 	}
 	
 	return rtn;

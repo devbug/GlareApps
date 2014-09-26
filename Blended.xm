@@ -8,8 +8,8 @@ UIColor *blendColor() {
 	return [colorHelper maskColorForBlendedMode];
 }
 
-CGBlendMode blendMode() {
-	return !isWhiteness ? kCGBlendModeOverlay : kCGBlendModeMultiply;
+NSInteger blendMode() {
+	return !isWhiteness ? kBackdropOverlayBlendModeColorDodge : kBackdropOverlayBlendModePlusD;
 }
 
 void blendView(id control) {
@@ -159,11 +159,11 @@ void blendView(id control) {
 
 %hook UITableView
 
-- (CGBlendMode)_separatorBackdropOverlayBlendMode {
+- (NSInteger)_separatorBackdropOverlayBlendMode {
 	return blendMode();
 }
 
-- (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)blendedMode {
+- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)blendedMode {
 	%orig(blendMode());
 }
 
@@ -178,11 +178,11 @@ void blendView(id control) {
 
 %hook UITableViewCell
 
-- (CGBlendMode)_separatorBackdropOverlayBlendMode {
+- (NSInteger)_separatorBackdropOverlayBlendMode {
 	return blendMode();
 }
 
-- (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)blendedMode {
+- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)blendedMode {
 	%orig(blendMode());
 }
 

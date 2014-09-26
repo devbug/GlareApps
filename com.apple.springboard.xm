@@ -278,7 +278,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	if (isWhiteness) return %orig;
 	
 	if (GlareAppsEnable)
-		burnColor = colorHelper.color_0_9__0_2;
+		burnColor = [colorHelper maskColorForBlendedMode];
 	
 	return %orig;
 }
@@ -292,8 +292,10 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	
 	if (rtn && !isWhiteness && GlareAppsEnable) {
 		UIView *_colorBurnView = MSHookIvar<UIView *>(rtn, "_colorBurnView");
+		UIView *_plusDView = MSHookIvar<UIView *>(rtn, "_plusDView");
 		
-		[_colorBurnView.layer setCompositingFilter:nil];
+		[_colorBurnView.layer setCompositingFilter:kCAFilterColorDodgeBlendMode];
+		[_plusDView.layer setCompositingFilter:nil];
 	}
 	
 	return rtn;
