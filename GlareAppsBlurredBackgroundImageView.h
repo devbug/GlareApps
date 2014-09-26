@@ -2,12 +2,6 @@
 
 
 enum {
-	kBackdropStyleSystemDefaultBlur = 2,
-	kBackdropStyleSystemDefaultGreen = 10091,
-	kBackdropStyleSystemDefaultRed = 10092,
-	kBackdropStyleSystemDefaultBlue = 10120,
-	
-	//
 	kBackdropStyleLiteBlurLight = 1002020,
 	kBackdropStyleLiteBlurDark = 1002030,
 	kBackdropStyleLiteColoredBlur = 1002040,

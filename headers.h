@@ -8,17 +8,30 @@
 
 
 enum {
+	kBackdropStyleSystemDefaultCombiner = -3,
+	kBackdropStyleSystemDefaultNone = -2,
+	kBackdropStyleSystemDefaultBlur = 2,
 	kBackdropStyleSystemDefaultClear = 2000,
 	kBackdropStyleSystemDefaultUltraLight = 2010,
 	kBackdropStyleSystemDefaultLight = 2020,
 	kBackdropStyleSystemDefaultLightLow = 2029,
 	kBackdropStyleSystemDefaultDark = 2030,
+	kBackdropStyleSystemDefaultDarkWithZoom = 2031,
 	kBackdropStyleSystemDefaultDarkLow = 2039,
 	kBackdropStyleSystemDefaultGray = 2040,			// Colored
 	kBackdropStyleSystemDefaultUltraDark = 2050,
 	kBackdropStyleSystemDefaultAdaptiveLight = 2060,
 	kBackdropStyleSystemDefaultSemiLight = 2070,
 	kBackdropStyleSystemDefaultUltraGray = 2080,	// UltraColored
+	
+	kBackdropStyleSystemDefaultGreen = 10091,
+	kBackdropStyleSystemDefaultRed = 10092,
+	kBackdropStyleSystemDefaultBlue = 10120,
+	
+	// >= iOS 7.1
+	kBackdropStyleSystemDefaultFlatSemiLight = 2071,
+	kBackdropStyleSystemDefaultPasscodePaddle = 3900,
+	kBackdropStyleSystemDefaultLightKeyboard = 3901,
 };
 
 enum {

@@ -17,12 +17,15 @@
 
 @class _UIBackdropView;
 @interface _UIBackdropViewSettings : NSObject
++ (id)darkeningTintColor;
 + (id)settingsForPrivateStyle:(NSInteger)arg1;
 + (id)settingsForStyle:(NSInteger)arg1;
 + (id)settingsForPrivateStyle:(NSInteger)arg1 graphicsQuality:(NSInteger)arg2;
 + (id)settingsForStyle:(NSInteger)arg1 graphicsQuality:(NSInteger)arg2;
 @property(nonatomic) BOOL appliesTintAndBlurSettings;
+@property(nonatomic) BOOL usesDarkeningTintView;	// >= iOS 7.1
 @property(nonatomic) BOOL usesContentView;
+@property(nonatomic) BOOL usesColorBurnTintView;	// >= iOS 7.1
 @property(nonatomic) BOOL usesColorTintView;
 @property(nonatomic) BOOL usesGrayscaleTintView;
 @property(nonatomic) BOOL usesBackdropEffectView;
@@ -32,6 +35,14 @@
 @property(copy, nonatomic) NSString *blurQuality;
 @property(nonatomic) NSInteger blurHardEdges;
 @property(nonatomic) CGFloat blurRadius;
+@property(retain, nonatomic) UIImage *darkeningTintMaskImage;	// >= iOS 7.1
+@property(nonatomic) CGFloat darkeningTintBrightness;	// >= iOS 7.1
+@property(nonatomic) CGFloat darkeningTintSaturation;	// >= iOS 7.1
+@property(nonatomic) CGFloat darkeningTintHue;	// >= iOS 7.1
+@property(nonatomic) CGFloat darkeningTintAlpha;	// >= iOS 7.1
+@property(retain, nonatomic) UIImage *colorBurnTintMaskImage;	// >= iOS 7.1
+@property(nonatomic) CGFloat colorBurnTintAlpha;	// >= iOS 7.1
+@property(nonatomic) CGFloat colorBurnTintLevel;	// >= iOS 7.1
 @property(retain, nonatomic) UIImage *colorTintMaskImage;
 @property(nonatomic) CGFloat colorTintMaskAlpha;
 @property(nonatomic) CGFloat colorTintAlpha;
@@ -56,8 +67,18 @@
 @property(copy, nonatomic) NSString *groupName;
 @property(nonatomic) BOOL applySettingsAfterLayout;
 @property(nonatomic) NSInteger maskMode;
+@property(retain, nonatomic) UIImage *darkeningTintMaskImage;	// >= iOS 7.1
+@property(retain, nonatomic) UIView *darkeningTintView;	// >= iOS 7.1
+@property(retain, nonatomic) UIView *contentView;
+//@property(retain, nonatomic) CAFilter *tintFilter;
+//@property(retain, nonatomic) CAFilter *colorSaturateFilter;
+//@property(retain, nonatomic) CAFilter *gaussianBlurFilter;
+@property(retain, nonatomic) UIImage *colorBurnTintMaskImage;	// >= iOS 7.1
+@property(retain, nonatomic) UIView *colorBurnTintView;	// >= iOS 7.1
 @property(retain, nonatomic) UIImage *colorTintMaskImage;
+@property(retain, nonatomic) UIView *colorTintView;
 @property(retain, nonatomic) UIImage *grayscaleTintMaskImage;
+@property(retain, nonatomic) UIView *grayscaleTintView;
 @property(retain, nonatomic) UIImage *filterMaskImage;
 @property(nonatomic) BOOL allowsColorSettingsSuppression;
 @property(nonatomic) BOOL wantsColorSettings;
@@ -69,27 +90,45 @@
 @property(nonatomic) BOOL computesColorSettings;
 @property(nonatomic) BOOL blursBackground;
 @property(nonatomic) NSInteger style;
+- (BOOL)disablesOccludedBackdropBlurs;	// >= iOS 7.1
+- (void)setDisablesOccludedBackdropBlurs:(BOOL)arg1;	// >= iOS 7.1
 - (void)applySettings:(id)arg1;
 - (void)computeAndApplySettings:(id)arg1;
-- (void)_setBlursBackground:(BOOL)arg1;
-- (void)setBackdropVisible:(BOOL)arg1;
 - (void)transitionIncrementallyToPrivateStyle:(NSInteger)arg1 weighting:(CGFloat)arg2;
 - (void)transitionIncrementallyToStyle:(NSInteger)arg1 weighting:(CGFloat)arg2;
 - (void)transitionToSettings:(id)arg1;
+- (void)transitionToColor:(id)arg1;
 - (void)transitionToPrivateStyle:(NSInteger)arg1;
 - (void)transitionToStyle:(NSInteger)arg1;
+- (void)_setBlursBackground:(BOOL)arg1;
+- (void)setUsesZoom;
+- (void)setBackdropVisible:(BOOL)arg1;
+- (BOOL)isBackdropVisible;
+- (void)setTintFilterForSettings:(id)arg1;
+- (void)setSaturationDeltaFactor:(CGFloat)arg1;
+- (CGFloat)saturationDeltaFactor;
+- (void)_updateInputBounds;
+- (void)scheduleUpdateInputBoundsIfNeeded;
+- (void)setBlurFilterWithRadius:(CGFloat)arg1 blurQuality:(id)arg2 blurHardEdges:(NSInteger)arg3;
+- (void)setBlurFilterWithRadius:(CGFloat)arg1 blurQuality:(id)arg2;
 - (void)setBlursWithHardEdges:(BOOL)arg1;
 - (BOOL)blursWithHardEdges;
 - (void)setBlurQuality:(id)arg1;
 - (id)blurQuality;
 - (void)setBlurRadius:(CGFloat)arg1;
 - (CGFloat)blurRadius;
+- (id)filters;
+- (void)_updateFilters;
 - (void)removeOverlayBlendModeFromView:(id)arg1;
 - (void)applyOverlayBlendModeToView:(id)arg1;
 - (void)applyOverlayBlendMode:(CGBlendMode)arg1 toView:(id)arg2;
 - (void)removeMaskViews;
 - (void)updateMaskViewsForView:(id)arg1;
 - (void)updateMaskViewForView:(id)arg1 flag:(NSInteger)arg2;
+- (void)setMaskImage:(id)arg1 onLayer:(id)arg2;
+- (id)backdropViewLayer;
+- (void)setShouldRasterizeEffectsView:(BOOL)arg1;
+- (void)clearUpdateInputBoundsRunLoopObserver;
 - (id)initWithFrame:(CGRect)arg1 style:(NSInteger)arg2;
 - (id)initWithPrivateStyle:(NSInteger)arg1;
 - (id)initWithStyle:(NSInteger)arg1;
@@ -183,6 +222,7 @@
 - (CGBlendMode)_separatorBackdropOverlayBlendMode;
 - (void)_setSeparatorBackdropOverlayBlendMode:(CGBlendMode)arg1;
 - (UIView *)_currentAccessoryView:(BOOL)arg1;
+- (void)_updateCellMaskViewsForView:(id)arg1 backdropView:(id)arg2;
 @end
 
 @interface UITableViewCellReorderControl : UIControl @end
@@ -197,6 +237,8 @@
 @interface UIView (private_api)
 + (BOOL)_isInAnimationBlock;
 - (void)_updateBackdropMaskViewsInScrollView:(id)arg1;
+- (void)_updateBackdropMaskFrames;
+- (void)_recursivelyUpdateBackdropMaskFrames;	// iOS 7.0.x
 - (void)_recursivelySetHiddenForBackdropMaskViews:(BOOL)arg1;
 - (void)_setHiddenForBackdropMaskViews:(BOOL)arg1;
 - (void)_setTransformForBackdropMaskViews:(struct CGAffineTransform)arg1;
@@ -204,17 +246,29 @@
 - (void)_setCenterForBackdropMaskViews:(struct CGPoint)arg1;
 - (void)_setBoundsForBackdropMaskViews:(struct CGRect)arg1;
 - (void)_setFrameForBackdropMaskViews:(struct CGRect)arg1 convertFrame:(BOOL)arg2;
-- (void)_setBackdropMaskViewFlags:(NSInteger)arg1;
+- (void)_setFrameForBackdropMaskViews:(struct CGRect)arg1;
+- (id)_anyBackdropMaskView;
+- (void)_removeBackdropMaskViews;
 - (id)_backdropMaskViewForFlag:(NSInteger)arg1;
 - (void)_setBackdropMaskView:(id)arg1 forFlag:(NSInteger)arg2;
-- (void)sendSubviewToBack:(id)arg1;
+- (id)_generateBackdropMaskViewForFlag:(NSInteger)arg1;
+- (id)_generateBackdropMaskImage;
+@property(readonly, nonatomic) NSArray *_backdropMaskViews;
+- (void)_setBackdropMaskViewForFilters:(id)arg1;
+@property(readonly, nonatomic) UIView *_backdropMaskViewForFilters;
+- (void)_setBackdropMaskViewForColorTint:(id)arg1;
+@property(readonly, nonatomic) UIView *_backdropMaskViewForColorTint;
+- (void)_setBackdropMaskViewForGrayscaleTint:(id)arg1;
+@property(readonly, nonatomic) UIView *_backdropMaskViewForGrayscaleTint;
+- (void)_setBackdropMaskViewFlags:(NSInteger)arg1;
+- (NSInteger)_backdropMaskViewFlags;
 - (void)_setDrawsAsBackdropOverlayWithBlendMode:(CGBlendMode)arg1;
-- (void)_updateBackdropMaskFrames;
-- (void)_removeBackdropMaskViews;
 - (void)_setDrawsAsBackdropOverlay:(BOOL)arg1;
-- (void)_setFrameForBackdropMaskViews:(struct CGRect)arg1;
+- (BOOL)_drawsAsBackdropOverlay;
+- (void)sendSubviewToBack:(id)arg1;
 - (id)_viewControllerForAncestor;
 - (BOOL)_is_needsLayout;
+- (BOOL)_isInVisibleHierarchy;
 @end
 
 @interface UIDropShadowView : UIView @end
