@@ -39,3 +39,4 @@
 @property(readonly, nonatomic) MFComposeScrollView *bodyScroller;
 @end
 
+@interface MFMailComposeViewController : UIViewController @end

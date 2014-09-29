@@ -65,8 +65,3 @@ NSInteger blendMode();
 void blendView(id control);
 
 
-
-@interface MFMailComposeViewController : UIViewController @end
-@interface SLComposeViewController : UIViewController @end
-@interface SKComposeReviewViewController : UIViewController @end
-

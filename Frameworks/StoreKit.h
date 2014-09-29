@@ -80,3 +80,5 @@
 
 @interface SKUISwooshView : UIView @end
 
+@interface SKComposeReviewViewController : UIViewController @end
+
