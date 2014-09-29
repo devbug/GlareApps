@@ -111,7 +111,7 @@
 		_UIBackdropView *_blurView = MSHookIvar<_UIBackdropView *>(rtn, "_blurView");
 		
 		if ([_blurView isKindOfClass:[_UIBackdropView class]]) {
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 			//settings.grayscaleTintAlpha = 0.0f;
 			settings.blurRadius = 10.0f;
 			

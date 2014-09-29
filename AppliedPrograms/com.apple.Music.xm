@@ -323,10 +323,10 @@ UIImage *shuffleImage = nil;
 	
 	_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
 	
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight];
 	settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 	
-	if (_backdropView.style != kBackdropStyleSystemDefaultSemiLight)
+	if (_backdropView.style != UIBackdropStyleSemiLight)
 		[_backdropView transitionToSettings:settings];
 }
 
@@ -379,7 +379,7 @@ UIImage *shuffleImage = nil;
 	frame.origin.y = 0;
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight];
 		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
@@ -439,7 +439,7 @@ UIImage *shuffleImage = nil;
 	frame.origin.y = 0;
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight];
 		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
@@ -483,7 +483,7 @@ UIImage *shuffleImage = nil;
 	frame.origin.y = 0;
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight];
 		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame settings:settings];
@@ -847,7 +847,7 @@ UIImage *shuffleImage = nil;
 %hook MPHCZAlbumTableViewController
 
 - (id)_createTableViewBackgroundView {
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 	
 	_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
 	//backdropView.tag = 0xc001;
@@ -1268,7 +1268,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	if (rtn) {
 		_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
 		
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight];
 		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 		
 		[_backdropView transitionToSettings:settings];
@@ -1338,7 +1338,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	[backdropView retain];
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
@@ -1513,7 +1513,7 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 			backgroundImageView.style = kBackdropStyleForWhiteness;
 			backgroundImageView.isFlickerTransition = NO;
 			backgroundImageView.blurRadius = musicAppAlbumArtBackdropBlurRadius;
-			backgroundImageView.graphicQuality = kBackdropGraphicQualityForceOn;
+			backgroundImageView.graphicQuality = UIBackdropGraphicsQualityForceOn;
 			[backgroundImageView setParallaxEnabled:NO];
 			[backgroundImageView reconfigureBackdropFromCurrentSettings];
 		}

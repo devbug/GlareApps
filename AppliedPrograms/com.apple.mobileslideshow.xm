@@ -185,10 +185,10 @@
 	
 	_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
 	
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight];
 	settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 	
-	if (_backdropView.style != kBackdropStyleSystemDefaultSemiLight)
+	if (_backdropView.style != UIBackdropStyleSemiLight)
 		[_backdropView transitionToSettings:settings];
 }
 
@@ -204,7 +204,7 @@
 		_UIBackdropView *backdropView = (_UIBackdropView *)self.sheetView.subviews[0];
 		
 		if ([backdropView isKindOfClass:[_UIBackdropView class]]) {
-			NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+			NSInteger style = (isWhiteness ? UIBackdropStyleUltraLight : UIBackdropStyleDark);
 			if (backdropView.style != style)
 				[backdropView transitionToStyle:style];
 		}
@@ -259,7 +259,7 @@
 	frame.origin.x = 0;
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
@@ -295,7 +295,7 @@
 	frame.origin.x = 0;
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;
@@ -332,7 +332,7 @@
 		frame.origin.x = 0;
 		
 		if (backdropView == nil) {
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 			
 			backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 			backdropView.tag = 0xc001;

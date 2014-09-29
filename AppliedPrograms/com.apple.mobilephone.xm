@@ -160,7 +160,7 @@ NSInteger currentBackdropStyle				= 0;
 	frame.origin.x = 0;
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		settings.grayscaleTintAlpha = 0.0f;
 		settings.blurRadius = 10.f;
 		

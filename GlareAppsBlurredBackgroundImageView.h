@@ -1,14 +1,14 @@
 #import "headers.h"
 
 
-enum {
-	kBackdropStyleLiteBlurLight = 1002020,
-	kBackdropStyleLiteBlurDark = 1002030,
-	kBackdropStyleLiteColoredBlur = 1002040,
-	kBackdropStyleLiteBlurUltraDark = 1002050,
-	kBackdropStyleLiteColoredBlurLight = 1002060,
-	kBackdropStyleLiteColoredBlurDark = 1002070,
-};
+typedef NS_ENUM(NSInteger, UIBackdropStyleLite) {
+	UIBackdropStyleLiteBlurLight			= 1002020,
+	UIBackdropStyleLiteBlurDark				= 1002030,
+	UIBackdropStyleLiteColoredBlur			= 1002040,
+	UIBackdropStyleLiteBlurUltraDark		= 1002050,
+	UIBackdropStyleLiteColoredBlurLight		= 1002060,
+	UIBackdropStyleLiteColoredBlurDark		= 1002070,
+} NS_ENUM_AVAILABLE_IOS(7_0);
 
 
 @interface GlareAppsBlurredBackgroundImageView : UIView {
@@ -26,7 +26,7 @@ enum {
 @property (nonatomic) UIOffset parallaxSlideMagnitude;
 @property (nonatomic) BOOL isFlickerTransition;
 @property (nonatomic, setter=setStyle:) NSInteger style;
-@property (nonatomic) NSInteger graphicQuality;
+@property (nonatomic) UIBackdropGraphicsQuality graphicQuality;
 
 - (id)initWithFrame:(CGRect)frame;
 

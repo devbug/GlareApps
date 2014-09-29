@@ -9,7 +9,7 @@ UIColor *blendColor() {
 }
 
 NSInteger blendMode() {
-	return !isWhiteness ? kBackdropOverlayBlendModeColorDodge : kBackdropOverlayBlendModePlusD;
+	return !isWhiteness ? UIBackdropOverlayBlendModeColorDodge : UIBackdropOverlayBlendModePlusD;
 }
 
 void blendView(id control) {

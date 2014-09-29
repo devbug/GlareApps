@@ -157,7 +157,7 @@
 - (void)setBackgroundView:(UIView *)view {
 	if ([self.backgroundView isKindOfClass:[_UIBackdropView class]]) return;
 	
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight];
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight];
 	settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 	
 	_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];

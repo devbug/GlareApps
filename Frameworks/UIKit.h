@@ -2,6 +2,47 @@
 #import "../headers.h"
 
 
+typedef NS_ENUM(NSInteger, UIBackdropStyle) {
+	UIBackdropStyleCombiner					= -3,
+	UIBackdropStyleNone						= -2,
+	UIBackdropStyleBlur						= 2,
+	UIBackdropStyleClear					= 2000,
+	UIBackdropStyleUltraLight				= 2010,
+	UIBackdropStyleLight					= 2020,
+	UIBackdropStyleLightLow					= 2029,
+	UIBackdropStyleDark						= 2030,
+	UIBackdropStyleDarkWithZoom				= 2031,
+	UIBackdropStyleDarkLow					= 2039,
+	UIBackdropStyleColored					= 2040,		// Gray
+	UIBackdropStyleUltraDark				= 2050,
+	UIBackdropStyleAdaptiveLight			= 2060,
+	UIBackdropStyleSemiLight				= 2070,
+	UIBackdropStyleUltraColored				= 2080,		// UltraGray
+	
+	UIBackdropStyleGreen					= 10091,
+	UIBackdropStyleRed						= 10092,
+	UIBackdropStyleBlue						= 10120,
+	
+	// >= iOS 7.1
+	UIBackdropStyleFlatSemiLight			= 2071,
+	UIBackdropStylePasscodePaddle			= 3900,
+	UIBackdropStyleLightKeyboard			= 3901,
+} NS_ENUM_AVAILABLE_IOS(7_0);
+
+typedef NS_ENUM(NSInteger, UIBackdropGraphicsQuality) {
+	UIBackdropGraphicsQualitySystemDefault	= 0,
+	UIBackdropGraphicsQualityForceOff		= 10,
+	UIBackdropGraphicsQualityForceOn		= 100,
+} NS_ENUM_AVAILABLE_IOS(7_0);
+
+typedef NS_ENUM(NSInteger, UIBackdropOverlayBlendMode) {
+	UIBackdropOverlayBlendModeNormal		= 0,
+	UIBackdropOverlayBlendModePlusD			= 1,
+	UIBackdropOverlayBlendModePlusL			= 2,
+	UIBackdropOverlayBlendModeColorDodge	= 3,
+} NS_ENUM_AVAILABLE_IOS(7_0);
+
+
 @interface CALayer (private_api)
 @property BOOL allowsGroupBlending;
 @end
@@ -18,10 +59,10 @@
 @class _UIBackdropView;
 @interface _UIBackdropViewSettings : NSObject
 + (id)darkeningTintColor;
-+ (id)settingsForPrivateStyle:(NSInteger)arg1;
-+ (id)settingsForStyle:(NSInteger)arg1;
-+ (id)settingsForPrivateStyle:(NSInteger)arg1 graphicsQuality:(NSInteger)arg2;
-+ (id)settingsForStyle:(NSInteger)arg1 graphicsQuality:(NSInteger)arg2;
++ (id)settingsForPrivateStyle:(UIBackdropStyle)arg1;
++ (id)settingsForStyle:(UIBackdropStyle)arg1;
++ (id)settingsForPrivateStyle:(UIBackdropStyle)arg1 graphicsQuality:(UIBackdropGraphicsQuality)arg2;
++ (id)settingsForStyle:(UIBackdropStyle)arg1 graphicsQuality:(UIBackdropGraphicsQuality)arg2;
 @property(nonatomic) BOOL appliesTintAndBlurSettings;
 @property(nonatomic) BOOL usesDarkeningTintView;	// >= iOS 7.1
 @property(nonatomic) BOOL usesContentView;
@@ -51,8 +92,8 @@
 @property(nonatomic) CGFloat grayscaleTintMaskAlpha;
 @property(nonatomic) CGFloat grayscaleTintAlpha;
 @property(nonatomic) CGFloat grayscaleTintLevel;
-@property(nonatomic) NSInteger graphicsQuality;
-@property(nonatomic) NSInteger style;
+@property(nonatomic) UIBackdropGraphicsQuality graphicsQuality;
+@property(nonatomic) UIBackdropStyle style;
 @property(nonatomic, assign) _UIBackdropView *backdrop;
 @property(nonatomic) BOOL blursWithHardEdges;
 @end
@@ -89,17 +130,17 @@
 @property(nonatomic) NSTimeInterval appliesOutputSettingsAnimationDuration;
 @property(nonatomic) BOOL computesColorSettings;
 @property(nonatomic) BOOL blursBackground;
-@property(nonatomic) NSInteger style;
+@property(nonatomic) UIBackdropStyle style;
 - (BOOL)disablesOccludedBackdropBlurs;	// >= iOS 7.1
 - (void)setDisablesOccludedBackdropBlurs:(BOOL)arg1;	// >= iOS 7.1
 - (void)applySettings:(id)arg1;
 - (void)computeAndApplySettings:(id)arg1;
-- (void)transitionIncrementallyToPrivateStyle:(NSInteger)arg1 weighting:(CGFloat)arg2;
-- (void)transitionIncrementallyToStyle:(NSInteger)arg1 weighting:(CGFloat)arg2;
+- (void)transitionIncrementallyToPrivateStyle:(UIBackdropStyle)arg1 weighting:(CGFloat)arg2;
+- (void)transitionIncrementallyToStyle:(UIBackdropStyle)arg1 weighting:(CGFloat)arg2;
 - (void)transitionToSettings:(id)arg1;
 - (void)transitionToColor:(id)arg1;
-- (void)transitionToPrivateStyle:(NSInteger)arg1;
-- (void)transitionToStyle:(NSInteger)arg1;
+- (void)transitionToPrivateStyle:(UIBackdropStyle)arg1;
+- (void)transitionToStyle:(UIBackdropStyle)arg1;
 - (void)_setBlursBackground:(BOOL)arg1;
 - (void)setUsesZoom;
 - (void)setBackdropVisible:(BOOL)arg1;
@@ -121,7 +162,7 @@
 - (void)_updateFilters;
 - (void)removeOverlayBlendModeFromView:(id)arg1;
 - (void)applyOverlayBlendModeToView:(id)arg1;
-- (void)applyOverlayBlendMode:(NSInteger)arg1 toView:(id)arg2;
+- (void)applyOverlayBlendMode:(UIBackdropOverlayBlendMode)arg1 toView:(id)arg2;
 - (void)removeMaskViews;
 - (void)updateMaskViewsForView:(id)arg1;
 - (void)updateMaskViewForView:(id)arg1 flag:(NSInteger)arg2;
@@ -129,9 +170,9 @@
 - (id)backdropViewLayer;
 - (void)setShouldRasterizeEffectsView:(BOOL)arg1;
 - (void)clearUpdateInputBoundsRunLoopObserver;
-- (id)initWithFrame:(CGRect)arg1 style:(NSInteger)arg2;
-- (id)initWithPrivateStyle:(NSInteger)arg1;
-- (id)initWithStyle:(NSInteger)arg1;
+- (id)initWithFrame:(CGRect)arg1 style:(UIBackdropStyle)arg2;
+- (id)initWithPrivateStyle:(UIBackdropStyle)arg1;
+- (id)initWithStyle:(UIBackdropStyle)arg1;
 - (id)initWithSettings:(_UIBackdropViewSettings *)arg1;
 - (id)initWithFrame:(CGRect)arg1 settings:(_UIBackdropViewSettings *)arg2;
 - (id)initWithFrame:(CGRect)arg1 autosizesToFitSuperview:(BOOL)arg2 settings:(_UIBackdropViewSettings *)arg3;
@@ -140,7 +181,7 @@
 @interface UIApplication (private_api)
 - (UIStatusBar *)statusBar;
 - (void)_setTextLegibilityEnabled:(BOOL)arg1;
-- (void)_setApplicationBackdropStyle:(NSInteger)arg1;
+- (void)_setApplicationBackdropStyle:(UIBackdropStyle)arg1;
 - (void)_setApplicationIsOpaque:(BOOL)arg1;
 - (void)_setDefaultTopNavBarTintColor:(id)arg1;
 - (id)_defaultTopNavBarTintColor;
@@ -180,8 +221,8 @@
 @property(retain, nonatomic) UIColor *barTintColor;
 // >= 7.1
 - (id)_adaptiveBackdrop;
-- (void)backdropView:(id)arg1 didChangeToGraphicsQuality:(NSInteger)arg2;
-- (id)backdropView:(id)arg1 willChangeToGraphicsQuality:(NSInteger)arg2;
+- (void)backdropView:(id)arg1 didChangeToGraphicsQuality:(UIBackdropGraphicsQuality)arg2;
+- (id)backdropView:(id)arg1 willChangeToGraphicsQuality:(UIBackdropGraphicsQuality)arg2;
 @end
 @interface UINavigationButton : UIButton @end
 @interface UINavigationBar (private_api)
@@ -211,16 +252,16 @@
 @end
 
 @interface UITableView (private_api)
-- (NSInteger)_separatorBackdropOverlayBlendMode;
-- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)arg1;
-- (void)_setSeparatorBackdropOverlayBlendModeForUIAppearance:(NSInteger)arg1;
+- (UIBackdropOverlayBlendMode)_separatorBackdropOverlayBlendMode;
+- (void)_setSeparatorBackdropOverlayBlendMode:(UIBackdropOverlayBlendMode)arg1;
+- (void)_setSeparatorBackdropOverlayBlendModeForUIAppearance:(UIBackdropOverlayBlendMode)arg1;
 - (UIView *)_tableHeaderBackgroundView;
 - (void)setTableHeaderBackgroundColor:(id)arg1;
 @end
 
 @interface UITableViewCell (private_api)
-- (NSInteger)_separatorBackdropOverlayBlendMode;
-- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)arg1;
+- (UIBackdropOverlayBlendMode)_separatorBackdropOverlayBlendMode;
+- (void)_setSeparatorBackdropOverlayBlendMode:(UIBackdropOverlayBlendMode)arg1;
 - (UIView *)_currentAccessoryView:(BOOL)arg1;
 - (void)_updateCellMaskViewsForView:(id)arg1 backdropView:(id)arg2;
 @end
@@ -262,7 +303,7 @@
 @property(readonly, nonatomic) UIView *_backdropMaskViewForGrayscaleTint;
 - (void)_setBackdropMaskViewFlags:(NSInteger)arg1;
 - (NSInteger)_backdropMaskViewFlags;
-- (void)_setDrawsAsBackdropOverlayWithBlendMode:(NSInteger)arg1;
+- (void)_setDrawsAsBackdropOverlayWithBlendMode:(UIBackdropOverlayBlendMode)arg1;
 - (void)_setDrawsAsBackdropOverlay:(BOOL)arg1;
 - (BOOL)_drawsAsBackdropOverlay;
 - (void)sendSubviewToBack:(id)arg1;
@@ -362,7 +403,7 @@
 - (BOOL)drawsBackground;
 - (void)setDrawsBackground:(BOOL)arg1;
 - (void)_updateNeedForBackdrop;
-- (void)_updateBackgroundToBackdropStyle:(NSInteger)arg1;
+- (void)_updateBackgroundToBackdropStyle:(UIBackdropStyle)arg1;
 - (UISearchDisplayController *)controller;
 @end
 
@@ -417,14 +458,14 @@
 @property(nonatomic) CGFloat keycapOpacity;
 @property(nonatomic) CGFloat blurSaturation;
 @property(nonatomic) CGFloat blurRadius;
-@property(readonly, nonatomic) NSInteger backdropStyle;
+@property(readonly, nonatomic) UIBackdropStyle backdropStyle;
 @property(readonly, nonatomic) BOOL whiteText;
 @end
 @interface UIKBRenderConfig (Firmware70)
 @property(nonatomic) CGFloat keyborderOpacity;
 @end
 @interface UIKBRenderConfig (Firmware71)
-+ (NSInteger)backdropStyleForStyle:(NSInteger)arg1;
++ (UIBackdropStyle)backdropStyleForStyle:(NSInteger)arg1;
 + (id)configForAppearance:(NSInteger)arg1;
 @property(nonatomic) CGFloat lightLatinKeycapOpacity;
 @end

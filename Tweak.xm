@@ -1207,7 +1207,7 @@ void clearBar(UIView *view) {
 		if ([self respondsToSelector:@selector(setBackgroundImage:)])
 			self.backgroundImage = nil;
 		
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForPrivateStyle:UIBackdropStyleSemiLight graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 		
 		_UIBackdropView *backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
@@ -1479,7 +1479,7 @@ UIImage *reorderImageBlack = nil;
 	
 	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
 	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+	NSInteger style = (isWhiteness ? UIBackdropStyleUltraLight : UIBackdropStyleDark);
 	if (_effectView.style != style)
 		[_effectView transitionToStyle:style];
 	
@@ -1509,7 +1509,7 @@ UIImage *reorderImageBlack = nil;
 	UIImage *colorTintMaskImage = [_backdropView.inputSettings.colorTintMaskImage retain];
 	UIImage *filterMaskImage = [_backdropView.inputSettings.filterMaskImage retain];
 	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultUltraDark);
+	NSInteger style = (isWhiteness ? UIBackdropStyleUltraLight : UIBackdropStyleUltraDark);
 	if (_backdropView.style != style) {
 		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:style];
 		settings.blurRadius = 7.0f;
@@ -1713,7 +1713,7 @@ UIImage *reorderImageBlack = nil;
 	_UIBackdropView *backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdrop");
 	
 	if (backdropView != nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultSemiLight graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleSemiLight graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		settings.grayscaleTintLevel = (isWhiteness ? 1.0f : 0.0f);
 		settings.grayscaleTintAlpha = (([self.controller respondsToSelector:@selector(isActive)] && self.controller.isActive) ? kTintColorAlphaFactor : 0.0f);
 		if (isWhiteness)
@@ -1798,7 +1798,7 @@ UIImage *reorderImageBlack = nil;
 	if (settings.blurRadius == newSettings.blurRadius 
 			&& settings.grayscaleTintAlpha == newSettings.grayscaleTintAlpha
 			&& settings.grayscaleTintLevel == newSettings.grayscaleTintLevel) {
-		if (isWhiteness && newSettings.style == kBackdropStyleSystemDefaultSemiLight) {
+		if (isWhiteness && newSettings.style == UIBackdropStyleSemiLight) {
 			%orig;
 			return;
 		}
@@ -1819,14 +1819,14 @@ UIImage *reorderImageBlack = nil;
 			&& settings.grayscaleTintAlpha == newSettings.grayscaleTintAlpha
 			&& settings.grayscaleTintLevel == newSettings.grayscaleTintLevel) {
 		if (newSettings.style != kBackdropStyleForWhiteness 
-				&& (newSettings.style == kBackdropStyleSystemDefaultUltraLight || newSettings.style == kBackdropStyleSystemDefaultLight 
-						|| newSettings.style == kBackdropStyleSystemDefaultDark || newSettings.style == kBackdropStyleSystemDefaultAdaptiveLight)) {
+				&& (newSettings.style == UIBackdropStyleUltraLight || newSettings.style == UIBackdropStyleLight 
+						|| newSettings.style == UIBackdropStyleDark || newSettings.style == UIBackdropStyleAdaptiveLight)) {
 			_UIBackdropViewSettings *styledSettings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleForWhiteness];
 			
 			return %orig(frame, fitSuperview, styledSettings);
 		}
 		if (newSettings.style != kBackdropStyleForWhiteness 
-				&& (newSettings.style == kBackdropStyleSystemDefaultLightLow || newSettings.style == kBackdropStyleSystemDefaultDarkLow)) {
+				&& (newSettings.style == UIBackdropStyleLightLow || newSettings.style == UIBackdropStyleDarkLow)) {
 			_UIBackdropViewSettings *styledSettings = [_UIBackdropViewSettings settingsForPrivateStyle:kBackdropStyleForWhiteness+9];
 			
 			return %orig(frame, fitSuperview, styledSettings);
@@ -1885,7 +1885,7 @@ UIImage *reorderImageBlack = nil;
 		if ([viewController.view isKindOfClass:[_UIBackdropView class]]) {
 			_UIBackdropView *backdropView = (_UIBackdropView *)viewController.view;
 			
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 			
 			[backdropView transitionToSettings:settings];
 			[backdropView _setBlursBackground:YES];
@@ -1898,7 +1898,7 @@ UIImage *reorderImageBlack = nil;
 				CGRect frame = viewController.view.frame;
 				frame.origin.x = 0;
 				
-				_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+				_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 				
 				backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
 				backdropView.tag = 0xc001;
@@ -1940,7 +1940,7 @@ UIImage *reorderImageBlack = nil;
 	[backdropView retain];
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:CGRectZero autosizesToFitSuperview:YES settings:settings];
 		backdropView.tag = 0xc001;

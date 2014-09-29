@@ -69,7 +69,7 @@
 	[backdropView removeFromSuperview];
 	
 	if (backdropView == nil) {
-		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:kBackdropGraphicQualitySystemDefault];
+		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
 		
 		backdropView = [[_UIBackdropView alloc] initWithFrame:_searchResultsTable.frame autosizesToFitSuperview:NO settings:settings];
 		backdropView.tag = 0xc001;

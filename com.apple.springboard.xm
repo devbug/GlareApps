@@ -205,7 +205,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	
 	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
 	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+	NSInteger style = (isWhiteness ? UIBackdropStyleUltraLight : UIBackdropStyleDark);
 	if (_effectView.style != style)
 		[_effectView transitionToStyle:style];
 	
@@ -225,7 +225,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	
 	_UIBackdropView *_effectView = MSHookIvar<_UIBackdropView *>(self, "_effectView");
 	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultDark);
+	NSInteger style = (isWhiteness ? UIBackdropStyleUltraLight : UIBackdropStyleDark);
 	if (_effectView.style != style)
 		[_effectView transitionToStyle:style];
 }
@@ -254,7 +254,7 @@ void reloadKillAllAppsNotification(CFNotificationCenterRef center,
 	UIImage *colorTintMaskImage = [_backdropView.inputSettings.colorTintMaskImage retain];
 	UIImage *filterMaskImage = [_backdropView.inputSettings.filterMaskImage retain];
 	
-	NSInteger style = (isWhiteness ? kBackdropStyleSystemDefaultUltraLight : kBackdropStyleSystemDefaultUltraDark);
+	NSInteger style = (isWhiteness ? UIBackdropStyleUltraLight : UIBackdropStyleUltraDark);
 	if (_backdropView.style != style) {
 		_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:style];
 		settings.blurRadius = 7.0f;

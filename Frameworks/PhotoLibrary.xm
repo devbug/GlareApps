@@ -74,7 +74,7 @@
 	self.toolbar.barStyle = UIBarStyleBlack;
 	self.navigationBar.barStyle = UIBarStyleBlack;
 	
-	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultDark];
+	_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleDark];
 	settings.blurRadius = 22.0f;
 	
 	_UIBackdropView *_adaptiveBackdrop = MSHookIvar<_UIBackdropView *>(self.toolbar, "_adaptiveBackdrop");
@@ -97,7 +97,7 @@
 	if (self.subviews.count > 0) {
 		_UIBackdropView *backdropView = self.subviews[0];
 		if ([backdropView isKindOfClass:[_UIBackdropView class]]) {
-			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleSystemDefaultDark];
+			_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:UIBackdropStyleDark];
 			settings.blurRadius = 22.0f;
 			
 			[backdropView transitionToSettings:settings];

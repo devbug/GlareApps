@@ -26,8 +26,8 @@
 		_blurRadius = -1.0f;
 		_blursBackground = YES;
 		_backgroundTintColor = nil;
-		_style = kBackdropStyleLiteBlurDark;
-		_graphicQuality = kBackdropGraphicQualitySystemDefault;
+		_style = UIBackdropStyleLiteBlurDark;
+		_graphicQuality = UIBackdropGraphicsQualitySystemDefault;
 		
 		_parallax = [[objc_getClass("_UIParallaxMotionEffect") alloc] init];
 		_parallaxEnabled = NO;
@@ -76,7 +76,7 @@
 }
 
 - (void)setDarkness:(BOOL)dark {
-	if (_blursBackground == NO || _style == kBackdropStyleLiteColoredBlur) return;
+	if (_blursBackground == NO || _style == UIBackdropStyleLiteColoredBlur) return;
 	
 	[self _setDarkness:dark];
 }
@@ -114,7 +114,7 @@
 	
 	_blursBackground = blur;
 	
-	if ((_blursBackground == NO || _style == kBackdropStyleLiteColoredBlur) && _backgroundTintColor) {
+	if ((_blursBackground == NO || _style == UIBackdropStyleLiteColoredBlur) && _backgroundTintColor) {
 		CGFloat red, green, blue, alpha;
 		[_backgroundTintColor getRed:&red green:&green blue:&blue alpha:&alpha];
 		CGFloat totalLuminance = red * 0.299 + green * 0.587 + blue * 0.114;
@@ -132,7 +132,7 @@
 	_style = style;
 	_blurRadius = -1.0f;
 	
-	if (_style == kBackdropStyleLiteColoredBlur)
+	if (_style == UIBackdropStyleLiteColoredBlur)
 		[self _setBackgroundTintColor:_backgroundTintColor withBlur:_blursBackground];
 }
 
@@ -196,8 +196,8 @@
 	
 	if ([view respondsToSelector:@selector(_setDrawsAsBackdropOverlayWithBlendMode:)]) {
 		[view _setBackdropMaskViewFlags:1];
-		//[view _setDrawsAsBackdropOverlayWithBlendMode:_isDarkness ? kCGBlendModeOverlay : kCGBlendModeMultiply];
-		[_backdropView applyOverlayBlendMode:(_isDarkness ? kCGBlendModeOverlay : kCGBlendModeMultiply) toView:view];
+		//[view _setDrawsAsBackdropOverlayWithBlendMode:_isDarkness ? UIBackdropOverlayBlendModeColorDodge : UIBackdropOverlayBlendModePlusD];
+		[_backdropView applyOverlayBlendMode:(_isDarkness ? UIBackdropOverlayBlendModeColorDodge : UIBackdropOverlayBlendModePlusD) toView:view];
 	}
 	[_backdropView updateMaskViewsForView:view];
 	[view _setFrameForBackdropMaskViews:view.frame];
@@ -475,24 +475,24 @@
 	// 11060 = 2030 (_UIBackdropViewSettingsDark)
 	// 11070 = 2050 (_UIBackdropViewSettingsUltraDark)
 	_UIBackdropViewSettings *settings = nil;
-	NSInteger computedStyle = _style;
+	UIBackdropStyle computedStyle = _style;
 	
-	if (_style >= kBackdropStyleLiteBlurLight) {
+	if (_style >= UIBackdropStyleLiteBlurLight) {
 		switch (_style) {
-			case kBackdropStyleLiteBlurLight:
-			case kBackdropStyleLiteColoredBlurLight:
-				computedStyle = kBackdropStyleSystemDefaultLight;
+			case UIBackdropStyleLiteBlurLight:
+			case UIBackdropStyleLiteColoredBlurLight:
+				computedStyle = UIBackdropStyleLight;
 				[self setDarkness:NO];
 				break;
-			case kBackdropStyleLiteBlurDark:
-			case kBackdropStyleLiteBlurUltraDark:
-			case kBackdropStyleLiteColoredBlurDark:
+			case UIBackdropStyleLiteBlurDark:
+			case UIBackdropStyleLiteBlurUltraDark:
+			case UIBackdropStyleLiteColoredBlurDark:
 			default:
-				computedStyle = kBackdropStyleSystemDefaultDark;
+				computedStyle = UIBackdropStyleDark;
 				[self setDarkness:YES];
 				break;
-			case kBackdropStyleLiteColoredBlur:
-				computedStyle = kBackdropStyleSystemDefaultAdaptiveLight;
+			case UIBackdropStyleLiteColoredBlur:
+				computedStyle = UIBackdropStyleAdaptiveLight;
 				break;
 		}
 		
@@ -500,7 +500,7 @@
 		//NSLog(@"%@\nblurRadius:             %lf\ngrayscaleTintLevel:     %lf\ngrayscaleTintAlpha:     %lf\ncolorTint:              %@\ncolorTintAlpha:         %lf", settings, settings.blurRadius, settings.grayscaleTintLevel, settings.grayscaleTintAlpha, settings.colorTint, settings.colorTintAlpha);
 		settings.blurRadius = 7.0f;
 		
-		if (_style != kBackdropStyleLiteColoredBlur) {
+		if (_style != UIBackdropStyleLiteColoredBlur) {
 			if (_isDarkness) {
 				settings.grayscaleTintAlpha = 0.8f; // 0.73 (dark)
 				settings.grayscaleTintLevel = 0.05f; // 0.11 (dark)
@@ -526,32 +526,32 @@
 	}
 	else {
 		switch (_style) {
-			case kBackdropStyleSystemDefaultClear:
-			case kBackdropStyleSystemDefaultUltraLight:
-			case kBackdropStyleSystemDefaultLight:
-			case kBackdropStyleSystemDefaultLightLow:
-			case kBackdropStyleSystemDefaultAdaptiveLight:
-			case kBackdropStyleSystemDefaultSemiLight:
+			case UIBackdropStyleClear:
+			case UIBackdropStyleUltraLight:
+			case UIBackdropStyleLight:
+			case UIBackdropStyleLightLow:
+			case UIBackdropStyleAdaptiveLight:
+			case UIBackdropStyleSemiLight:
 				[self setDarkness:NO];
 				break;
-			case kBackdropStyleSystemDefaultBlur:
-			case kBackdropStyleSystemDefaultDark:
-			case kBackdropStyleSystemDefaultDarkLow:
-			case kBackdropStyleSystemDefaultUltraDark:
+			case UIBackdropStyleBlur:
+			case UIBackdropStyleDark:
+			case UIBackdropStyleDarkLow:
+			case UIBackdropStyleUltraDark:
 				[self setDarkness:YES];
 				break;
-			case kBackdropStyleSystemDefaultGray:
-			case kBackdropStyleSystemDefaultUltraGray:
-				computedStyle = kBackdropStyleSystemDefaultLight;
+			case UIBackdropStyleColored:
+			case UIBackdropStyleUltraColored:
+				computedStyle = UIBackdropStyleLight;
 				break;
-			case kBackdropStyleSystemDefaultGreen:
-			case kBackdropStyleSystemDefaultRed:
-			case kBackdropStyleSystemDefaultBlue:
+			case UIBackdropStyleGreen:
+			case UIBackdropStyleRed:
+			case UIBackdropStyleBlue:
 				[self setDarkness:NO];
 				break;
 			default:
 				[self setDarkness:YES];
-				computedStyle = kBackdropStyleSystemDefaultAdaptiveLight;
+				computedStyle = UIBackdropStyleAdaptiveLight;
 				break;
 		}
 		
@@ -560,19 +560,19 @@
 		
 		settings.colorTintAlpha = 0.6f;
 		
-		if (_style == kBackdropStyleSystemDefaultGray) {
+		if (_style == UIBackdropStyleColored) {
 			settings.blurRadius = 10.0f;
 			settings.grayscaleTintAlpha = 0.0f;
 			settings.grayscaleTintLevel = 0.97f;
 		}
-		else if (_style == kBackdropStyleSystemDefaultUltraGray) {
+		else if (_style == UIBackdropStyleUltraColored) {
 			settings.blurRadius = 20.0f;
 			settings.grayscaleTintAlpha = 0.50f;
 			settings.grayscaleTintLevel = 0.97f;
 			
 			settings.colorTintAlpha = 0.9f;
 		}
-		else if (_style >= kBackdropStyleSystemDefaultGreen) {
+		else if (_style >= UIBackdropStyleGreen) {
 			settings.grayscaleTintAlpha = 0.0f;
 			settings.grayscaleTintLevel = 1.0f;
 			

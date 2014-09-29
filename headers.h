@@ -7,47 +7,6 @@
 #import "GlareAppsBlurredBackgroundImageView.h"
 
 
-enum {
-	kBackdropStyleSystemDefaultCombiner = -3,
-	kBackdropStyleSystemDefaultNone = -2,
-	kBackdropStyleSystemDefaultBlur = 2,
-	kBackdropStyleSystemDefaultClear = 2000,
-	kBackdropStyleSystemDefaultUltraLight = 2010,
-	kBackdropStyleSystemDefaultLight = 2020,
-	kBackdropStyleSystemDefaultLightLow = 2029,
-	kBackdropStyleSystemDefaultDark = 2030,
-	kBackdropStyleSystemDefaultDarkWithZoom = 2031,
-	kBackdropStyleSystemDefaultDarkLow = 2039,
-	kBackdropStyleSystemDefaultGray = 2040,			// Colored
-	kBackdropStyleSystemDefaultUltraDark = 2050,
-	kBackdropStyleSystemDefaultAdaptiveLight = 2060,
-	kBackdropStyleSystemDefaultSemiLight = 2070,
-	kBackdropStyleSystemDefaultUltraGray = 2080,	// UltraColored
-	
-	kBackdropStyleSystemDefaultGreen = 10091,
-	kBackdropStyleSystemDefaultRed = 10092,
-	kBackdropStyleSystemDefaultBlue = 10120,
-	
-	// >= iOS 7.1
-	kBackdropStyleSystemDefaultFlatSemiLight = 2071,
-	kBackdropStyleSystemDefaultPasscodePaddle = 3900,
-	kBackdropStyleSystemDefaultLightKeyboard = 3901,
-};
-
-enum {
-	kBackdropGraphicQualitySystemDefault = 0,
-	kBackdropGraphicQualityForceOff = 10,
-	kBackdropGraphicQualityForceOn = 100,
-};
-
-enum {
-	kBackdropOverlayBlendModeNormal = 0,
-	kBackdropOverlayBlendModePlusD = 1,
-	kBackdropOverlayBlendModePlusL = 2,
-	kBackdropOverlayBlendModeColorDodge = 3,
-};
-
-
 extern NSString * const kCAFilterNormalBlendMode;
 extern NSString * const kCAFilterMultiplyBlendMode;
 extern NSString * const kCAFilterScreenBlendMode;
@@ -76,7 +35,7 @@ extern BOOL isFirmware70;
 extern BOOL isFirmware71;
 extern GlareAppsColorHelper *colorHelper;
 
-#define kBackdropStyleForWhiteness			(isWhiteness ? kBackdropStyleSystemDefaultLight : kBackdropStyleSystemDefaultDark)
+#define kBackdropStyleForWhiteness			(isWhiteness ? UIBackdropStyleLight : UIBackdropStyleDark)
 #define kBarStyleForWhiteness				(isWhiteness ? UIBarStyleDefault : UIBarStyleBlack)
 #define kDarkColorWithWhiteForWhiteness		(isWhiteness ? 1.0f : 0.0f)
 #define kLightColorWithWhiteForWhiteness	(isWhiteness ? 0.0f : 1.0f)
