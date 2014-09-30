@@ -257,6 +257,7 @@ typedef NS_ENUM(NSInteger, UIBackdropOverlayBlendMode) {
 - (void)_setSeparatorBackdropOverlayBlendModeForUIAppearance:(UIBackdropOverlayBlendMode)arg1;
 - (UIView *)_tableHeaderBackgroundView;
 - (void)setTableHeaderBackgroundColor:(id)arg1;
+- (UITableViewCell *)_reorderingCell;
 @end
 
 @interface UITableViewCell (private_api)
@@ -264,6 +265,7 @@ typedef NS_ENUM(NSInteger, UIBackdropOverlayBlendMode) {
 - (void)_setSeparatorBackdropOverlayBlendMode:(UIBackdropOverlayBlendMode)arg1;
 - (UIView *)_currentAccessoryView:(BOOL)arg1;
 - (void)_updateCellMaskViewsForView:(id)arg1 backdropView:(id)arg2;
+- (UITableView *)_tableView;
 @end
 
 @interface UITableViewCellReorderControl : UIControl @end

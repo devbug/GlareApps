@@ -159,11 +159,11 @@ void blendView(id control) {
 
 %hook UITableView
 
-- (NSInteger)_separatorBackdropOverlayBlendMode {
+- (UIBackdropOverlayBlendMode)_separatorBackdropOverlayBlendMode {
 	return blendMode();
 }
 
-- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)blendedMode {
+- (void)_setSeparatorBackdropOverlayBlendMode:(UIBackdropOverlayBlendMode)blendedMode {
 	%orig(blendMode());
 }
 
@@ -178,18 +178,13 @@ void blendView(id control) {
 
 %hook UITableViewCell
 
-- (NSInteger)_separatorBackdropOverlayBlendMode {
-	return blendMode();
-}
-
-- (void)_setSeparatorBackdropOverlayBlendMode:(NSInteger)blendedMode {
-	%orig(blendMode());
-}
-
 - (void)layoutSubviews {
 	%orig;
 	
-	[self _setSeparatorBackdropOverlayBlendMode:blendMode()];
+	if (self._tableView._reorderingCell == self)
+		[self _setSeparatorBackdropOverlayBlendMode:UIBackdropOverlayBlendModeNormal];
+	else
+		[self _setSeparatorBackdropOverlayBlendMode:blendMode()];
 }
 
 %end
