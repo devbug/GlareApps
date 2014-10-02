@@ -266,6 +266,7 @@ typedef NS_ENUM(NSInteger, UIBackdropOverlayBlendMode) {
 - (UIView *)_currentAccessoryView:(BOOL)arg1;
 - (void)_updateCellMaskViewsForView:(id)arg1 backdropView:(id)arg2;
 - (UITableView *)_tableView;
+@property(retain, nonatomic) UIView *backgroundView;
 @end
 
 @interface UITableViewCellReorderControl : UIControl @end

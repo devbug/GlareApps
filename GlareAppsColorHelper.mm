@@ -45,6 +45,7 @@
 		_whiteColor = [[UIColor whiteColor] retain];
 		_blackColor = [[UIColor blackColor] retain];
 		_rgbBlackColor = [[UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f] retain];
+		_rgbWhiteColor = [[UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:1.0f] retain];
 		_color_1_0__1_0 = [[UIColor colorWithWhite:1.0f alpha:1.0f] retain];
 		_color_0_0__1_0 = [[UIColor colorWithWhite:0.0f alpha:1.0f] retain];
 		_color_1_0__0_01 = [[UIColor colorWithWhite:1.0f alpha:0.01f] retain];
@@ -115,6 +116,20 @@
 	return [color colorWithAlphaComponent:alpha];
 }
 
+- (UIColor *)fakeCommonTextColor {
+	if (_isWhiteness)
+		return _color_0_1__1_0;
+	
+	return _color_0_9__1_0;
+}
+
+- (UIColor *)rgbCommonTextColor {
+	if (_isWhiteness)
+		return _rgbBlackColor;
+	
+	return _rgbWhiteColor;
+}
+
 - (UIColor *)lightTextColor {
 	if (_isWhiteness)
 		return _whiteColor;
@@ -126,6 +141,20 @@
 	UIColor *color = [self lightTextColor];
 	
 	return [color colorWithAlphaComponent:alpha];
+}
+
+- (UIColor *)fakeLightTextColor {
+	if (_isWhiteness)
+		return _color_0_9__1_0;
+	
+	return _color_0_1__1_0;
+}
+
+- (UIColor *)rgbLightTextColor {
+	if (_isWhiteness)
+		return _rgbWhiteColor;
+	
+	return _rgbBlackColor;
 }
 
 - (UIColor *)keyWindowBackgroundColor {
@@ -313,6 +342,7 @@
 	[_whiteColor release]; _whiteColor = nil;
 	[_blackColor release]; _blackColor = nil;
 	[_rgbBlackColor release]; _rgbBlackColor = nil;
+	[_rgbWhiteColor release]; _rgbWhiteColor = nil;
 	[_color_1_0__1_0 release]; _color_1_0__1_0 = nil;
 	[_color_0_0__1_0 release]; _color_0_0__1_0 = nil;
 	[_color_1_0__0_01 release]; _color_1_0__0_01 = nil;

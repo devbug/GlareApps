@@ -77,7 +77,7 @@
 }
 
 - (id)cardCellBackgroundColor {
-	return [colorHelper defaultTableViewCellBackgroundColor];
+	return [colorHelper clearColor];
 }
 
 - (UIColor *)cardLabelBackgroundColor {
@@ -187,7 +187,7 @@
 - (void)layoutSubviews {
 	%orig;
 	
-	self.backgroundColor = [colorHelper defaultTableViewCellBackgroundColor];
+	self.backgroundColor = [colorHelper clearColor];
 	self.textLabel.backgroundColor = [colorHelper clearColor];
 	
 	if (useBlendedMode)

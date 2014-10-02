@@ -185,6 +185,40 @@ void blendView(id control) {
 		[self _setSeparatorBackdropOverlayBlendMode:UIBackdropOverlayBlendModeNormal];
 	else
 		[self _setSeparatorBackdropOverlayBlendMode:blendMode()];
+	
+	if (!self.highlighted && !self.selected)
+		[self _setDrawsAsBackdropOverlayWithBlendMode:UIBackdropOverlayBlendModeNormal];
+	
+	if (!self.textLabel.attributedText) {
+		if (!self.highlighted && !self.selected)
+			self.textLabel.textColor = [colorHelper commonTextColor];
+		else
+			self.textLabel.textColor = [colorHelper rgbLightTextColor];
+	}
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+	%orig;
+	
+	if (self.selectionStyle != UITableViewCellSelectionStyleNone && highlighted)
+		[self _setDrawsAsBackdropOverlayWithBlendMode:blendMode()];
+}
+
+%end
+
+%hook UIColor
+
++ (id)tableCellDefaultSelectionTintColor {
+	return [colorHelper defaultTableViewSeparatorColor];
+}
++ (id)tableSelectionGradientEndColor {
+	return [colorHelper defaultTableViewSeparatorColor];
+}
++ (id)tableSelectionGradientStartColor {
+	return [colorHelper defaultTableViewSeparatorColor];
+}
++ (id)tableSelectionColor {
+	return [colorHelper defaultTableViewSeparatorColor];
 }
 
 %end
