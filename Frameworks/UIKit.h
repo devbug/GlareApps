@@ -43,6 +43,9 @@ typedef NS_ENUM(NSInteger, UIBackdropOverlayBlendMode) {
 } NS_ENUM_AVAILABLE_IOS(7_0);
 
 
+extern "C" UIImage *_UIImageWithName(NSString *);
+
+
 @interface CALayer (private_api)
 @property BOOL allowsGroupBlending;
 @end
@@ -510,4 +513,21 @@ typedef NS_ENUM(NSInteger, UIBackdropOverlayBlendMode) {
 @interface UISlider (private_api)
 - (void)_setUseLookNeue:(BOOL)arg1;
 @end
+
+@interface UIWindow (private_api)
+- (BOOL)_isHostedInAnotherProcess;
+@end
+
+@interface UIPeripheralHost : NSObject
++ (id)activeInstance;
++ (id)sharedInstance;
+- (id)containerTextEffectsWindowAboveStatusBar;
+- (id)containerTextEffectsWindow;
+- (id)containerWindow;
+//@property(readonly, nonatomic) UIKeyboard *automaticKeyboard;
+@property(readonly, nonatomic) UIResponder *responder;
+@end
+
+@interface UITextMagnifierRenderer : UIView @end
+@interface UITextMagnifierCaretRenderer : UITextMagnifierRenderer @end
 

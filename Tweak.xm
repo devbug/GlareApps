@@ -873,6 +873,45 @@ void clearBar(UIView *view) {
 %end
 
 
+%hook UITextMagnifierCaretRenderer
+
+- (void)drawMagnifier:(CGRect)rect {
+	%orig;
+	
+	UIWindow *window = [[%c(UIPeripheralHost) sharedInstance] containerTextEffectsWindow];
+	
+	if (window && !window._isHostedInAnotherProcess) {
+		if (self.superview) {
+			_UIBackdropView *backdropView = (_UIBackdropView *)[self.superview viewWithTag:0xc001];
+			[backdropView retain];
+			
+			CGRect frame = self.frame;
+			
+			if (backdropView == nil) {
+				UIImage *maskImage = _UIImageWithName(@"kb-loupe-lo.png");
+				
+				_UIBackdropViewSettings *settings = [_UIBackdropViewSettings settingsForStyle:kBackdropStyleForWhiteness graphicsQuality:UIBackdropGraphicsQualitySystemDefault];
+				settings.grayscaleTintMaskImage = maskImage;
+				settings.colorTintMaskImage = maskImage;
+				settings.filterMaskImage = maskImage;
+				
+				backdropView = [[_UIBackdropView alloc] initWithFrame:frame autosizesToFitSuperview:YES settings:settings];
+				backdropView.tag = 0xc001;
+				
+				[self.superview insertSubview:backdropView atIndex:0];
+				[colorHelper addBlurView:backdropView];
+			}
+			
+			backdropView.frame = frame;
+			
+			[backdropView release];
+		}
+	}
+}
+
+%end
+
+
 %hook _UICompatibilityTextView
 
 - (void)setTextColor:(UIColor *)color {
