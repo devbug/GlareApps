@@ -8,8 +8,12 @@ UIColor *blendColor() {
 	return [colorHelper maskColorForBlendedMode];
 }
 
+NSInteger blendMode(BOOL _isWhiteness) {
+	return !_isWhiteness ? UIBackdropOverlayBlendModeColorDodge : UIBackdropOverlayBlendModePlusD;
+}
+
 NSInteger blendMode() {
-	return !isWhiteness ? UIBackdropOverlayBlendModeColorDodge : UIBackdropOverlayBlendModePlusD;
+	return blendMode(isWhiteness);
 }
 
 void blendView(id control) {
@@ -185,9 +189,6 @@ void blendView(id control) {
 		[self _setSeparatorBackdropOverlayBlendMode:UIBackdropOverlayBlendModeNormal];
 	else
 		[self _setSeparatorBackdropOverlayBlendMode:blendMode()];
-	
-	if (self.selectionStyle != UITableViewCellSelectionStyleNone && self.highlighted)
-		[self.selectedBackgroundView _setDrawsAsBackdropOverlayWithBlendMode:blendMode()];
 }
 
 %end
@@ -205,6 +206,25 @@ void blendView(id control) {
 }
 + (id)tableSelectionColor {
 	return colorHelper.color_0_55__1_0;
+}
+
+%end
+
+%hook UITableViewCellSelectedBackground
+
+- (void)setSelectionTintColor:(UIColor *)color {
+	%orig([UIColor tableCellDefaultSelectionTintColor]);
+}
+
+- (void)setMultiselectBackgroundColor:(UIColor *)color {
+	%orig([UIColor tableCellDefaultSelectionTintColor]);
+}
+
+- (void)drawRect:(CGRect)rect {
+	%orig;
+	
+	if (self.selectionStyle != UITableViewCellSelectionStyleNone)
+		[self _setDrawsAsBackdropOverlayWithBlendMode:blendMode()];
 }
 
 %end

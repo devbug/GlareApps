@@ -279,6 +279,7 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 @interface UITableViewCellSelectedBackground : UIView
 @property(retain, nonatomic) UIColor *selectionTintColor;
 @property(retain, nonatomic) UIColor *multiselectBackgroundColor;
+@property(nonatomic) UITableViewCellSelectionStyle selectionStyle;
 @end
 
 @interface UIView (private_api)
@@ -382,6 +383,7 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 @end
 
 @interface UIColor (private_api)
++ (id)tableCellDefaultSelectionTintColor;
 - (CGFloat)alphaComponent;
 @end
 
