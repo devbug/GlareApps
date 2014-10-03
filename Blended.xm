@@ -186,22 +186,8 @@ void blendView(id control) {
 	else
 		[self _setSeparatorBackdropOverlayBlendMode:blendMode()];
 	
-	if (!self.highlighted && !self.selected)
-		[self _setDrawsAsBackdropOverlayWithBlendMode:UIBackdropOverlayBlendModeNormal];
-	
-	if (!self.textLabel.attributedText) {
-		if (!self.highlighted && !self.selected)
-			self.textLabel.textColor = [colorHelper commonTextColor];
-		else
-			self.textLabel.textColor = [colorHelper rgbLightTextColor];
-	}
-}
-
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
-	%orig;
-	
-	if (self.selectionStyle != UITableViewCellSelectionStyleNone && highlighted)
-		[self _setDrawsAsBackdropOverlayWithBlendMode:blendMode()];
+	if (self.selectionStyle != UITableViewCellSelectionStyleNone && self.highlighted)
+		[self.selectedBackgroundView _setDrawsAsBackdropOverlayWithBlendMode:blendMode()];
 }
 
 %end
@@ -209,16 +195,16 @@ void blendView(id control) {
 %hook UIColor
 
 + (id)tableCellDefaultSelectionTintColor {
-	return [colorHelper defaultTableViewSeparatorColor];
+	return colorHelper.color_0_55__1_0;
 }
 + (id)tableSelectionGradientEndColor {
-	return [colorHelper defaultTableViewSeparatorColor];
+	return colorHelper.color_0_55__1_0;
 }
 + (id)tableSelectionGradientStartColor {
-	return [colorHelper defaultTableViewSeparatorColor];
+	return colorHelper.color_0_55__1_0;
 }
 + (id)tableSelectionColor {
-	return [colorHelper defaultTableViewSeparatorColor];
+	return colorHelper.color_0_55__1_0;
 }
 
 %end
