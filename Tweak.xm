@@ -1127,6 +1127,28 @@ void clearBar(UIView *view) {
 %end
 
 
+%hook UIActivityIndicatorView
+
+- (void)didMoveToSuperview {
+	%orig;
+	
+	CGFloat backgroundAlpha = self.superview.backgroundColor.alphaComponent;
+	
+	if (backgroundAlpha == 0.0f || backgroundAlpha == 0.01f || [NSStringFromClass(self.superview.class) hasPrefix:@"UITableViewCell"]) {
+		if (self.activityIndicatorViewStyle == UIActivityIndicatorViewStyleWhiteLarge) {
+			if (self.color == nil) {
+				self.color = isWhiteness ? colorHelper.whiteColor : [colorHelper systemGrayColor];
+			}
+		}
+		else if (self.activityIndicatorViewStyle == UIActivityIndicatorViewStyleGray || self.activityIndicatorViewStyle == UIActivityIndicatorViewStyleWhite) {
+			self.activityIndicatorViewStyle = isWhiteness ? UIActivityIndicatorViewStyleGray : UIActivityIndicatorViewStyleWhite;
+		}
+	}
+}
+
+%end
+
+
 
 #pragma mark -
 #pragma mark UICollectionView
