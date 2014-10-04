@@ -43,7 +43,15 @@ typedef NS_ENUM(NSInteger, UIBackdropOverlayBlendMode) {
 } NS_ENUM_AVAILABLE_IOS(7_0);
 
 
-extern "C" UIImage *_UIImageWithName(NSString *);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+UIImage *_UIImageWithName(NSString *);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 @interface CALayer (private_api)
@@ -67,9 +75,7 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 + (id)settingsForPrivateStyle:(UIBackdropStyle)arg1 graphicsQuality:(UIBackdropGraphicsQuality)arg2;
 + (id)settingsForStyle:(UIBackdropStyle)arg1 graphicsQuality:(UIBackdropGraphicsQuality)arg2;
 @property(nonatomic) BOOL appliesTintAndBlurSettings;
-@property(nonatomic) BOOL usesDarkeningTintView;	// >= iOS 7.1
 @property(nonatomic) BOOL usesContentView;
-@property(nonatomic) BOOL usesColorBurnTintView;	// >= iOS 7.1
 @property(nonatomic) BOOL usesColorTintView;
 @property(nonatomic) BOOL usesGrayscaleTintView;
 @property(nonatomic) BOOL usesBackdropEffectView;
@@ -79,14 +85,6 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 @property(copy, nonatomic) NSString *blurQuality;
 @property(nonatomic) NSInteger blurHardEdges;
 @property(nonatomic) CGFloat blurRadius;
-@property(retain, nonatomic) UIImage *darkeningTintMaskImage;	// >= iOS 7.1
-@property(nonatomic) CGFloat darkeningTintBrightness;	// >= iOS 7.1
-@property(nonatomic) CGFloat darkeningTintSaturation;	// >= iOS 7.1
-@property(nonatomic) CGFloat darkeningTintHue;	// >= iOS 7.1
-@property(nonatomic) CGFloat darkeningTintAlpha;	// >= iOS 7.1
-@property(retain, nonatomic) UIImage *colorBurnTintMaskImage;	// >= iOS 7.1
-@property(nonatomic) CGFloat colorBurnTintAlpha;	// >= iOS 7.1
-@property(nonatomic) CGFloat colorBurnTintLevel;	// >= iOS 7.1
 @property(retain, nonatomic) UIImage *colorTintMaskImage;
 @property(nonatomic) CGFloat colorTintMaskAlpha;
 @property(nonatomic) CGFloat colorTintAlpha;
@@ -100,6 +98,19 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 @property(nonatomic, assign) _UIBackdropView *backdrop;
 @property(nonatomic) BOOL blursWithHardEdges;
 @end
+@interface _UIBackdropViewSettings (Firmware71)
+@property(nonatomic) BOOL usesDarkeningTintView;
+@property(nonatomic) BOOL usesColorBurnTintView;
+@property(retain, nonatomic) UIImage *darkeningTintMaskImage;
+@property(nonatomic) CGFloat darkeningTintBrightness;
+@property(nonatomic) CGFloat darkeningTintSaturation;
+@property(nonatomic) CGFloat darkeningTintHue;
+@property(nonatomic) CGFloat darkeningTintAlpha;
+@property(retain, nonatomic) UIImage *colorBurnTintMaskImage;
+@property(nonatomic) CGFloat colorBurnTintAlpha;
+@property(nonatomic) CGFloat colorBurnTintLevel;
+@end
+
 @interface _UIBackdropView : UIView
 + (id)allBackdropViews;
 @property(nonatomic) CGFloat _blurRadius;
@@ -111,14 +122,10 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 @property(copy, nonatomic) NSString *groupName;
 @property(nonatomic) BOOL applySettingsAfterLayout;
 @property(nonatomic) NSInteger maskMode;
-@property(retain, nonatomic) UIImage *darkeningTintMaskImage;	// >= iOS 7.1
-@property(retain, nonatomic) UIView *darkeningTintView;	// >= iOS 7.1
 @property(retain, nonatomic) UIView *contentView;
 //@property(retain, nonatomic) CAFilter *tintFilter;
 //@property(retain, nonatomic) CAFilter *colorSaturateFilter;
 //@property(retain, nonatomic) CAFilter *gaussianBlurFilter;
-@property(retain, nonatomic) UIImage *colorBurnTintMaskImage;	// >= iOS 7.1
-@property(retain, nonatomic) UIView *colorBurnTintView;	// >= iOS 7.1
 @property(retain, nonatomic) UIImage *colorTintMaskImage;
 @property(retain, nonatomic) UIView *colorTintView;
 @property(retain, nonatomic) UIImage *grayscaleTintMaskImage;
@@ -134,8 +141,6 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 @property(nonatomic) BOOL computesColorSettings;
 @property(nonatomic) BOOL blursBackground;
 @property(nonatomic) UIBackdropStyle style;
-- (BOOL)disablesOccludedBackdropBlurs;	// >= iOS 7.1
-- (void)setDisablesOccludedBackdropBlurs:(BOOL)arg1;	// >= iOS 7.1
 - (void)applySettings:(id)arg1;
 - (void)computeAndApplySettings:(id)arg1;
 - (void)transitionIncrementallyToPrivateStyle:(UIBackdropStyle)arg1 weighting:(CGFloat)arg2;
@@ -179,6 +184,14 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 - (id)initWithSettings:(_UIBackdropViewSettings *)arg1;
 - (id)initWithFrame:(CGRect)arg1 settings:(_UIBackdropViewSettings *)arg2;
 - (id)initWithFrame:(CGRect)arg1 autosizesToFitSuperview:(BOOL)arg2 settings:(_UIBackdropViewSettings *)arg3;
+@end
+@interface _UIBackdropView (Firmware71)
+@property(retain, nonatomic) UIImage *darkeningTintMaskImage;
+@property(retain, nonatomic) UIView *darkeningTintView;
+@property(retain, nonatomic) UIImage *colorBurnTintMaskImage;
+@property(retain, nonatomic) UIView *colorBurnTintView;
+- (BOOL)disablesOccludedBackdropBlurs;
+- (void)setDisablesOccludedBackdropBlurs:(BOOL)arg1;
 @end
 
 @interface UIApplication (private_api)
@@ -286,7 +299,6 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 + (BOOL)_isInAnimationBlock;
 - (void)_updateBackdropMaskViewsInScrollView:(id)arg1;
 - (void)_updateBackdropMaskFrames;
-- (void)_recursivelyUpdateBackdropMaskFrames;	// iOS 7.0.x
 - (void)_recursivelySetHiddenForBackdropMaskViews:(BOOL)arg1;
 - (void)_setHiddenForBackdropMaskViews:(BOOL)arg1;
 - (void)_setTransformForBackdropMaskViews:(struct CGAffineTransform)arg1;
@@ -317,6 +329,9 @@ extern "C" UIImage *_UIImageWithName(NSString *);
 - (id)_viewControllerForAncestor;
 - (BOOL)_is_needsLayout;
 - (BOOL)_isInVisibleHierarchy;
+@end
+@interface UIView (Firmware70)
+- (void)_recursivelyUpdateBackdropMaskFrames;
 @end
 
 @interface UIDropShadowView : UIView @end

@@ -9,16 +9,9 @@
 
 extern NSString * const kCAFilterNormalBlendMode;
 extern NSString * const kCAFilterMultiplyBlendMode;
-extern NSString * const kCAFilterScreenBlendMode;
 extern NSString * const kCAFilterOverlayBlendMode;
-extern NSString * const kCAFilterDarkenBlendMode;
-extern NSString * const kCAFilterLightenBlendMode;
 extern NSString * const kCAFilterColorDodgeBlendMode;
 extern NSString * const kCAFilterColorBurnBlendMode;
-extern NSString * const kCAFilterSoftLightBlendMode;
-extern NSString * const kCAFilterHardLightBlendMode;
-extern NSString * const kCAFilterDifferenceBlendMode;
-extern NSString * const kCAFilterExclusionBlendMode;
 extern NSString * const kCAFilterPlusD;
 extern NSString * const kCAFilterPlusL;
 
