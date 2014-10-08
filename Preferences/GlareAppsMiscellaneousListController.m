@@ -26,6 +26,13 @@
 
 
 
+enum {
+	MusicAppAlbumArtVisibleDefault = 0,
+	MusicAppAlbumArtVisibleSmaller,
+	MusicAppAlbumArtVisibleNone
+};
+
+
 @implementation GlareAppsMiscellaneousListController
 
 - (id)specifiers {
@@ -99,17 +106,25 @@
 - (NSMutableArray *)makeMusicAppGroupExtraSpecifiers {
 	NSMutableArray *__specifiers = [NSMutableArray array];
 	
+	NSString *noneTitle = [[self bundle] localizedStringForKey:@"MusicApp_AlbumArtNone" value:@"None" table:@"GlareAppsSettings"];
+	NSString *smallerTitle = [[self bundle] localizedStringForKey:@"MusicApp_AlbumArtSmaller" value:@"Smaller" table:@"GlareAppsSettings"];
+	NSString *defaultTitle = [[self bundle] localizedStringForKey:@"MusicApp_AlbumArtDefault" value:@"Default" table:@"GlareAppsSettings"];
+	
 	PSSpecifier *specifier1 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Show AlbumArt" value:@"Show AlbumArt" table:@"GlareAppsSettings"]
 															 target:self
 																set:@selector(setPreferenceNumberValue:specifier:)
 																get:@selector(getPreferenceNumberValue:)
-															 detail:nil
-															   cell:PSSwitchCell
+															 detail:[PSListItemsController class]
+															   cell:PSLinkListCell
 															   edit:nil];
-	[specifier1 setProperty:@"GlareAppsShowMusicAppAlbumArt" forKey:@"key"];
+	[specifier1 setProperty:@"GlareMusicAppAlbumArtStyle" forKey:@"key"];
 	[specifier1 setProperty:@"kr.slak.glareapps.prefnoti" forKey:@"PostNotification"];
 	[specifier1 setProperty:@"kr.slak.GlareApps" forKey:@"defaults"];
-	[specifier1 setProperty:@(YES) forKey:@"default"];
+	[specifier1 setProperty:@(MusicAppAlbumArtVisibleSmaller) forKey:@"default"];
+	specifier1.values = @[ @(MusicAppAlbumArtVisibleDefault), @(MusicAppAlbumArtVisibleSmaller), @(MusicAppAlbumArtVisibleNone) ];
+	specifier1.titleDictionary = @{ @(MusicAppAlbumArtVisibleDefault) : defaultTitle,
+									@(MusicAppAlbumArtVisibleSmaller) : smallerTitle,
+									@(MusicAppAlbumArtVisibleNone) : noneTitle, };
 	
 	[__specifiers addObject:specifier1];
 	

@@ -19,10 +19,16 @@ extern NSString * const kCAFilterPlusL;
 
 @class GlareAppsColorHelper;
 
+enum {
+	MusicAppAlbumArtVisibleDefault = 0,
+	MusicAppAlbumArtVisibleSmaller,
+	MusicAppAlbumArtVisibleNone
+};
+
 extern BOOL isWhiteness;
 extern BOOL useBlendedMode;
 extern BOOL useMusicAppAlbumArtBackdrop;
-extern BOOL showMusicAppAlbumArt;
+extern NSInteger musicAppAlbumArtVisible;
 extern CGFloat musicAppAlbumArtBackdropBlurRadius;
 extern BOOL isFirmware70;
 extern BOOL isFirmware71;

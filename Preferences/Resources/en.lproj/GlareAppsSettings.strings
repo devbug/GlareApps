@@ -10,6 +10,9 @@
 "MUSICAPP_RESTART_REQUIRED" = "Music app restart is required";
 "Use AlbumArt Backdrop" = "Use AlbumArt Backdrop";
 "Show AlbumArt" = "Show AlbumArt";
+"MusicApp_AlbumArtDefault" = "Default";
+"MusicApp_AlbumArtSmaller" = "Smaller";
+"MusicApp_AlbumArtNone" = "None";
 "Backdrop Blur Radius" = "Backdrop Blur Radius";
 "Kill all apps" = "Kill all applied apps";
 "KILLALLAPPS_MSG" = "Include Preferences app";

@@ -10,6 +10,9 @@
 "MUSICAPP_RESTART_REQUIRED" = "음악 앱의 재시작이 필요합니다.";
 "Use AlbumArt Backdrop" = "앨범 표지 배경 사용";
 "Show AlbumArt" = "앨범 표지 보이기";
+"MusicApp_AlbumArtDefault" = "기본";
+"MusicApp_AlbumArtSmaller" = "작게";
+"MusicApp_AlbumArtNone" = "없음";
 "Backdrop Blur Radius" = "배경 블러 수준";
 "Kill all apps" = "모든 적용 앱 종료";
 "KILLALLAPPS_MSG" = "설정 앱을 포함하여 모두 종료합니다.";

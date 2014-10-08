@@ -1089,11 +1089,6 @@ BOOL isEnabledRedrawControls(UIView *self) {
 		navBar = MSHookIvar<UINavigationBar *>(self, "_padFakeNavigationBar");
 	}
 	
-	if (useMusicAppAlbumArtBackdrop) {
-		UIView *_contentView = MSHookIvar<UIView *>(self, "_contentView");
-		_contentView.hidden = !showMusicAppAlbumArt;
-	}
-	
 	if (useBlendedMode && useMusicAppAlbumArtBackdrop) {
 		navBar._backgroundView.alpha = 0.0f;
 	}
@@ -1113,6 +1108,27 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	if (EnableNowPlayingBlurring) return;
 	
 	[self performSelector:@selector(__glareapps_updateNavigationBar)];
+	
+	if (useMusicAppAlbumArtBackdrop) {
+		UIView *_contentView = MSHookIvar<UIView *>(self, "_contentView");
+		if (_contentView) {
+			_contentView.hidden = NO;
+			
+			if (musicAppAlbumArtVisible == MusicAppAlbumArtVisibleSmaller) {
+				CGRect frame = _contentView.frame;
+				CGRect rect = frame;
+				frame.size.width *= 0.9f;
+				frame.size.height *= 0.9f;
+				frame.origin.x += (rect.size.width - frame.size.width) / 2.0f;
+				frame.origin.y += (rect.size.height - frame.size.height) / 2.0f;
+				
+				_contentView.frame = frame;
+			}
+			else if (musicAppAlbumArtVisible == MusicAppAlbumArtVisibleNone) {
+				_contentView.hidden = YES;
+			}
+		}
+	}
 	
 	MusicNowPlayingTitlesView *_titlesView = MSHookIvar<MusicNowPlayingTitlesView *>(self, "_titlesView");
 	_titlesView._titleLabel.textColor = TINT_COLOR;
