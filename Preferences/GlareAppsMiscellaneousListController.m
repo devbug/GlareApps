@@ -23,6 +23,7 @@
 
 
 #import "Preferences.h"
+#import <sys/utsname.h>
 
 
 
@@ -31,6 +32,14 @@ enum {
 	MusicAppAlbumArtVisibleSmaller,
 	MusicAppAlbumArtVisibleNone
 };
+
+
+static NSString *getMachineName() {
+	struct utsname systemInfo;
+	uname(&systemInfo);
+	
+	return [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+}
 
 
 @implementation GlareAppsMiscellaneousListController
@@ -57,20 +66,31 @@ enum {
 		PSSpecifier *theme = [PSSpecifier emptyGroupSpecifier];
 		[theme setProperty:[[self bundle] localizedStringForKey:@"DEFAULT_THEME_MSG" value:@"Default is Black theme." table:@"GlareAppsSettings"] forKey:@"footerText"];
 		
-		PSSpecifier *specifier2 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Use Blended mode" value:@"Use Blended mode" table:@"GlareAppsSettings"]
-																 target:self
-																	set:@selector(setPreferenceNumberValue:specifier:)
-																	get:@selector(getPreferenceNumberValue:)
-																 detail:nil
-																   cell:PSSwitchCell
-																   edit:nil];
-		[specifier2 setProperty:@"GlareAppsUseBlendedMode" forKey:@"key"];
-		[specifier2 setProperty:@"kr.slak.glareapps.prefnoti" forKey:@"PostNotification"];
-		[specifier2 setProperty:@"kr.slak.GlareApps" forKey:@"defaults"];
-		[specifier2 setProperty:@(NO) forKey:@"default"];
+		__specifiers = [[NSMutableArray alloc] initWithObjects:theme, 
+															specifier1, 
+															nil];
+		
+		if (![getMachineName() hasPrefix:@"iPhone3,"]) {
+			PSSpecifier *specifier2 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Use Blended mode" value:@"Use Blended mode" table:@"GlareAppsSettings"]
+																	 target:self
+																		set:@selector(setPreferenceNumberValue:specifier:)
+																		get:@selector(getPreferenceNumberValue:)
+																	 detail:nil
+																	   cell:PSSwitchCell
+																	   edit:nil];
+			[specifier2 setProperty:@"GlareAppsUseBlendedMode" forKey:@"key"];
+			[specifier2 setProperty:@"kr.slak.glareapps.prefnoti" forKey:@"PostNotification"];
+			[specifier2 setProperty:@"kr.slak.GlareApps" forKey:@"defaults"];
+			[specifier2 setProperty:@(NO) forKey:@"default"];
+			
+			[__specifiers addObject:groupSpecifier1];
+			[__specifiers addObject:specifier2];
+		}
 		
 		PSSpecifier *musicAppGroupSpecifier = [PSSpecifier groupSpecifierWithName:[[self bundle] localizedStringForKey:@"MUSICAPP_" value:@"Music app" table:@"GlareAppsSettings"]];
 		[musicAppGroupSpecifier setProperty:[[self bundle] localizedStringForKey:@"MUSICAPP_RESTART_REQUIRED" value:@"Music app restart is required" table:@"GlareAppsSettings"] forKey:@"footerText"];
+		
+		[__specifiers addObject:musicAppGroupSpecifier];
 		
 		PSSpecifier *specifier3 = [PSSpecifier preferenceSpecifierNamed:[[self bundle] localizedStringForKey:@"Use AlbumArt Backdrop" value:@"Use AlbumArt Backdrop" table:@"GlareAppsSettings"]
 																 target:self
@@ -85,13 +105,7 @@ enum {
 		[specifier3 setProperty:@(NO) forKey:@"default"];
 		[specifier3 setProperty:@"MusicApp_Enable_Specifier" forKey:@"id"];
 		
-		__specifiers = [[NSMutableArray alloc] initWithObjects:theme, 
-															specifier1, 
-															groupSpecifier1, 
-															specifier2, 
-															musicAppGroupSpecifier, 
-															specifier3, 
-															nil];
+		[__specifiers addObject:specifier3];
 		
 		NSNumber *musicGroupEnable = [self getPreferenceNumberValue:specifier3];
 		if ([musicGroupEnable boolValue])

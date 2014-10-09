@@ -1,6 +1,6 @@
 Package: kr.slak.glareapps
 Name: Glare Apps
-Depends: mobilesubstrate (>= 0.9.5012), firmware (>= 7.0), gsc.device-supports1080p
+Depends: mobilesubstrate (>= 0.9.5012), firmware (>= 7.0)
 Version: 0.1
 Architecture: iphoneos-arm
 Description: Translucent apps
