@@ -1188,6 +1188,28 @@ BOOL isEnabledRedrawControls(UIView *self) {
 %end
 
 
+%hook UINavigationController
+
+- (UIViewController *)popViewControllerAnimated:(BOOL)animated {
+	if ([self.topViewController isKindOfClass:%c(MusicNowPlayingViewController)]) {
+		MAAppDelegate *delegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
+		
+		UINavigationBar *navBar = [[delegate tabBarController] moreNavigationController].navigationBar;
+		navBar._backgroundView.alpha = 1.0f;
+		
+		navBar = [delegate radioNavigationController].navigationBar;
+		navBar._backgroundView.alpha = 1.0f;
+		
+		navBar = self.navigationBar;
+		navBar._backgroundView.alpha = 1.0f;
+	}
+	
+	return %orig;
+}
+
+%end
+
+
 
 
 #pragma mark -

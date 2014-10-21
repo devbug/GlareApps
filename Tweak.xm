@@ -35,7 +35,7 @@ static void LoadSettings() {
 		if (dict[@"GlareAppsEnable"] == nil)
 			GlareAppsEnable = YES;
 		
-		if (!GlareAppsWhiteList){
+		if (!GlareAppsWhiteList) {
 			[GlareAppsWhiteList release];
 			GlareAppsWhiteList = nil;
 		}
