@@ -25,3 +25,6 @@ profile
 obj
 .theos
 theos
+packages
+cydia_pages
+docs
