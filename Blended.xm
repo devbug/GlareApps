@@ -251,7 +251,7 @@ void blendView(id control) {
 	if (isWhiteness)
 		return self.color_0_75__1_0;
 	
-	if (isPad)
+	if (isPad())
 		return self.color_0_3__1_0;
 	
 	return self.color_0_55__1_0;

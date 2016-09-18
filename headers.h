@@ -48,7 +48,7 @@ extern GlareAppsColorHelper *colorHelper;
 #define kRealTransparentAlphaFactor			0.0f
 
 
-#define isPad								(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define isPad()								(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 
 BOOL isThisAppUIServiceProcess();

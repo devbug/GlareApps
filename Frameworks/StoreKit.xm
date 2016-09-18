@@ -59,7 +59,7 @@
 		rtn.backgroundColor = [colorHelper clearColor];
 	}
 	
-	return rtn;
+	return (id)rtn;
 }
 
 %end
@@ -84,7 +84,7 @@
 		rtn.backgroundColor = [colorHelper clearColor];
 	}
 	
-	return rtn;
+	return (id)rtn;
 }
 
 %end
@@ -133,7 +133,7 @@
 		rtn.backgroundColor = [colorHelper clearColor];
 	}
 	
-	return rtn;
+	return (id)rtn;
 }
 
 %end
@@ -199,7 +199,7 @@
 - (void)viewDidLayoutSubviews {
 	%orig;
 	
-	if (!isPad) {
+	if (!isPad()) {
 		_UIBackdropView *_backdropView = MSHookIvar<_UIBackdropView *>(self, "_backdropView");
 		_backdropView.alpha = 0.0f;
 	}

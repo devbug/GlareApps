@@ -204,7 +204,7 @@
 %hook ComposeNavigationController
 
 - (BOOL)__glareapps_shouldRemoveBackdropAfterPresenting {
-	if (isPad) return NO;
+	if (isPad()) return NO;
 	
 	return YES;
 }

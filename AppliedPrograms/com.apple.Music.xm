@@ -119,7 +119,7 @@ UINavigationController *getCurrentNavigationController() {
 	MAAppDelegate *delegate = (MAAppDelegate *)[[UIApplication sharedApplication] delegate];
 	UINavigationController *nvc = nil;
 	
-	if (isPad) {
+	if (isPad()) {
 		nvc = MSHookIvar<UINavigationController *>(delegate, "_nowPlayingNavigationController");
 	}
 	else {
@@ -871,7 +871,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 		
 		return YES;
 	}
-	else if (isPad) return YES;
+	else if (isPad()) return YES;
 	
 	return NO;
 }
@@ -1085,7 +1085,7 @@ BOOL isEnabledRedrawControls(UIView *self) {
 	
 	UINavigationBar *navBar = getCurrentNavigationController().navigationBar;
 	
-	if (isPad) {
+	if (isPad()) {
 		navBar = MSHookIvar<UINavigationBar *>(self, "_padFakeNavigationBar");
 	}
 	
@@ -1452,7 +1452,7 @@ static void reloadMusicPrefsNotification(CFNotificationCenterRef center,
 	[keyWindow.subviews[0] insertSubview:backgroundImageView atIndex:0];
 	backgroundImageView.alpha = 0.0f;
 	
-	if (isPad) {
+	if (isPad()) {
 		[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 		[[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(__glareapps_didRotate:)

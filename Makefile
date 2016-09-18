@@ -2,6 +2,8 @@ FW_DEVICE_IP = 192.168.1.9
 
 ARCHS = armv7 armv7s arm64
 
+PACKAGE_VERSION = 0.1-9
+
 SUBPROJECTS = Preferences
 
 include theos/makefiles/common.mk
@@ -33,6 +35,7 @@ GlareApps_FILES = Tweak.xm Blended.xm \
 				  AppliedPrograms/com.apple.mobilenotes.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics QuartzCore
 GlareApps_PRIVATE_FRAMEWORKS = SpringBoardServices BackBoardServices
+GlareApps_CFLAGS = -I.
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

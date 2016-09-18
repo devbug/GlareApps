@@ -60,7 +60,7 @@
 - (BOOL)presentSearchResults:(NSArray *)searchResults {
 	BOOL rtn = %orig;
 	
-	if (isPad) return rtn;
+	if (isPad()) return rtn;
 	
 	UITableView *_searchResultsTable = MSHookIvar<UITableView *>(self, "_searchResultsTable");
 	

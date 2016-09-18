@@ -14,6 +14,7 @@ GlareAppsSettings_FILES = GlareAppsSettings.m \
 GlareAppsSettings_INSTALL_PATH = /Library/PreferenceBundles
 GlareAppsSettings_FRAMEWORKS = UIKit QuartzCore CoreGraphics
 GlareAppsSettings_PRIVATE_FRAMEWORKS = Preferences SpringBoardServices
+GlareAppsSettings_CFLAGS = -Wno-error
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

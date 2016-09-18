@@ -7,7 +7,7 @@
 %hook ASPurchasedCellLayout
 
 - (void)setIconImage:(UIImage *)iconImage {
-	if (isPad) {
+	if (isPad()) {
 		// To do : icon image masking
 	}
 	

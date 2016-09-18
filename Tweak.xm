@@ -60,7 +60,7 @@ static void LoadSettings() {
 		
 		musicAppAlbumArtBackdropBlurRadius = [dict[@"GlareAppsMusicAppAlbumArtBackdropBlurRadius"] floatValue];
 		if (dict[@"GlareAppsMusicAppAlbumArtBackdropBlurRadius"] == nil)
-			musicAppAlbumArtBackdropBlurRadius = (isPad ? 20.0f : 15.0f);
+			musicAppAlbumArtBackdropBlurRadius = (isPad() ? 20.0f : 15.0f);
 		
 		[dict release];
 	}
