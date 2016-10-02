@@ -132,9 +132,8 @@
 }
 
 
-- (BOOL)killAllApps:(PSSpecifier *)specifier {
+- (void)killAllApps:(PSSpecifier *)specifier {
 	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("kr.slak.glareapps.killallapps"), NULL, NULL, TRUE);
-	return YES;
 }
 
 
