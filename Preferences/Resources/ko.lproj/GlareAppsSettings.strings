@@ -16,7 +16,7 @@
 "Backdrop Blur Radius" = "배경 블러 수준";
 "Kill all apps" = "모든 적용 앱 종료";
 "KILLALLAPPS_MSG" = "설정 앱을 포함하여 모두 종료합니다.";
-"MSG_COPYRIGHT" = "Glare Apps © 2014 deVbug";
+"MSG_COPYRIGHT" = "Glare Apps © 2014-2016 deVbug";
 "KILL" = "종료";
 "KillAllApps_PROMPT" = "모든 적용 앱을 지금 바로 종료합니다.";
 "Cancel" = "취소";
