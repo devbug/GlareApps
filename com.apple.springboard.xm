@@ -31,6 +31,48 @@
 - (void)executeOrAppendEvent:(id)fp8;
 @end
 
+// >= iOS 8.0
+@interface SBApplication (Firmware80)
+- (void)setFlag:(int)arg1 forActivationSetting:(unsigned)arg2;
+- (void)setFlag:(int)arg1 forDeactivationSetting:(unsigned)arg2;
+- (void)setFlag:(int)arg1 forStateSetting:(unsigned)arg2;
+- (void)setFlag:(int)arg1 forProcessSetting:(int)arg2;
+@end
+
+@interface BSEventQueueEvent : NSObject
++ (id)eventWithName:(NSString *)name handler:(void(^)(void))handler;
+- (void)executeFromEventQueue;
+- (void)execute;
+@end
+@interface FBWorkspaceEvent : BSEventQueueEvent
+- (void)execute;
+@end
+@interface BSEventQueue : NSObject
+@property(retain, nonatomic) BSEventQueueEvent *executingEvent;
+- (BOOL)hasEventWithName:(id)arg1;
+- (BOOL)hasEventWithPrefix:(id)arg1;
+- (void)cancelEventsWithName:(id)arg1;
+@end
+@interface FBWorkspaceEventQueue : BSEventQueue
++ (id)sharedInstance;
+- (void)executeOrPrependEvent:(id)arg1;
+- (void)executeOrAppendEvent:(id)arg1;
+@end
+
+@interface FBProcessManager : NSObject
++ (id)sharedInstance;
+- (id)applicationProcessesForBundleIdentifier:(id)arg1;
+@end
+@interface FBProcess : NSObject @end
+@interface FBApplicationProcess : FBProcess
+- (void)killForReason:(int)arg1 andReport:(char)arg2 withDescription:(id)arg3;
+- (void)killForReason:(int)arg1 andReport:(char)arg2 withDescription:(id)arg3 completion:(/*^block*/id)arg4;
+@end
+
+@interface SpringBoard (Firmware90)
+- (void)handleGotoHomeScreenShortcut:(id)unused;
+@end
+
 
 extern "C" NSString *BKSApplicationTerminationReasonDescription(int reason);
 extern "C" void BKSTerminateApplicationForReasonAndReportWithDescription(NSString *app, int a, int b, NSString *description);
@@ -82,12 +124,21 @@ void killSBApplicationForReasonAndReportWithDescription(SBApplication *app, int 
 	
 	NSString *label = [NSString stringWithFormat:@"TerminateApp: %@ (%@)", app.bundleIdentifier, desc];
 	
-	SBWorkspaceEvent *event = [%c(SBWorkspaceEvent) eventWithLabel:(CFStringRef)label handler:^{
-		BKSTerminateApplicationForReasonAndReportWithDescription(app.bundleIdentifier, reason, report, desc);
-	}];
-	
-	SBWorkspaceEventQueue *eventQueue = [%c(SBWorkspaceEventQueue) sharedInstance];
-	[eventQueue executeOrAppendEvent:event];
+	if (%c(SBWorkspaceEvent)) {
+		SBWorkspaceEvent *event = [%c(SBWorkspaceEvent) eventWithLabel:(CFStringRef)label handler:^{
+			BKSTerminateApplicationForReasonAndReportWithDescription(app.bundleIdentifier, reason, report, desc);
+		}];
+		[[%c(SBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
+	}
+	else if (%c(FBWorkspaceEvent)) {
+		FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:label handler:^{
+			NSArray *processes = [[%c(FBProcessManager) sharedInstance] applicationProcessesForBundleIdentifier:app.bundleIdentifier];
+			for (FBApplicationProcess *process in processes) {
+				[process killForReason:reason andReport:report withDescription:desc completion:nil];
+			}
+		}];
+		[[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
+	}
 }
 
 void killAllApps(NSArray *filteredApps)
@@ -99,11 +150,24 @@ void killAllApps(NSArray *filteredApps)
 		SBApplication *topApplication = ([springBoard isLocked] ? nil : [springBoard _accessibilityFrontMostApplication]);
 		
 		if (topApplication && [filteredApps containsObject:topApplication.displayIdentifier]) {
-			SBWorkspaceEvent *event = [%c(SBWorkspaceEvent) eventWithLabel:CFSTR("QuitTopApp") handler:^{
-				[springBoard quitTopApplication:nil];
-			}];
-			SBWorkspaceEventQueue *eventQueue = [%c(SBWorkspaceEventQueue) sharedInstance];
-			[eventQueue executeOrAppendEvent:event];
+			if (%c(SBWorkspaceEvent)) {
+				SBWorkspaceEvent *event = [%c(SBWorkspaceEvent) eventWithLabel:CFSTR("QuitTopApp") handler:^{
+					[springBoard quitTopApplication:nil];
+				}];
+				[[%c(SBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
+			}
+			else if (%c(FBWorkspaceEvent)) {
+				FBWorkspaceEvent *event = [%c(FBWorkspaceEvent) eventWithName:@"QuitTopApp" handler:^{
+					if ([springBoard respondsToSelector:@selector(handleGotoHomeScreenShortcut:)]) {
+						[springBoard handleGotoHomeScreenShortcut:nil];
+					}
+					else {
+						// iOS 8
+						//[SBUIController _handleButtonEventToSuspendDisplays:(BOOL) displayWasSuspendedOut:(char *)];
+					}
+				}];
+				[[%c(FBWorkspaceEventQueue) sharedInstance] executeOrAppendEvent:event];
+			}
 		}
 		
 		for (SBApplication *app in applist) {
@@ -112,8 +176,13 @@ void killAllApps(NSArray *filteredApps)
 			
 			[[%c(NSDistributedNotificationCenter) defaultCenter] postNotificationName:SBSAppSwitcherQuitAppNotification object:app.bundleIdentifier];
 			
-			[app setDeactivationSetting:0x2 flag:NO];
-			[app setDeactivationSetting:0x11 flag:YES];
+			if ([app respondsToSelector:@selector(setDeactivationSetting:flag:)]) {
+				[app setDeactivationSetting:0x2 flag:NO];
+				[app setDeactivationSetting:0x11 flag:YES];
+			}
+			else if ([app respondsToSelector:@selector(setFlag:forDeactivationSetting:)]) {
+				[app setFlag:1 forDeactivationSetting:3];
+			}
 			
 			killSBApplicationForReasonAndReportWithDescription(app, 1, NO, @"killed by GlareAppsSettings");
 		}

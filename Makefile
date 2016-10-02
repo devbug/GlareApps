@@ -1,8 +1,10 @@
 FW_DEVICE_IP = 192.168.1.9
+THEOS_DEVICE_IP = 192.168.1.9
 
 ARCHS = armv7 armv7s arm64
+SDKVERSION = 7.0
 
-PACKAGE_VERSION = 0.1-9
+PACKAGE_VERSION = $(shell git describe --dirty | sed 's/^[A-Za-z \t]*//')
 
 SUBPROJECTS = Preferences
 
@@ -35,12 +37,14 @@ GlareApps_FILES = Tweak.xm Blended.xm \
 				  AppliedPrograms/com.apple.mobilenotes.xm
 GlareApps_FRAMEWORKS = UIKit CoreGraphics QuartzCore
 GlareApps_PRIVATE_FRAMEWORKS = SpringBoardServices BackBoardServices
+# required: SDKVERSION = 8.0
+#GlareApps_WEAK_FRAMEWORKS = FrontBoard
 GlareApps_CFLAGS = -I.
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
-#after-install::
-#	install.exec "killall -9 backboardd"
+after-install::
+	install.exec "killall -9 backboardd"
 
 ri:: remoteinstall
 remoteinstall:: all internal-remoteinstall after-remoteinstall
@@ -48,4 +52,4 @@ internal-remoteinstall::
 	scp -P 22 "$(FW_PROJECT_DIR)/$(THEOS_OBJ_DIR_NAME)/$(TWEAK_NAME).dylib" root@$(FW_DEVICE_IP):/Library/MobileSubstrate/DynamicLibraries/
 	scp -P 22 "$(FW_PROJECT_DIR)/$(TWEAK_NAME).plist" root@$(FW_DEVICE_IP):/Library/MobileSubstrate/DynamicLibraries/
 after-remoteinstall::
-#	ssh root@$(FW_DEVICE_IP) "killall -9 Preferences; exit 0"
+	ssh root@$(FW_DEVICE_IP) "killall -9 Preferences" || true

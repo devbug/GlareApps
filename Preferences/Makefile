@@ -33,4 +33,4 @@ internal-remoteinstall::
 	scp "$(FW_PROJECT_DIR)/$(THEOS_OBJ_DIR_NAME)/$(BUNDLE_NAME).bundle/en.lproj/GlareAppsSettings.strings" root@$(FW_DEVICE_IP):/Library/PreferenceBundles/$(BUNDLE_NAME).bundle/en.lproj/
 	scp "$(FW_PROJECT_DIR)/$(THEOS_OBJ_DIR_NAME)/$(BUNDLE_NAME).bundle/ko.lproj/GlareAppsSettings.strings" root@$(FW_DEVICE_IP):/Library/PreferenceBundles/$(BUNDLE_NAME).bundle/ko.lproj/
 after-remoteinstall::
-	ssh root@$(FW_DEVICE_IP) "killall -9 Preferences"
+	ssh root@$(FW_DEVICE_IP) "killall -9 Preferences" || true

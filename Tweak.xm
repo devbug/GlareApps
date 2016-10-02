@@ -2039,9 +2039,9 @@ UIImage *reorderImageBlack = nil;
 	kbRenderConfig.lightKeyboard = (isWhiteness ? YES : NO);
 	kbRenderConfig.blurSaturation = isFirmware71 ? 0.5f : 0.9f;
 	kbRenderConfig.keycapOpacity = isFirmware71 ? 1.0f : 0.82f;
-	if (isFirmware71)
+	if ([kbRenderConfig respondsToSelector:@selector(setLightLatinKeycapOpacity:)])
 		kbRenderConfig.lightLatinKeycapOpacity = 1.0f;
-	else if (isFirmware70)
+	if ([kbRenderConfig respondsToSelector:@selector(setKeyborderOpacity:)])
 		kbRenderConfig.keyborderOpacity = 1.0f;
 	
 	%init;
